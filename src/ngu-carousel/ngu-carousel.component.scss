@@ -3,13 +3,13 @@
     position: relative;
 }
 
-.ngxcarousel {
+.ngucarousel {
     /*width: 100%;
         position: relative;*/
-    .ngxcarousel-inner {
+    .ngucarousel-inner {
         position: relative;
         overflow: hidden;
-        .ngxcarousel-items {
+        .ngucarousel-items {
             white-space: nowrap;
             position: relative;
         }
@@ -17,8 +17,8 @@
 }
 
 .banner {
-    .ngxcarouselPointDefault {
-        .ngxcarouselPoint {
+    .ngucarouselPointDefault {
+        .ngucarouselPoint {
             position: absolute;
             width: 100%;
             bottom: 20px;
@@ -35,8 +35,8 @@
     }
 }
 
-.ngxcarouselPointDefault {
-    .ngxcarouselPoint {
+.ngucarouselPointDefault {
+    .ngucarouselPoint {
         list-style-type: none;
         text-align: center;
         padding: 12px;

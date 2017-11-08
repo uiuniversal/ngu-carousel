@@ -60,7 +60,7 @@ export class NguCarouselComponent
   @ContentChild(NguCarouselPrevDirective, { read: ElementRef })
   private prev: ElementRef;
 
-  @ViewChild('ngxcarousel', { read: ElementRef })
+  @ViewChild('ngucarousel', { read: ElementRef })
   private carouselMain1: ElementRef;
   @ViewChild('ngxitems', { read: ElementRef })
   private carouselInner1: ElementRef;
@@ -179,15 +179,15 @@ export class NguCarouselComponent
   ngAfterViewInit() {
     if (this.userData.point.pointStyles) {
       const datas = this.userData.point.pointStyles.replace(
-        /.ngxcarouselPoint/g,
-        `.${this.data.classText} .ngxcarouselPoint`
+        /.ngucarouselPoint/g,
+        `.${this.data.classText} .ngucarouselPoint`
       );
 
       this.createStyleElem(datas);
     } else if (this.userData.point && this.userData.point.visible) {
       this.renderer.addClass(
         this.pointMain.nativeElement,
-        'ngxcarouselPointDefault'
+        'ngucarouselPointDefault'
       );
     }
   }
@@ -387,7 +387,7 @@ export class NguCarouselComponent
   private carouselSize(): void {
     this.data.classText = this.generateID();
     let dism = '';
-    const styleid = '.' + this.data.classText + ' > .ngxcarousel > .ngxcarousel-inner > .ngxcarousel-items >';
+    const styleid = '.' + this.data.classText + ' > .ngucarousel > .ngucarousel-inner > .ngucarousel-items >';
 
     if (this.userData.custom === 'banner') {
       this.renderer.addClass(this.carousel, 'banner');
@@ -546,24 +546,24 @@ export class NguCarouselComponent
       this.data.transform.lg = 100 / this.userData.grid.lg * slide;
       slideCss = `@media (max-width: 767px) {
               .${this.data
-                .classText} > .ngxcarousel > .ngxcarousel-inner > .ngxcarousel-items { transform: translate3d(-${this
+                .classText} > .ngucarousel > .ngucarousel-inner > .ngucarousel-items { transform: translate3d(-${this
         .data.transform.xs}%, 0, 0); } }
             @media (min-width: 768px) {
               .${this.data
-                .classText} > .ngxcarousel > .ngxcarousel-inner > .ngxcarousel-items { transform: translate3d(-${this
+                .classText} > .ngucarousel > .ngucarousel-inner > .ngucarousel-items { transform: translate3d(-${this
         .data.transform.sm}%, 0, 0); } }
             @media (min-width: 992px) {
               .${this.data
-                .classText} > .ngxcarousel > .ngxcarousel-inner > .ngxcarousel-items { transform: translate3d(-${this
+                .classText} > .ngucarousel > .ngucarousel-inner > .ngucarousel-items { transform: translate3d(-${this
         .data.transform.md}%, 0, 0); } }
             @media (min-width: 1200px) {
               .${this.data
-                .classText} > .ngxcarousel > .ngxcarousel-inner > .ngxcarousel-items { transform: translate3d(-${this
+                .classText} > .ngucarousel > .ngucarousel-inner > .ngucarousel-items { transform: translate3d(-${this
         .data.transform.lg}%, 0, 0); } }`;
     } else {
       this.data.transform.all = this.userData.grid.all * slide;
       slideCss = `.${this.data
-        .classText} > .ngxcarousel > .ngxcarousel-inner > .ngxcarousel-items { transform: translate3d(-${this.data
+        .classText} > .ngucarousel > .ngucarousel-inner > .ngucarousel-items { transform: translate3d(-${this.data
         .transform.all}px, 0, 0);`;
     }
     // this.renderer.createText(this.carouselCssNode, slideCss);
@@ -589,7 +589,7 @@ export class NguCarouselComponent
     for (let i = 0; i < 6; i++) {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
     }
-    return `ngxcarousel${text}`;
+    return `ngucarousel${text}`;
   }
 
   /* handle the auto slide */

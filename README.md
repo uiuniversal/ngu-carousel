@@ -1,7 +1,8 @@
 # ngu-carousel
+
 Angular Universal carousel
 
-`Note: This carousel doesn't include any css. go and customize css for buttons, items except ngxcarousel and ngxcarousel-inner`
+`Note: This carousel doesn't include any css. go and customize css for buttons, items except ngucarousel and ngucarousel-inner`
 
 ## changelog [![NPM version](https://badge.fury.io/js/ngu-carousel.png)](http://badge.fury.io/js/ngu-carousel)
 
@@ -204,7 +205,7 @@ export type Animate = 'lazy';
 ### Custom css for Point
 
 ```html
-<ul class="ngxcarouselPoint">
+<ul class="ngucarouselPoint">
     <li *ngFor="let i of pointNumbers; let i = index" [class.active]="i==pointers"></li>
 </ul>
 ```
@@ -226,7 +227,6 @@ This is HTML I'm using in the carousel. Add your own css according to this eleme
 * `moveToSlide` is an `Input` which accepts point numbers. Numbers represents no of slide to be done.
 * `onMove` is an `Output` which triggered on every slide before start and it will emit `$event` as `NguCarouselStore` object.
 * `carouselLoad` is an `Output` which triggered when slide reaches the end on items based on inputs `load`.
-
 
 # Getstarted guide
 
@@ -305,7 +305,7 @@ export class Sample implements OnInit {
       point: {
         visible: true,
         pointStyles: `
-          .ngxcarouselPoint {
+          .ngucarouselPoint {
             list-style-type: none;
             text-align: center;
             padding: 12px;
@@ -318,7 +318,7 @@ export class Sample implements OnInit {
             left: 0;
             box-sizing: border-box;
           }
-          .ngxcarouselPoint li {
+          .ngucarouselPoint li {
             display: inline-block;
             border-radius: 999px;
             background: rgba(255, 255, 255, 0.55);
@@ -326,7 +326,7 @@ export class Sample implements OnInit {
             margin: 0 3px;
             transition: .4s ease all;
           }
-          .ngxcarouselPoint li.active {
+          .ngucarouselPoint li.active {
               background: white;
               width: 10px;
           }
@@ -511,7 +511,7 @@ export class Sample implements OnInit {
       point: {
         visible: true,
         pointStyles: `
-          .ngxcarouselPoint {
+          .ngucarouselPoint {
             list-style-type: none;
             text-align: center;
             padding: 12px;
@@ -520,7 +520,7 @@ export class Sample implements OnInit {
             overflow: auto;
             box-sizing: border-box;
           }
-          .ngxcarouselPoint li {
+          .ngucarouselPoint li {
             display: inline-block;
             border-radius: 50%;
             border: 2px solid rgba(0, 0, 0, 0.55);
@@ -529,7 +529,7 @@ export class Sample implements OnInit {
             transition-timing-function: cubic-bezier(.17, .67, .83, .67);
             transition: .4s;
           }
-          .ngxcarouselPoint li.active {
+          .ngucarouselPoint li.active {
               background: #6b6b6b;
               transform: scale(1.2);
           }

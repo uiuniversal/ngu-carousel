@@ -1,7 +1,7 @@
 <!-- <div #main class="som"> -->
-<div #ngxcarousel class="ngxcarousel">
-    <div #forTouch class="ngxcarousel-inner">
-        <div #ngxitems class="ngxcarousel-items">
+<div #ngucarousel class="ngucarousel">
+    <div #forTouch class="ngucarousel-inner">
+        <div #ngxitems class="ngucarousel-items">
             <ng-content select="[NguCarouselItem]"></ng-content>
         </div>
         <div style="clear: both"></div>
@@ -10,7 +10,7 @@
     <ng-content select="[NguCarouselNext]"></ng-content>
 </div>
 <div #points *ngIf="userData.point.visible">
-    <ul class="ngxcarouselPoint">
+    <ul class="ngucarouselPoint">
         <li #pointInner *ngFor="let i of pointNumbers; let i = index" [class.active]="i==pointers" (click)="moveTo(i)"></li>
     </ul>
 </div>
