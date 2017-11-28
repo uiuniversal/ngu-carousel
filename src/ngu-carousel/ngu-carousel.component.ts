@@ -425,7 +425,7 @@ export class NguCarouselComponent
 
   /* this function is used to scoll the carousel when point is clicked */
   public moveTo(index: number) {
-    if (this.data.currentSlide !== index && index < this.pointIndex) {
+    if (this.pointers !== index && index < this.pointIndex) {
       let slideremains = 0;
       const btns = this.data.currentSlide < index ? 1 : 0;
 
