@@ -9,13 +9,6 @@ import { CommonModule } from '@angular/common';
 import { NguCarouselComponent } from './ngu-carousel/ngu-carousel.component';
 import { NguTileComponent } from './ngu-tile/ngu-tile.component';
 
-export class MyHammerConfig extends HammerGestureConfig {
-  overrides = <any>{
-    swipe: { velocity: 0.4, threshold: 20 }, // override default settings
-    pan: { velocity: 0.4, threshold: 20 }
-  };
-}
-
 @NgModule({
   imports: [CommonModule],
   exports: [
@@ -36,6 +29,6 @@ export class MyHammerConfig extends HammerGestureConfig {
     NguCarouselNextDirective,
     NguCarouselPrevDirective
   ],
-  providers: [{ provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig }]
+  providers: []
 })
 export class NguCarouselModule {}

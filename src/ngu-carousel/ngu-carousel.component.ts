@@ -33,8 +33,64 @@ import { Subscription } from 'rxjs/Subscription';
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'ngu-carousel',
-  templateUrl: './ngu-carousel.component.html',
-  styleUrls: ['./ngu-carousel.component.scss']
+  template: `<div #ngucarousel class="ngucarousel"><div #forTouch class="ngucarousel-inner"><div #nguitems class="ngucarousel-items"><ng-content select="[NguCarouselItem]"></ng-content></div><div style="clear: both"></div></div><ng-content select="[NguCarouselPrev]"></ng-content><ng-content select="[NguCarouselNext]"></ng-content></div><div #points *ngIf="userData.point.visible"><ul class="ngucarouselPoint"><li #pointInner *ngFor="let i of pointNumbers; let i = index" [class.active]="i==pointers" (click)="moveTo(i)"></li></ul></div>`,
+  styles: [`
+    :host {
+      display: block;
+      position: relative;
+    }
+
+    .ngucarousel .ngucarousel-inner {
+      position: relative;
+      overflow: hidden;
+    }
+    .ngucarousel .ngucarousel-inner .ngucarousel-items {
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .banner .ngucarouselPointDefault .ngucarouselPoint {
+      position: absolute;
+      width: 100%;
+      bottom: 20px;
+    }
+    .banner .ngucarouselPointDefault .ngucarouselPoint li {
+      background: rgba(255, 255, 255, 0.55);
+    }
+    .banner .ngucarouselPointDefault .ngucarouselPoint li.active {
+      background: white;
+    }
+    .banner .ngucarouselPointDefault .ngucarouselPoint li:hover {
+      cursor: pointer;
+    }
+
+    .ngucarouselPointDefault .ngucarouselPoint {
+      list-style-type: none;
+      text-align: center;
+      padding: 12px;
+      margin: 0;
+      white-space: nowrap;
+      overflow: auto;
+      box-sizing: border-box;
+    }
+    .ngucarouselPointDefault .ngucarouselPoint li {
+      display: inline-block;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.55);
+      padding: 4px;
+      margin: 0 4px;
+      transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+      transition: 0.4s;
+    }
+    .ngucarouselPointDefault .ngucarouselPoint li.active {
+      background: #6b6b6b;
+      transform: scale(1.8);
+    }
+    .ngucarouselPointDefault .ngucarouselPoint li:hover {
+      cursor: pointer;
+    }
+
+  `]
 })
 export class NguCarouselComponent
   implements OnInit, AfterContentInit, AfterViewInit, OnDestroy, OnChanges {
@@ -62,7 +118,7 @@ export class NguCarouselComponent
 
   @ViewChild('ngucarousel', { read: ElementRef })
   private carouselMain1: ElementRef;
-  @ViewChild('ngxitems', { read: ElementRef })
+  @ViewChild('nguitems', { read: ElementRef })
   private carouselInner1: ElementRef;
   @ViewChild('main', { read: ElementRef })
   private carousel1: ElementRef;
@@ -122,7 +178,7 @@ export class NguCarouselComponent
 
   ngOnChanges(changes: SimpleChanges) {
     // tslint:disable-next-line:no-unused-expression
-    this.moveToSlide &&
+    this.moveToSlide > -1 &&
       !changes.moveToSlide.firstChange &&
       this.moveTo(changes.moveToSlide.currentValue);
   }
@@ -173,7 +229,7 @@ export class NguCarouselComponent
       this.buttonControl();
     });
     // tslint:disable-next-line:no-unused-expression
-    this.moveToSlide && this.moveTo(this.moveToSlide);
+    this.moveToSlide > -1 && this.moveTo(this.moveToSlide);
   }
 
   ngAfterViewInit() {
@@ -339,9 +395,13 @@ export class NguCarouselComponent
       const Nos = this.items.length - (this.data.items - this.data.slideItems);
       this.pointIndex = Math.ceil(Nos / this.data.slideItems);
       const pointers = [];
-      for (let i = 0; i < this.pointIndex; i++) {
-        pointers.push(i);
+      
+      if (this.pointIndex > 1 || !this.userData.point.hideOnSingleSlide) {
+        for (let i = 0; i < this.pointIndex; i++) {
+          pointers.push(i);
+        }
       }
+
       this.pointNumbers = pointers;
       this.carouselPointActiver();
       if (this.pointIndex <= 1) {
