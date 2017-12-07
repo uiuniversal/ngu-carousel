@@ -22,5 +22,5 @@ import { Component, HostBinding } from '@angular/core';
   `]
 })
 export class NguTileComponent {
-  @HostBinding('class') classes = 'item';
+  @HostBinding('class.item') classes = true;
 }

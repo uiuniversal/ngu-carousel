@@ -12,6 +12,5 @@ import { Component, HostBinding } from '@angular/core';
   `]
 })
 export class NguItemComponent {
-  @HostBinding('class') classes = 'item';
-
+  @HostBinding('class.item') classes = true;
 }

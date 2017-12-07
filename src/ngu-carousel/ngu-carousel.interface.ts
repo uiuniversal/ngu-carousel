@@ -22,6 +22,7 @@ export class NguCarouselStore {
   isEnd: boolean;
   isFirst: boolean;
   isLast: boolean;
+  RTL: boolean;
 }
 export type DeviceType = 'xs' | 'sm' | 'md' | 'lg' | 'all';
 
@@ -57,6 +58,7 @@ export class NguCarousel {
   loop?: boolean;
   touch?: boolean;
   easing?: string;
+  RTL?: boolean;
 }
 
 export type Custom = 'banner';

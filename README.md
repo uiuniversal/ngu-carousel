@@ -139,6 +139,7 @@ export class NguCarouselStore {
   isEnd: boolean;
   isFirst: boolean;
   isLast: boolean;
+  RTL: boolean;
 }
 export type DeviceType = 'xs' | 'sm' | 'md' | 'lg' | 'all';
 
@@ -166,6 +167,7 @@ export class NguCarousel {
   loop?: boolean;
   touch?: boolean;
   easing?: string;
+  RTL: boolean;
 }
 
 export class Grid {
@@ -178,6 +180,7 @@ export class Grid {
 
 export interface Point {
   visible: boolean;
+  hideOnSingleSlide?: boolean;
   pointStyles?: string;
 }
 
@@ -196,11 +199,13 @@ export type Animate = 'lazy';
 | `load` | number | optional | is used to load the items similar to pagination. the carousel will tigger the carouslLoad function to load another set of items. it will help you to improve the performance of the app.**`(carouselLoad)="myfunc($event)"`** |
 | `point.visible` | boolean | optional | It is used to indicate no. of slides and also shows the current active slide. |
 | `point.pointStyle` | string | optional | It is used to customize the point indicator. make sure your check the guide. |
+| `point.hideOnSingleSlide` | boolean | optional | It is used to hide the point indicator when slide is less than one. |
 | `touch` | boolean | optional | It is used to active touch support to the carousel. |
 | `easing` | string | optional | It is used to define the easing style of the carousel. Only define the ease name without any timing like `ease`,`ease-in` |
 | `loop` | boolean | optional | It is used to loop the `ngu-item | ngu-tile`. It must be true for `interval` |
 | `animation` | string | optional | It is used to animate the sliding items. currently it only supports `lazy`. more coming soon and also with custom css animation option |
 | `custom` | string | optional | It is you to define the purpose of the carousel. currently it only supports `banner`. more coming soon and also with custom css animation option |
+| `RTL` | boolean | optional | This option enable the `rtl` direction and act as rtl. By default it is `ltr` |
 
 ### Custom css for Point
 

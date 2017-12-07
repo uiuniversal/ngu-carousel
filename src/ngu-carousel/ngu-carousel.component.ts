@@ -40,6 +40,10 @@ import { Subscription } from 'rxjs/Subscription';
       position: relative;
     }
 
+    :host.ngurtl {
+      direction: rtl;
+    }
+
     .ngucarousel .ngucarousel-inner {
       position: relative;
       overflow: hidden;
@@ -94,6 +98,7 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class NguCarouselComponent
   implements OnInit, AfterContentInit, AfterViewInit, OnDestroy, OnChanges {
+  directionSym: string;
   itemsSubscribe: Subscription;
   carouselCssNode: any;
   pointIndex: number;
@@ -167,7 +172,8 @@ export class NguCarouselComponent
     touch: { active: false, swipe: '', velocity: 0 },
     isEnd: false,
     isFirst: true,
-    isLast: false
+    isLast: false,
+    RTL: false
   };
 
   constructor(
@@ -196,6 +202,8 @@ export class NguCarouselComponent
     this.data.loop = this.userData.loop || false;
     this.userData.easing = this.userData.easing || 'cubic-bezier(0, 0, 0.2, 1)';
     this.data.touch.active = this.userData.touch || false;
+    this.data.RTL = this.userData.RTL ? true : false;
+    this.directionSym = this.data.RTL ? '' : '-';
 
     this.carouselSize();
     // const datas = this.itemsElements.first.nativeElement.getBoundingClientRect().width;
@@ -285,14 +293,18 @@ export class NguCarouselComponent
       hammertime.on('panend', (ev: any) => {
         // this.setStyle(this.carouselInner, 'transform', '');
         this.data.touch.velocity = ev.velocity;
-        this.data.touch.swipe === 'panright'
-          ? this.carouselScrollOne(0)
-          : this.carouselScrollOne(1);
-        });
-        hammertime.on("hammer.input", function(ev) {
-          // allow nested touch events to no propagate, this may have other side affects but works for now.
-          // TODO: It is probably better to check the source element of the event and only apply the handle to the correct carousel
-          ev.srcEvent.stopPropagation()
+        let direc = 0;
+        if (!this.data.RTL) {
+          direc = this.data.touch.swipe === 'panright' ? 0 : 1;
+        } else {
+          direc = this.data.touch.swipe === 'panright' ? 1 : 0;
+        }
+        this.carouselScrollOne(direc);
+      });
+      hammertime.on("hammer.input", function(ev) {
+        // allow nested touch events to no propagate, this may have other side affects but works for now.
+        // TODO: It is probably better to check the source element of the event and only apply the handle to the correct carousel
+        ev.srcEvent.stopPropagation()
       });
     }
   }
@@ -312,18 +324,24 @@ export class NguCarouselComponent
         : valt;
     this.data.dexVal = ev;
     this.data.touch.swipe = e;
-    this.data.touchTransform =
-      e === 'panleft'
-        ? valt + this.data.touchTransform
-        : this.data.touchTransform - valt;
-
+    if (!this.data.RTL) {
+      this.data.touchTransform =
+        e === 'panleft'
+          ? valt + this.data.touchTransform
+          : this.data.touchTransform - valt;
+    } else {
+      this.data.touchTransform =
+        e === 'panright'
+          ? valt + this.data.touchTransform
+          : this.data.touchTransform - valt;
+    }
     if (this.data.touchTransform > 0) {
       this.setStyle(
         this.carouselInner,
         'transform',
         this.data.type === 'responsive'
-          ? `translate3d(-${this.data.touchTransform}%, 0px, 0px)`
-          : `translate3d(-${this.data.touchTransform}px, 0px, 0px)`
+          ? `translate3d(${this.directionSym}${this.data.touchTransform}%, 0px, 0px)`
+          : `translate3d(${this.directionSym}${this.data.touchTransform}px, 0px, 0px)`
       );
     } else {
       this.data.touchTransform = 0;
@@ -480,6 +498,8 @@ export class NguCarouselComponent
     }
 
     this.renderer.addClass(this.carousel, this.data.classText);
+    this.data.RTL &&
+      this.renderer.addClass(this.carousel, 'ngurtl');
     this.createStyleElem(`${dism} ${itemStyle}`);
   }
 
@@ -606,24 +626,24 @@ export class NguCarouselComponent
       this.data.transform.lg = 100 / this.userData.grid.lg * slide;
       slideCss = `@media (max-width: 767px) {
               .${this.data
-                .classText} > .ngucarousel > .ngucarousel-inner > .ngucarousel-items { transform: translate3d(-${this
+                .classText} > .ngucarousel > .ngucarousel-inner > .ngucarousel-items { transform: translate3d(${this.directionSym}${this
         .data.transform.xs}%, 0, 0); } }
             @media (min-width: 768px) {
               .${this.data
-                .classText} > .ngucarousel > .ngucarousel-inner > .ngucarousel-items { transform: translate3d(-${this
+                .classText} > .ngucarousel > .ngucarousel-inner > .ngucarousel-items { transform: translate3d(${this.directionSym}${this
         .data.transform.sm}%, 0, 0); } }
             @media (min-width: 992px) {
               .${this.data
-                .classText} > .ngucarousel > .ngucarousel-inner > .ngucarousel-items { transform: translate3d(-${this
+                .classText} > .ngucarousel > .ngucarousel-inner > .ngucarousel-items { transform: translate3d(${this.directionSym}${this
         .data.transform.md}%, 0, 0); } }
             @media (min-width: 1200px) {
               .${this.data
-                .classText} > .ngucarousel > .ngucarousel-inner > .ngucarousel-items { transform: translate3d(-${this
+                .classText} > .ngucarousel > .ngucarousel-inner > .ngucarousel-items { transform: translate3d(${this.directionSym}${this
         .data.transform.lg}%, 0, 0); } }`;
     } else {
       this.data.transform.all = this.userData.grid.all * slide;
       slideCss = `.${this.data
-        .classText} > .ngucarousel > .ngucarousel-inner > .ngucarousel-items { transform: translate3d(-${this.data
+        .classText} > .ngucarousel > .ngucarousel-inner > .ngucarousel-items { transform: translate3d(${this.directionSym}${this.data
         .transform.all}px, 0, 0);`;
     }
     // this.renderer.createText(this.carouselCssNode, slideCss);
