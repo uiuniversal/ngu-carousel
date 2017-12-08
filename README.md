@@ -16,12 +16,6 @@ Demo available [Here](https://sheikalthaf.github.io/ngu-carousel)
 
 `npm install @ngu/carousel --save`
 
-Now ngu-carousel supports touch with the help of hammerjs
-
-`npm install hammerjs --save`
-
-## Sample
-
 Include CarouselModule in your app module:
 
 ```javascript
@@ -35,23 +29,14 @@ import { NguCarouselModule } from '@ngu/carousel';
 export class AppModule { }
 ```
 
-Import hammerjs in `main.ts` file
+Now ngu-carousel supports touch with the help of hammerjs
+
+`npm install hammerjs --save`
+
+Import hammerjs in `polyfills.ts` file
 
 ```javascript
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-
-import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
 import 'hammerjs';
-
-if (environment.production) {
-  enableProdMode();
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  platformBrowserDynamic().bootstrapModule(AppModule);
-});
 
 ```
 

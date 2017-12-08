@@ -111,8 +111,8 @@ export class NguCarouselComponent
   @Output('carouselLoad') carouselLoad = new EventEmitter();
   @Output('onMove') onMove = new EventEmitter();
 
-  @ContentChildren(NguCarouselItemDirective)
-  private items: QueryList<NguCarouselItemDirective>;
+  @ContentChildren(NguCarouselItemDirective, { read: ElementRef })
+  private items: QueryList<ElementRef>;
   @ViewChildren('pointInner', { read: ElementRef })
   private points: QueryList<ElementRef>;
 
@@ -141,7 +141,7 @@ export class NguCarouselComponent
   private carousel: any;
   private carouselMain: any;
   private carouselInner: any;
-  private carouselItems: any;
+  // private carouselItems: any;
 
   private onResize: any;
   private onScrolling: any;
@@ -193,7 +193,7 @@ export class NguCarouselComponent
     this.carousel = this.el.nativeElement;
     this.carouselMain = this.carouselMain1.nativeElement;
     this.carouselInner = this.carouselInner1.nativeElement;
-    this.carouselItems = this.carouselInner.getElementsByClassName('item');
+    // this.carouselItems = this.carouselInner.getElementsByClassName('item');
 
     this.rightBtn = this.next.nativeElement;
     this.leftBtn = this.prev.nativeElement;
@@ -723,24 +723,33 @@ export class NguCarouselComponent
   private carouselAnimator(direction: number, start: number, end: number, speed: number, length: number): void {
     let val = length < 5 ? length : 5;
     val = val === 1 ? 3 : val;
+    const itemList = this.items.toArray();
 
     if (direction === 1) {
       for (let i = start - 1; i < end; i++) {
         val = val * 2;
         // tslint:disable-next-line:no-unused-expression
-        this.carouselItems[i] && this.setStyle(this.carouselItems[i], 'transform', `translate3d(${val}px, 0, 0)`);
+        itemList[i] && this.setStyle(
+          itemList[i].nativeElement,
+          'transform',
+          `translate3d(${val}px, 0, 0)`
+        );
       }
     } else {
       for (let i = end - 1; i >= start - 1; i--) {
         val = val * 2;
         // tslint:disable-next-line:no-unused-expression
-        this.carouselItems[i] && this.setStyle(this.carouselItems[i], 'transform', `translate3d(-${val}px, 0, 0)`);
+        itemList[i] && this.setStyle(
+          itemList[i].nativeElement,
+          'transform',
+          `translate3d(-${val}px, 0, 0)`
+        );
       }
     }
     setTimeout(() => {
-      for (let i = 0; i < this.items.length; i++) {
-        this.setStyle(this.carouselItems[i], 'transform', 'translate3d(0, 0, 0)');
-      }
+      this.items.forEach(elem =>
+        this.setStyle(elem.nativeElement, 'transform', `translate3d(0, 0, 0)`)
+      );
     }, speed * .7);
   }
 
