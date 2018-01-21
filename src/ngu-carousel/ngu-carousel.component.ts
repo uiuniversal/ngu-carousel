@@ -175,6 +175,15 @@ export class NguCarouselComponent
     isLast: false,
     RTL: false
   };
+  
+  public listener1: any;
+  public listener2: any;
+  public listener3: any;
+  public listener4: any;
+  public listener5: any;
+  public listener6: any;
+  public listener7: any;
+  public listener8: any;
 
   constructor(
     private el: ElementRef,
@@ -210,10 +219,10 @@ export class NguCarouselComponent
   }
 
   ngAfterContentInit() {
-    this.renderer.listen(this.leftBtn, 'click', () =>
+    this.listener1 = this.renderer.listen(this.leftBtn, 'click', () =>
       this.carouselScrollOne(0)
     );
-    this.renderer.listen(this.rightBtn, 'click', () =>
+    this.listener2 = this.renderer.listen(this.rightBtn, 'click', () =>
       this.carouselScrollOne(1)
     );
 
@@ -226,7 +235,7 @@ export class NguCarouselComponent
       this.carouselInterval();
       this.onWindowScrolling();
       this.touch();
-      this.renderer.listen('window', 'resize', event => {
+      this.listener3 = this.renderer.listen('window', 'resize', event => {
         this.onResizing(event);
       });
     }
@@ -260,6 +269,29 @@ export class NguCarouselComponent
     clearInterval(this.carouselInt);
     // tslint:disable-next-line:no-unused-expression
     this.itemsSubscribe && this.itemsSubscribe.unsubscribe();
+    
+    // remove listeners
+    this.listener1();
+    this.listener2();
+    if(this.listener3) {
+      this.listener3();
+    }
+    if(this.listener4) {
+      this.listener4();
+    }
+    if(this.listener5) {
+      this.listener5();
+    }
+    if(this.listener6) {
+      this.listener6();
+    }
+    if(this.listener7) {
+      this.listener7();
+    }
+    if(this.listener8) {
+      this.listener8();
+    }
+
   }
 
   private onResizing(event: any) {
@@ -675,23 +707,23 @@ export class NguCarouselComponent
   /* handle the auto slide */
   private carouselInterval(): void {
     if (typeof this.userData.interval === 'number' && this.data.loop) {
-      this.renderer.listen(this.carouselMain, 'touchstart', () => {
+      this.listener4 = this.renderer.listen(this.carouselMain, 'touchstart', () => {
         this.carouselIntervalEvent(1);
       });
 
-      this.renderer.listen(this.carouselMain, 'touchend', () => {
+      this.listener5 = this.renderer.listen(this.carouselMain, 'touchend', () => {
         this.carouselIntervalEvent(0);
       });
 
-      this.renderer.listen(this.carouselMain, 'mouseenter', () => {
+      this.listener6 = this.renderer.listen(this.carouselMain, 'mouseenter', () => {
         this.carouselIntervalEvent(1);
       });
 
-      this.renderer.listen(this.carouselMain, 'mouseleave', () => {
+      this.listener7 = this.renderer.listen(this.carouselMain, 'mouseleave', () => {
         this.carouselIntervalEvent(0);
       });
 
-      this.renderer.listen('window', 'scroll', () => {
+      this.listener8 = this.renderer.listen('window', 'scroll', () => {
         clearTimeout(this.onScrolling);
         this.onScrolling = setTimeout(() => {
           this.onWindowScrolling();
