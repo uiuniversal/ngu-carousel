@@ -1,7 +1,7 @@
 export class NguCarouselStore {
   type: string;
   deviceType: DeviceType;
-  classText: string;
+  token: string;
   items: number;
   load: number;
   deviceWidth: number;

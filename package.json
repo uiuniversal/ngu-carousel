@@ -1,6 +1,6 @@
 {
     "name": "ngu-carousel",
-    "version": "1.4.2",
+    "version": "1.4.5",
     "description": "Angular Universal carousel",
     "scripts": {
         "transpile": "ngc ",

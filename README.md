@@ -103,7 +103,7 @@ export class SampleComponent implements OnInit {
 export class NguCarouselStore {
   type: string;
   deviceType: DeviceType;
-  classText: string;
+  token: string;
   items: number;
   load: number;
   deviceWidth: number;
@@ -206,7 +206,7 @@ This is HTML I'm using in the carousel. Add your own css according to this eleme
 
 <ngu-carousel
       [inputs]="carouselBanner"
-      [moveToSlide]="2"
+      (initData)="initDataFn($event)"
       (onMove)="onmoveFn($event)"
       (carouselLoad)="loadItemsFn()">
 </ngu-carousel>
@@ -214,9 +214,21 @@ This is HTML I'm using in the carousel. Add your own css according to this eleme
 ```
 
 * `inputs` is an `Input` and It accepts `NguCarousel`.
-* `moveToSlide` is an `Input` which accepts point numbers. Numbers represents no of slide to be done.
+* `initData` is an `Output` which triggered on carousel init and it emits token to exchange with service to contol the carousel.
 * `onMove` is an `Output` which triggered on every slide before start and it will emit `$event` as `NguCarouselStore` object.
 * `carouselLoad` is an `Output` which triggered when slide reaches the end on items based on inputs `load`.
+
+
+##Carousel Service
+
+```javascript
+import { NguCarouselService } from '@ngu/carousel';
+```
+This carousel Service supports:
+
+* `reset(token)` - This function will reset the carousel
+* `moveToSlide(token, index, animate)` - This function is used to move to index with animation control.
+
 
 # Getstarted guide
 
@@ -231,7 +243,6 @@ import { NguCarousel, NguCarouselStore } from '@ngu/carousel';
   template: `
     <ngu-carousel
       [inputs]="carouselBanner"
-      [moveToSlide]="1"
       (onMove)="onmoveFn($event)">
 
           <ngu-item NguCarouselItem class="bannerStyle">
@@ -337,17 +348,18 @@ export class Sample implements OnInit {
 
 ```
 
-## Tile
+## Tile with Service
 
 ```javascript
 import { Component } from '@angular/core';
-import { NguCarousel } from '@ngu/carousel';
+import { NguCarousel, NguCarouselStore, NguCarouselService } from '@ngu/carousel';
 
 @Component({
   selector: 'app-carousel',
   template: `
     <ngu-carousel
       [inputs]="carouselTile"
+      (initData)="initDataFn($event)"
       (carouselLoad)="carouselTileLoad($event)">
 
             <ngu-tile NguCarouselItem *ngFor="let Tile of carouselTileItems">
@@ -357,6 +369,7 @@ import { NguCarousel } from '@ngu/carousel';
           <button NguCarouselPrev class='leftRs'>&lt;</button>
           <button NguCarouselNext class='rightRs'>&gt;</button>
     </ngu-carousel>
+    <button (click)="resetFn()">Reset</button>
   `,
   styles: [`
 
@@ -392,9 +405,12 @@ import { NguCarousel } from '@ngu/carousel';
   `]
 })
 export class Sample implements OnInit {
+  private carouselToken: string;
 
   public carouselTileItems: Array<any>;
   public carouselTile: NguCarousel;
+
+  constructor(private carousel: NguCarouselService) {  }
 
   ngOnInit(){
     this.carouselTileItems = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
@@ -411,6 +427,18 @@ export class Sample implements OnInit {
       touch: true,
       easing: 'ease'
     }
+  }
+
+  initDataFn(key: NguCarouselStore) {
+    this.carouselToken = key.token;
+  }
+
+  resetFn() {
+    this.carousel.reset(this.carouselToken);
+  }
+
+  moveToSlide() {
+    this.carousel.moveToSlide(this.carouselToken, 2, false);
   }
 
   public carouselTileLoad(evt: any) {

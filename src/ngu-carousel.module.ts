@@ -1,4 +1,9 @@
-import { NguCarouselPointDirective, NguCarouselItemDirective, NguCarouselNextDirective, NguCarouselPrevDirective } from './ngu-carousel.directive';
+import {
+  NguCarouselPointDirective,
+  NguCarouselItemDirective,
+  NguCarouselNextDirective,
+  NguCarouselPrevDirective
+} from './ngu-carousel.directive';
 import { NguItemComponent } from './ngu-item/ngu-item.component';
 import {
   HammerGestureConfig,
@@ -8,6 +13,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NguCarouselComponent } from './ngu-carousel/ngu-carousel.component';
 import { NguTileComponent } from './ngu-tile/ngu-tile.component';
+import { NguCarouselService } from './ngu-carousel.service';
 
 @NgModule({
   imports: [CommonModule],
@@ -29,6 +35,6 @@ import { NguTileComponent } from './ngu-tile/ngu-tile.component';
     NguCarouselNextDirective,
     NguCarouselPrevDirective
   ],
-  providers: []
+  providers: [NguCarouselService]
 })
 export class NguCarouselModule {}
