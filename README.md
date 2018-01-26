@@ -219,7 +219,7 @@ This is HTML I'm using in the carousel. Add your own css according to this eleme
 * `carouselLoad` is an `Output` which triggered when slide reaches the end on items based on inputs `load`.
 
 
-##Carousel Service
+## Carousel Service
 
 ```javascript
 import { NguCarouselService } from '@ngu/carousel';

@@ -291,6 +291,7 @@ export class NguCarouselComponent
     clearInterval(this.carouselInt);
     // tslint:disable-next-line:no-unused-expression
     this.itemsSubscribe && this.itemsSubscribe.unsubscribe();
+    this.carouselSerSub && this.carouselSerSub.unsubscribe();
 
     // remove listeners
     this.listener1();
