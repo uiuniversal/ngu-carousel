@@ -661,7 +661,6 @@ export class NguCarouselComponent
       itemSpeed = somt < 200 ? 200 : somt;
       this.data.dexVal = 0;
     }
-    console.log(this.withAnim);
     if (this.withAnim) {
       this.setStyle(
         this.carouselInner,
