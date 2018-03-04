@@ -23,12 +23,27 @@ export class NguCarouselStore {
   isFirst: boolean;
   isLast: boolean;
   RTL: boolean;
+  button: NguButton;
+  point: boolean;
+  vertical: Vertical;
 }
 export type DeviceType = 'xs' | 'sm' | 'md' | 'lg' | 'all';
+
+export type ButtonVisible = 'disabled' | 'hide';
 
 export class ItemsControl {
   start: number;
   end: number;
+}
+
+export class Vertical {
+  enabled: boolean;
+  height: number;
+}
+
+export class NguButton {
+  visibility?: ButtonVisible;
+  elastic?: number;
 }
 
 export class Touch {
@@ -38,6 +53,7 @@ export class Touch {
 }
 
 export class Transfrom {
+  [key: string]: number;
   xs: number;
   sm: number;
   md: number;
@@ -59,11 +75,12 @@ export class NguCarousel {
   touch?: boolean;
   easing?: string;
   RTL?: boolean;
+  button?: NguButton;
+  vertical?: Vertical;
 }
 
 export type Custom = 'banner';
 export type Animate = 'lazy';
-
 
 export interface Point {
   visible: boolean;

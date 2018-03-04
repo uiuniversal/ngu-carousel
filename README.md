@@ -10,7 +10,7 @@ for ChangeLog go to [CHANGELOG.md](https://github.com/sheikalthaf/ngu-carousel/b
 
 ## Demo
 
-Demo available [Here](https://sheikalthaf.github.io/ngu-carousel)
+Demo available [Here](https://sheikalthaf.github.io/ngx-carousel)
 
 ## Installation
 
@@ -22,11 +22,9 @@ Include CarouselModule in your app module:
 import { NguCarouselModule } from '@ngu/carousel';
 
 @NgModule({
-  imports: [
-    NguCarouselModule
-  ],
+  imports: [NguCarouselModule]
 })
-export class AppModule { }
+export class AppModule {}
 ```
 
 Now ngu-carousel supports touch with the help of hammerjs
@@ -37,7 +35,6 @@ Import hammerjs in `polyfills.ts` file
 
 ```javascript
 import 'hammerjs';
-
 ```
 
 Then use in your component:
@@ -99,7 +96,6 @@ export class SampleComponent implements OnInit {
 ## Input Interface
 
 ```javascript
-
 export class NguCarouselStore {
   type: string;
   deviceType: DeviceType;
@@ -125,12 +121,18 @@ export class NguCarouselStore {
   isFirst: boolean;
   isLast: boolean;
   RTL: boolean;
+  vertical: Vertical;
 }
 export type DeviceType = 'xs' | 'sm' | 'md' | 'lg' | 'all';
 
 export class ItemsControl {
   start: number;
   end: number;
+}
+
+export class Vertical {
+  enabled: boolean;
+  height: number;
 }
 
 export class Touch {
@@ -152,7 +154,8 @@ export class NguCarousel {
   loop?: boolean;
   touch?: boolean;
   easing?: string;
-  RTL: boolean;
+  RTL?: boolean;
+  vertical?: Vertical;
 }
 
 export class Grid {
@@ -171,26 +174,26 @@ export interface Point {
 
 export type Custom = 'banner';
 export type Animate = 'lazy';
-
-
 ```
 
-| Command | Type | Required | Description |
-| --- | --- | --- | --- |
-| `grid` | Object | Yes | **xs** - mobile, **sm** - tablet, **md** - desktop, **lg** - large desktops, **all** - fixed width (When you use **all** make others 0 and vise versa) |
-| `slide` | number | optional | It is used to slide the number items on click |
-| `speed` | milli seconds | optional | It is used for time taken to slide the number items |
-| `interval` | milli seconds | optional | It is used to make carousel auto slide with given value. interval defines the interval between slides |
-| `load` | number | optional | is used to load the items similar to pagination. the carousel will tigger the carouslLoad function to load another set of items. it will help you to improve the performance of the app.**`(carouselLoad)="myfunc($event)"`** |
-| `point.visible` | boolean | optional | It is used to indicate no. of slides and also shows the current active slide. |
-| `point.pointStyle` | string | optional | It is used to customize the point indicator. make sure your check the guide. |
-| `point.hideOnSingleSlide` | boolean | optional | It is used to hide the point indicator when slide is less than one. |
-| `touch` | boolean | optional | It is used to active touch support to the carousel. |
-| `easing` | string | optional | It is used to define the easing style of the carousel. Only define the ease name without any timing like `ease`,`ease-in` |
-| `loop` | boolean | optional | It is used to loop the `ngu-item | ngu-tile`. It must be true for `interval` |
-| `animation` | string | optional | It is used to animate the sliding items. currently it only supports `lazy`. more coming soon and also with custom css animation option |
-| `custom` | string | optional | It is you to define the purpose of the carousel. currently it only supports `banner`. more coming soon and also with custom css animation option |
-| `RTL` | boolean | optional | This option enable the `rtl` direction and act as rtl. By default it is `ltr` |
+| Command                   | Type          | Required | Description                                                                                                                                                                                                                   |
+| ------------------------- | ------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `grid`                    | Object        | Yes      | **xs** - mobile, **sm** - tablet, **md** - desktop, **lg** - large desktops, **all** - fixed width (When you use **all** make others 0 and vise versa)                                                                        |
+| `slide`                   | number        | optional | It is used to slide the number items on click                                                                                                                                                                                 |
+| `speed`                   | milli seconds | optional | It is used for time taken to slide the number items                                                                                                                                                                           |
+| `interval`                | milli seconds | optional | It is used to make carousel auto slide with given value. interval defines the interval between slides                                                                                                                         |
+| `load`                    | number        | optional | is used to load the items similar to pagination. the carousel will tigger the carouslLoad function to load another set of items. it will help you to improve the performance of the app.**`(carouselLoad)="myfunc($event)"`** |
+| `point.visible`           | boolean       | optional | It is used to indicate no. of slides and also shows the current active slide.                                                                                                                                                 |
+| `point.pointStyle`        | string        | optional | It is used to customize the point indicator. make sure your check the guide.                                                                                                                                                  |
+| `point.hideOnSingleSlide` | boolean       | optional | It is used to hide the point indicator when slide is less than one.                                                                                                                                                           |
+| `touch`                   | boolean       | optional | It is used to active touch support to the carousel.                                                                                                                                                                           |
+| `easing`                  | string        | optional | It is used to define the easing style of the carousel. Only define the ease name without any timing like `ease`,`ease-in`                                                                                                     |
+| `loop`                    | boolean       | optional | It is used to loop the `ngu-item | ngu-tile`. It must be true for `interval`                                                                                                                                                  |
+| `animation`               | string        | optional | It is used to animate the sliding items. currently it only supports `lazy`. more coming soon and also with custom css animation option                                                                                        |
+| `custom`                  | string        | optional | It is you to define the purpose of the carousel. currently it only supports `banner`. more coming soon and also with custom css animation option                                                                              |
+| `RTL`                     | boolean       | optional | This option enable the `rtl` direction and act as rtl. By default it is `ltr`                                                                                                                                                 |
+| `vertical.enabled`        | boolean       | optional | This option enable the `vertical` direction                                                                                                                                                                                   |
+| `vertical.height`         | boolean       | optional | This option is used to set the height of the carousel                                                                                                                                                                         |
 
 ### Custom css for Point
 
@@ -203,14 +206,12 @@ export type Animate = 'lazy';
 This is HTML I'm using in the carousel. Add your own css according to this elements in `pointStyles`. check below guide for more details.
 
 ```html
-
 <ngu-carousel
       [inputs]="carouselBanner"
       (initData)="initDataFn($event)"
       (onMove)="onmoveFn($event)"
       (carouselLoad)="loadItemsFn()">
 </ngu-carousel>
-
 ```
 
 * `inputs` is an `Input` and It accepts `NguCarousel`.
@@ -218,17 +219,16 @@ This is HTML I'm using in the carousel. Add your own css according to this eleme
 * `onMove` is an `Output` which triggered on every slide before start and it will emit `$event` as `NguCarouselStore` object.
 * `carouselLoad` is an `Output` which triggered when slide reaches the end on items based on inputs `load`.
 
-
 ## Carousel Service
 
 ```javascript
 import { NguCarouselService } from '@ngu/carousel';
 ```
+
 This carousel Service supports:
 
 * `reset(token)` - This function will reset the carousel
 * `moveToSlide(token, index, animate)` - This function is used to move to index with animation control.
-
 
 # Getstarted guide
 
@@ -261,7 +261,8 @@ import { NguCarousel, NguCarouselStore } from '@ngu/carousel';
           <button NguCarouselNext class='rightRs'>&gt;</button>
     </ngu-carousel>
   `,
-  styles: [`
+  styles: [
+    `
     .bannerStyle h1 {
         background-color: #ccc;
         min-height: 300px;
@@ -291,15 +292,13 @@ import { NguCarousel, NguCarouselStore } from '@ngu/carousel';
         border-radius: 999px;
         right: 0;
     }
-  `]
+  `
+  ]
 })
 export class Sample implements OnInit {
-
-
-  ngOnInit(){
-
+  ngOnInit() {
     this.carouselBanner = {
-      grid: {xs: 1, sm: 1, md: 1, lg: 1, all: 0},
+      grid: { xs: 1, sm: 1, md: 1, lg: 1, all: 0 },
       slide: 1,
       speed: 400,
       interval: 4000,
@@ -336,16 +335,131 @@ export class Sample implements OnInit {
       load: 2,
       loop: true,
       touch: true
-    }
+    };
   }
 
   /* It will be triggered on every slide*/
   onmoveFn(data: NguCarouselStore) {
     console.log(data);
   }
-
 }
+```
 
+## Banner with Vertical carousel
+
+```javascript
+import { Component } from '@angular/core';
+import { NguCarousel, NguCarouselStore } from '@ngu/carousel';
+
+@Component({
+  selector: 'app-carousel',
+  template: `
+    <ngu-carousel
+      [inputs]="carouselBanner"
+      (onMove)="onmoveFn($event)">
+
+          <ngu-item NguCarouselItem class="bannerStyle">
+              <h1>1</h1>
+          </ngu-item>
+
+          <ngu-item NguCarouselItem class="bannerStyle">
+              <h1>2</h1>
+          </ngu-item>
+
+          <ngu-item NguCarouselItem class="bannerStyle">
+              <h1>3</h1>
+          </ngu-item>
+
+          <button NguCarouselPrev class='leftRs'>&lt;</button>
+          <button NguCarouselNext class='rightRs'>&gt;</button>
+    </ngu-carousel>
+  `,
+  styles: [
+    `
+    .bannerStyle h1 {
+        background-color: #ccc;
+        min-height: 300px;
+        text-align: center;
+        line-height: 300px;
+    }
+    .leftRs {
+        position: absolute;
+        margin: auto;
+        top: 0;
+        bottom: 0;
+        width: 50px;
+        height: 50px;
+        box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, .3);
+        border-radius: 999px;
+        left: 0;
+    }
+
+    .rightRs {
+        position: absolute;
+        margin: auto;
+        top: 0;
+        bottom: 0;
+        width: 50px;
+        height: 50px;
+        box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, .3);
+        border-radius: 999px;
+        right: 0;
+    }
+  `
+  ]
+})
+export class Sample implements OnInit {
+  ngOnInit() {
+    this.carouselBanner = {
+      grid: { xs: 1, sm: 1, md: 1, lg: 1, all: 0 },
+      slide: 1,
+      speed: 400,
+      interval: 4000,
+      point: {
+        visible: true,
+        pointStyles: `
+          .ngucarouselPoint {
+            list-style-type: none;
+            text-align: center;
+            padding: 12px;
+            margin: 0;
+            white-space: nowrap;
+            overflow: auto;
+            position: absolute;
+            width: 100%;
+            bottom: 20px;
+            left: 0;
+            box-sizing: border-box;
+          }
+          .ngucarouselPoint li {
+            display: inline-block;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.55);
+            padding: 5px;
+            margin: 0 3px;
+            transition: .4s ease all;
+          }
+          .ngucarouselPoint li.active {
+              background: white;
+              width: 10px;
+          }
+        `
+      },
+      load: 2,
+      loop: true,
+      touch: true, // touch is not currently in active for vertical carousel, will enable it in future build
+      vertical {
+        enabled: true,
+        height: 400
+      }
+    };
+  }
+
+  /* It will be triggered on every slide*/
+  onmoveFn(data: NguCarouselStore) {
+    console.log(data);
+  }
+}
 ```
 
 ## Tile with Service
