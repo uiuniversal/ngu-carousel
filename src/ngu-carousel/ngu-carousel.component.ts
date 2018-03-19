@@ -311,8 +311,7 @@ export class NguCarouselComponent
 
     // remove listeners
     for (let i = 1; i <= 8; i++) {
-      // tslint:disable-next-line:no-eval
-      eval(`this.listener${i} && this.listener${i}()`);
+      this[`listener${i}`] && this[`listener${i}`]();
     }
   }
 
