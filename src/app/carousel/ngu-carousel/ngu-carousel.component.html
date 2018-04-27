@@ -1,0 +1,16 @@
+<div #ngucarousel class="ngucarousel">
+  <div #forTouch class="ngucarousel-inner">
+    <div #nguitems class="ngucarousel-items">
+      <ng-content select="[NguCarouselItem]"></ng-content>
+    </div>
+    <div style="clear: both"></div>
+  </div>
+  <ng-content select="[NguCarouselPrev]"></ng-content>
+  <ng-content select="[NguCarouselNext]"></ng-content>
+</div>
+<div #points *ngIf="data.point">
+  <ng-content select="[NguCarouselPoint]"></ng-content>
+  <!-- <ul class="ngucarouselPoint">
+    <li #pointInner *ngFor="let i of pointNumbers; let i = index" [class.active]="i==pointers" (click)="moveTo(i)"></li>
+  </ul> -->
+</div>

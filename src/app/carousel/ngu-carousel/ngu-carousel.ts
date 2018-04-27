@@ -39,6 +39,7 @@ export class ItemsControl {
 export class Vertical {
   enabled: boolean;
   height: number;
+  // numHeight?: number;
 }
 
 export class NguButton {
@@ -53,7 +54,6 @@ export class Touch {
 }
 
 export class Transfrom {
-  [key: string]: number;
   xs: number;
   sm: number;
   md: number;
@@ -61,7 +61,7 @@ export class Transfrom {
   all: number;
 }
 
-export class NguCarousel {
+export class NguCarouselConfig {
   grid: Transfrom;
   slide?: number;
   speed?: number;

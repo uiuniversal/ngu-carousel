@@ -1,114 +1,41 @@
+import { isPlatformBrowser } from '@angular/common';
+import {
+  AfterContentInit,
+  AfterViewInit,
+  Component,
+  ContentChild,
+  ContentChildren,
+  ElementRef,
+  EventEmitter,
+  Inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  PLATFORM_ID,
+  QueryList,
+  Renderer2,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 import {
   NguCarouselItemDirective,
   NguCarouselNextDirective,
   NguCarouselPrevDirective
 } from './../ngu-carousel.directive';
-import {
-  Component,
-  ElementRef,
-  Renderer2,
-  Input,
-  Output,
-  OnInit,
-  OnDestroy,
-  HostListener,
-  EventEmitter,
-  ContentChildren,
-  QueryList,
-  ViewChild,
-  AfterContentInit,
-  AfterViewInit,
-  ContentChild,
-  ViewChildren,
-  Inject,
-  PLATFORM_ID,
-  OnChanges,
-  SimpleChanges
-} from '@angular/core';
-
-import { NguCarousel, NguCarouselStore } from './ngu-carousel.interface';
-import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-import { Subscription } from 'rxjs/Subscription';
-import { NguCarouselService } from './../ngu-carousel.service';
+import { NguCarouselStore } from './ngu-carousel';
 
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'ngu-carousel',
-  template: `<div #ngucarousel class="ngucarousel"><div #forTouch class="ngucarousel-inner"><div #nguitems class="ngucarousel-items"><ng-content select="[NguCarouselItem]"></ng-content></div><div style="clear: both"></div></div><ng-content select="[NguCarouselPrev]"></ng-content><ng-content select="[NguCarouselNext]"></ng-content></div><div #points *ngIf="data.point"><ul class="ngucarouselPoint"><li #pointInner *ngFor="let i of pointNumbers; let i = index" [class.active]="i==pointers" (click)="moveTo(i)"></li></ul></div>`,
-  styles: [
-    `
-    :host {
-      display: block;
-      position: relative;
-    }
-
-    :host.ngurtl {
-      direction: rtl;
-    }
-    
-    .nguvertical {
-      flex-direction: column;
-    }
-
-    .ngucarousel .ngucarousel-inner {
-      position: relative;
-      overflow: hidden;
-    }
-    .ngucarousel .ngucarousel-inner .ngucarousel-items {
-      position: relative;
-      display: flex;
-    }
-
-    .banner .ngucarouselPointDefault .ngucarouselPoint {
-      position: absolute;
-      width: 100%;
-      bottom: 20px;
-    }
-    .banner .ngucarouselPointDefault .ngucarouselPoint li {
-      background: rgba(255, 255, 255, 0.55);
-    }
-    .banner .ngucarouselPointDefault .ngucarouselPoint li.active {
-      background: white;
-    }
-    .banner .ngucarouselPointDefault .ngucarouselPoint li:hover {
-      cursor: pointer;
-    }
-
-    .ngucarouselPointDefault .ngucarouselPoint {
-      list-style-type: none;
-      text-align: center;
-      padding: 12px;
-      margin: 0;
-      white-space: nowrap;
-      overflow: auto;
-      box-sizing: border-box;
-    }
-    .ngucarouselPointDefault .ngucarouselPoint li {
-      display: inline-block;
-      border-radius: 50%;
-      background: rgba(0, 0, 0, 0.55);
-      padding: 4px;
-      margin: 0 4px;
-      transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
-      transition: 0.4s;
-    }
-    .ngucarouselPointDefault .ngucarouselPoint li.active {
-      background: #6b6b6b;
-      transform: scale(1.8);
-    }
-    .ngucarouselPointDefault .ngucarouselPoint li:hover {
-      cursor: pointer;
-    }
-
-  `
-  ]
+  templateUrl: 'ngu-carousel.component.html',
+  styleUrls: ['ngu-carousel.component.scss']
 })
-export class NguCarouselComponent
-  implements OnInit, AfterContentInit, AfterViewInit, OnDestroy, OnChanges {
-  styleSelector: string;
-  private carouselSerSub: Subscription;
+// tslint:disable-next-line:component-class-suffix
+export class NguCarousel
+  implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
+  styleid: string;
   private directionSym: string;
-  private itemsSubscribe: Subscription;
   private carouselCssNode: any;
   private pointIndex: number;
   private withAnim: boolean;
@@ -116,6 +43,7 @@ export class NguCarouselComponent
 
   // tslint:disable-next-line:no-input-rename
   @Input('inputs') private userData: any;
+  // @Input('moveToSlide') moveToSlide: number;
   // tslint:disable-next-line:no-input-rename
   @Input('reset') private reseter: boolean;
 
@@ -161,8 +89,8 @@ export class NguCarouselComponent
   private carouselInt: any;
 
   private Arr1 = Array;
-  public pointNumbers: Array<any> = [];
-  public data: NguCarouselStore = {
+  pointNumbers: Array<any> = [];
+  data: NguCarouselStore = {
     type: 'fixed',
     token: '',
     deviceType: 'lg',
@@ -192,23 +120,20 @@ export class NguCarouselComponent
     vertical: { enabled: false, height: 400 }
   };
 
-  public listener1: any;
-  public listener2: any;
-  public listener3: any;
-  public listener4: any;
-  public listener5: any;
-  public listener6: any;
-  public listener7: any;
-  public listener8: any;
+  private listener1: any;
+  private listener2: any;
+  private listener3: any;
+  private listener4: any;
+  private listener5: any;
+  private listener6: any;
+  private listener7: any;
+  private listener8: any;
 
   constructor(
     private el: ElementRef,
     private renderer: Renderer2,
-    private carouselSer: NguCarouselService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
-
-  ngOnChanges(changes: SimpleChanges) {}
 
   ngOnInit() {
     this.carousel = this.el.nativeElement;
@@ -227,6 +152,9 @@ export class NguCarouselComponent
     if (this.userData.vertical && this.userData.vertical.enabled) {
       this.data.vertical.enabled = this.userData.vertical.enabled;
       this.data.vertical.height = this.userData.vertical.height;
+      // this.data.vertical.numHeight = +this.userData.vertical.height
+      //   .match(/[0-9]/g)
+      //   .join('');
     }
     this.directionSym = this.data.RTL ? '' : '-';
     this.data.point =
@@ -238,21 +166,21 @@ export class NguCarouselComponent
     this.carouselSize();
     // const datas = this.itemsElements.first.nativeElement.getBoundingClientRect().width;
 
-    this.carouselSerSub = this.carouselSer.getData.subscribe(res => {
-      if (res.id === this.data.token) {
-        if (res.ref === 'moveToSlide') {
-          if (this.pointers !== res.index && res.index < this.pointIndex) {
-            this.withAnim = res.animation === false ? false : true;
-            this.moveTo(res.index);
-          }
-        } else if (res.ref === 'reset') {
-          if (this.pointers !== 0 && 0 < this.pointIndex) {
-            this.withAnim = false;
-            this.reset();
-          }
-        }
-      }
-    });
+    // this.carouselSerSub = this.carouselSer.getData.subscribe(res => {
+    //   if (res.id === this.data.token) {
+    //     if (res.ref === 'moveToSlide') {
+    //       if (this.pointers !== res.index && res.index < this.pointIndex) {
+    //         this.withAnim = res.animation === false ? false : true;
+    //         this.moveTo(res.index);
+    //       }
+    //     } else if (res.ref === 'reset') {
+    //       if (this.pointers !== 0 && 0 < this.pointIndex) {
+    //         this.withAnim = false;
+    //         this.reset();
+    //       }
+    //     }
+    //   }
+    // });
   }
 
   ngAfterContentInit() {
@@ -284,6 +212,8 @@ export class NguCarouselComponent
       this.carouselPoint();
       this.buttonControl();
     });
+    // tslint:disable-next-line:no-unused-expression
+    // this.moveToSlide > -1 && this.moveTo(this.moveToSlide);
   }
 
   ngAfterViewInit() {
@@ -304,9 +234,6 @@ export class NguCarouselComponent
 
   ngOnDestroy() {
     clearInterval(this.carouselInt);
-    // tslint:disable-next-line:no-unused-expression
-    this.itemsSubscribe && this.itemsSubscribe.unsubscribe();
-    this.carouselSerSub && this.carouselSerSub.unsubscribe();
     this.carouselLoad.complete();
 
     // remove listeners
@@ -316,6 +243,14 @@ export class NguCarouselComponent
   }
 
   private onResizing(event: any): void {
+    // Observable.fromEvent(window, 'resize')
+    // .debounceTime(500)
+    // .subscribe((event: any) => {
+    //   if (this.data.deviceWidth !== event.target.outerWidth) {
+    //     this.setStyle(this.carouselInner, 'transition', ``);
+    //     this.storeCarouselData();
+    //   }
+    // });
     clearTimeout(this.onResize);
     this.onResize = setTimeout(() => {
       if (this.data.deviceWidth !== event.target.outerWidth) {
@@ -353,14 +288,21 @@ export class NguCarouselComponent
         });
       }
       hammertime.on('panend', (ev: any) => {
+        // this.data.touch.velocity = ev.velocity;
+
+        // if (this.data.shouldSlide) {
         if (Math.abs(ev.velocity) > 1) {
           this.data.touch.velocity = ev.velocity;
+          // this.data.touch.swipe === 'panright'
+          //   ? this.carouselScrollOne(0)
+          //   : this.carouselScrollOne(1);
           let direc = 0;
           if (!this.data.RTL) {
             direc = this.data.touch.swipe === 'panright' ? 0 : 1;
           } else {
             direc = this.data.touch.swipe === 'panright' ? 1 : 0;
           }
+          // this.data.touchTransform = this.data.transform[this.data.deviceType];
           this.carouselScrollOne(direc);
         } else {
           this.data.dexVal = 0;
@@ -369,8 +311,18 @@ export class NguCarouselComponent
             'transition',
             'transform 324ms cubic-bezier(0, 0, 0.2, 1)'
           );
-          this.setStyle(this.carouselInner, 'transform', '');
+          // const tran = this.data.touchTransform * +`${this.directionSym}1`;
+          this.setStyle(
+            this.carouselInner,
+            'transform',
+            ''
+            // this.setStyle(
+            //   this.carouselInner,
+            //   'transform',
+            //   'translate3d(' + tran + '%, 0px, 0px)'
+          );
         }
+        // this.carouselScrollOne(direc);
       });
       hammertime.on('hammer.input', function(ev) {
         // allow nested touch events to no propagate, this may have other side affects but works for now.
@@ -474,7 +426,9 @@ export class NguCarouselComponent
           ? 'lg'
           : this.data.deviceWidth >= 992
             ? 'md'
-            : this.data.deviceWidth >= 768 ? 'sm' : 'xs';
+            : this.data.deviceWidth >= 768
+              ? 'sm'
+              : 'xs';
 
       this.data.items = this.userData.grid[this.data.deviceType];
       this.data.itemWidth = this.data.carouselWidth / this.data.items;
@@ -567,7 +521,7 @@ export class NguCarouselComponent
   private carouselSize(): void {
     this.data.token = this.generateID();
     let dism = '';
-    this.styleSelector = `.${
+    this.styleid = `.${
       this.data.token
     } > .ngucarousel > .ngucarousel-inner > .ngucarousel-items`;
 
@@ -576,18 +530,18 @@ export class NguCarouselComponent
     }
 
     if (this.userData.animation === 'lazy') {
-      dism += `${this.styleSelector} > .item {transition: transform .6s ease;}`;
+      dism += `${this.styleid} > .item {transition: transform .6s ease;}`;
     }
 
     let itemStyle = '';
     if (this.data.vertical.enabled) {
-      const itemWidth_xs = `${this.styleSelector} > .item {height: ${this.data
+      const itemWidth_xs = `${this.styleid} > .item {height: ${this.data
         .vertical.height / +this.userData.grid.xs}px}`;
-      const itemWidth_sm = `${this.styleSelector} > .item {height: ${this.data
+      const itemWidth_sm = `${this.styleid} > .item {height: ${this.data
         .vertical.height / +this.userData.grid.sm}px}`;
-      const itemWidth_md = `${this.styleSelector} > .item {height: ${this.data
+      const itemWidth_md = `${this.styleid} > .item {height: ${this.data
         .vertical.height / +this.userData.grid.md}px}`;
-      const itemWidth_lg = `${this.styleSelector} > .item {height: ${this.data
+      const itemWidth_lg = `${this.styleid} > .item {height: ${this.data
         .vertical.height / +this.userData.grid.lg}px}`;
 
       itemStyle = `@media (max-width:767px){${itemWidth_xs}}
@@ -597,16 +551,15 @@ export class NguCarouselComponent
     } else if (this.data.type === 'responsive') {
       const itemWidth_xs =
         this.userData.type === 'mobile'
-          ? `${this.styleSelector} .item {flex: 0 0 ${95 /
-              +this.userData.grid.xs}%}`
-          : `${this.styleSelector} .item {flex: 0 0 ${100 /
+          ? `${this.styleid} .item {flex: 0 0 ${95 / +this.userData.grid.xs}%}`
+          : `${this.styleid} .item {flex: 0 0 ${100 /
               +this.userData.grid.xs}%}`;
 
-      const itemWidth_sm = `${this.styleSelector} > .item {flex: 0 0 ${100 /
+      const itemWidth_sm = `${this.styleid} > .item {flex: 0 0 ${100 /
         +this.userData.grid.sm}%}`;
-      const itemWidth_md = `${this.styleSelector} > .item {flex: 0 0 ${100 /
+      const itemWidth_md = `${this.styleid} > .item {flex: 0 0 ${100 /
         +this.userData.grid.md}%}`;
-      const itemWidth_lg = `${this.styleSelector} > .item {flex: 0 0 ${100 /
+      const itemWidth_lg = `${this.styleid} > .item {flex: 0 0 ${100 /
         +this.userData.grid.lg}%}`;
 
       itemStyle = `@media (max-width:767px){${itemWidth_xs}}
@@ -614,7 +567,7 @@ export class NguCarouselComponent
                     @media (min-width:992px){${itemWidth_md}}
                     @media (min-width:1200px){${itemWidth_lg}}`;
     } else {
-      itemStyle = `${this.styleSelector} .item {flex: 0 0 ${
+      itemStyle = `${this.styleid} .item {flex: 0 0 ${
         this.userData.grid.all
       }px}`;
     }
@@ -711,6 +664,8 @@ export class NguCarouselComponent
     currentSlide: number,
     itemSpeed: number
   ): void {
+    // tslint:disable-next-line:no-unused-expression
+
     if (this.data.dexVal !== 0) {
       const val = Math.abs(this.data.touch.velocity);
       let somt = Math.floor(
@@ -753,13 +708,18 @@ export class NguCarouselComponent
 
   /** boolean function for making isFirst and isLast */
   private btnBoolean(first: number, last: number) {
+    // if (this.data.direction === 'rtl') {
+    //   this.data.isFirst = first ? false : true;
+    //   this.data.isLast = last ? false : true;
+    // } else {
     this.data.isFirst = first ? true : false;
     this.data.isLast = last ? true : false;
+    // }
   }
 
   private transformString(grid: string, slide: number): string {
     let collect = '';
-    collect += `${this.styleSelector} { transform: translate3d(`;
+    collect += `${this.styleid} { transform: translate3d(`;
 
     if (this.data.vertical.enabled) {
       this.data.transform[grid] =
@@ -777,6 +737,10 @@ export class NguCarouselComponent
   private transformStyle(slide: number): void {
     let slideCss = '';
     if (this.data.type === 'responsive') {
+      // this.data.transform.xs = 100 / this.userData.grid.xs * slide;
+      // this.data.transform.sm = 100 / this.userData.grid.sm * slide;
+      // this.data.transform.md = 100 / this.userData.grid.md * slide;
+      // this.data.transform.lg = 100 / this.userData.grid.lg * slide;
       slideCss = `@media (max-width: 767px) {${this.transformString(
         'xs',
         slide
@@ -786,10 +750,11 @@ export class NguCarouselComponent
       @media (min-width: 1200px) {${this.transformString('lg', slide)} }`;
     } else {
       this.data.transform.all = this.userData.grid.all * slide;
-      slideCss = `${this.styleSelector} { transform: translate3d(${
+      slideCss = `${this.styleid} { transform: translate3d(${
         this.directionSym
       }${this.data.transform.all}px, 0, 0);`;
     }
+    // this.renderer.createText(this.carouselCssNode, slideCss);
     this.carouselCssNode.innerHTML = slideCss;
   }
 
@@ -926,6 +891,17 @@ export class NguCarouselComponent
         this.data.isFirst ? 'none' : 'block',
         this.data.isLast ? 'none' : 'block'
       ];
+      // this.setStyle(
+      //   this.leftBtn,
+      //   'display',
+      //   this.data.isFirst ? 'none' : 'block'
+      // );
+      // this.setStyle(
+      //   this.rightBtn,
+      //   'display',
+      //   this.data.isLast ? 'none' : 'block'
+      // );
+      // this.leftBtn.nativeElement
     } else {
       arr = ['block', 'block'];
     }

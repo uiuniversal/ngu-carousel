@@ -11,14 +11,13 @@ import {
 } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NguCarouselComponent } from './ngu-carousel/ngu-carousel.component';
+import { NguCarousel } from './ngu-carousel/ngu-carousel.component';
 import { NguTileComponent } from './ngu-tile/ngu-tile.component';
-import { NguCarouselService } from './ngu-carousel.service';
 
 @NgModule({
   imports: [CommonModule],
   exports: [
-    NguCarouselComponent,
+    NguCarousel,
     NguItemComponent,
     NguTileComponent,
     NguCarouselPointDirective,
@@ -27,14 +26,13 @@ import { NguCarouselService } from './ngu-carousel.service';
     NguCarouselPrevDirective
   ],
   declarations: [
-    NguCarouselComponent,
+    NguCarousel,
     NguItemComponent,
     NguTileComponent,
     NguCarouselPointDirective,
     NguCarouselItemDirective,
     NguCarouselNextDirective,
     NguCarouselPrevDirective
-  ],
-  providers: [NguCarouselService]
+  ]
 })
 export class NguCarouselModule {}

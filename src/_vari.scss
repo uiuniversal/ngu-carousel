@@ -1,0 +1,32 @@
+/*navigation*/
+
+$sideNav: #1c71ff;
+$mainColor: #46239d;
+$mainColor1: #4253c1;
+$navWidth: 200px;
+$navToolbarWidth: 50px;
+$navCloseWidth: 52px;
+$Defaultfontsize: 14px;
+@mixin xsScreen {
+    @media only screen and (max-width: 767px) {
+        @content
+    }
+}
+
+;
+@mixin smScreen {
+    @media only screen and (min-width: 768px) {
+        @content
+    }
+}
+
+;
+@mixin verticalGradient($fromColor, $toColor) {
+    background-image: linear-gradient(to bottom, $fromColor, $toColor);
+}
+
+@mixin boxShadow($depth) {
+    -webkit-box-shadow: 0px 0px $depth ($depth / 6) rgba(0, 0, 0, ($depth / 100));
+    -moz-box-shadow: 0px 0px $depth ($depth / 6) rgba(0, 0, 0, ($depth / 100));
+    box-shadow: 0px 0px $depth ($depth / 6) rgba(0, 0, 0, ($depth / 100));
+}

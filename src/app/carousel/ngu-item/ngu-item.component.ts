@@ -1,15 +1,10 @@
 import { Component, HostBinding } from '@angular/core';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'ngu-item',
-  template: `<ng-content></ng-content>`,
-  styles: [`
-    :host {
-        display: inline-block;
-        white-space: initial;
-        vertical-align: top;
-    }
-  `]
+  templateUrl: 'ngu-item.component.html',
+  styleUrls: ['ngu-item.component.scss']
 })
 export class NguItemComponent {
   @HostBinding('class.item') classes = true;
