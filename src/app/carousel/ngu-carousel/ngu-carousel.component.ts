@@ -237,8 +237,10 @@ export class NguCarousel
     this.carouselLoad.complete();
 
     // remove listeners
-    for (let i = 1; i <= 8; i++) {
-      this[`listener${i}`] && this[`listener${i}`]();
+    if (isPlatformBrowser(this.platformId)) {
+      for (let i = 1; i <= 8; i++) {
+        this[`listener${i}`] && this[`listener${i}`]();
+      }
     }
   }
 
