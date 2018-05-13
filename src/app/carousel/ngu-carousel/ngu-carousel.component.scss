@@ -7,14 +7,16 @@
 }
 
 .ngucarousel {
-  .ngucarousel-inner {
+  // height: 100%;
+  // .ngucarousel-inner {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  .ngucarousel-items {
     position: relative;
-    overflow: hidden;
-    .ngucarousel-items {
-      position: relative;
-      display: flex;
-    }
-  }
+    display: flex;
+    height: 100%;
+  } // }
 }
 
 .nguvertical {
@@ -66,4 +68,8 @@
       }
     }
   }
+}
+
+.nguclearFix {
+  clear: both;
 }

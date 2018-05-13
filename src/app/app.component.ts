@@ -1,18 +1,24 @@
-import { Component, ViewChild } from '@angular/core';
-import { NguCarousel, NguCarouselStore, NguCarouselConfig } from './carousel';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { btnAnim } from './app-animation';
+import { NguCarousel, NguCarouselConfig, NguCarouselStore } from './carousel';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  animations: [btnAnim]
 })
-export class AppComponent {
+export class AppComponent implements OnInit, AfterViewInit {
+  carouselBanner1: NguCarouselConfig;
+  Arr = Array; // Array type captured in a variable
+  num = 0;
   storeCarouselData: NguCarouselStore;
   rsts: any;
   stateCtrl: FormControl;
   states: { name: string; img: string }[];
   imgags: string[];
+  myBannerVisible = true;
   public carouselBannerItems: Array<any> = [];
   public carouselBanner: NguCarouselConfig;
 
@@ -44,94 +50,58 @@ export class AppComponent {
       slide: 4,
       speed: 500,
       loop: true,
-      // interval: 4000,
+      interval: {
+        timing: 4000
+      },
       point: {
         visible: true,
-        pointStyles: `
-          .ngucarouselPoint {
-            list-style-type: none;
-            text-align: center;
-            padding: 12px;
-            margin: 0;
-            white-space: nowrap;
-            overflow: auto;
-            position: absolute;
-            width: 100%;
-            bottom: 20px;
-            left: 0;
-            box-sizing: border-box;
-          }
-          .ngucarouselPoint li {
-            display: inline-block;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.55);
-            padding: 5px;
-            margin: 0 3px;
-            transition: .4s ease all;
-          }
-          .ngucarouselPoint li.active {
-              background: white;
-              width: 10px;
-          }
-        `
+        hideOnSingleSlide: true
       },
       load: 2,
       custom: 'banner',
       touch: true,
       easing: 'cubic-bezier(0, 0, 0.2, 1)',
-      RTL: true,
-      vertical: { enabled: true, height: 400 }
+      velocity: 0.8
     };
-
-    this.carouselTile = {
-      grid: { xs: 2, sm: 3, md: 3, lg: 4, all: 0 },
-      speed: 600,
-      interval: 3000,
+    this.carouselBanner1 = {
+      grid: { xs: 1, sm: 2, md: 2, lg: 2, all: 0 },
+      slide: 4,
+      speed: 500,
+      loop: true,
+      interval: {
+        timing: 4000,
+        initialDelay: 1000
+      },
       point: {
         visible: true,
-        pointStyles: `
-          .ngucarouselPoint {
-            list-style-type: none;
-            text-align: center;
-            padding: 12px;
-            margin: 0;
-            white-space: nowrap;
-            overflow: auto;
-            box-sizing: border-box;
-          }
-          .ngucarouselPoint li {
-            display: inline-block;
-            border-radius: 50%;
-            border: 2px solid rgba(0, 0, 0, 0.55);
-            padding: 4px;
-            margin: 0 3px;
-            transition-timing-function: cubic-bezier(.17, .67, .83, .67);
-            transition: .4s;
-          }
-          .ngucarouselPoint li.active {
-              background: #6b6b6b;
-              transform: scale(1.2);
-          }
-        `
+        hideOnSingleSlide: true
       },
       load: 2,
+      custom: 'banner',
       touch: true,
-      RTL: true
+      easing: 'cubic-bezier(0, 0, 0.2, 1)'
     };
+
+    // this.carouselTile = {
+    //   grid: { xs: 2, sm: 3, md: 3, lg: 4, all: 0 },
+    //   speed: 600,
+    //   slide: 3,
+    //   interval: 3000,
+    //   point: {
+    //     visible: true
+    //   },
+    //   load: 2,
+    //   touch: true,
+    //   RTL: true
+    // };
 
     this.carouselTile = {
       grid: { xs: 1, sm: 1, md: 3, lg: 3, all: 0 },
-      slide: 1,
+      slide: 3,
       speed: 400,
       animation: 'lazy',
       point: {
-        visible: true,
-        pointStyles: `.ngucarouselPoint { list-style-type: none; text-align: center; padding: 12px; margin: 0; white-space: nowrap;
-                        overflow: auto; position: absolute; width: 100%; top: 0; box-sizing: border-box; }
-                      .ngucarouselPoint li { display: inline-block; border-radius: 999px; background: #444444; width: 10px;
-                        height: 10px; padding: 5px; margin: 2.5px 3px; transition: .2s ease all; }
-                      .ngucarouselPoint li.active { background: white; width: 15px; height: 15px;
-                        margin: 0px 3px; border: 0.5px solid #444444; }`
+        visible: true
       },
       load: 2,
       touch: true,
@@ -142,31 +112,7 @@ export class AppComponent {
       grid: { xs: 2, sm: 3, md: 4, lg: 4, all: 0 },
       speed: 600,
       point: {
-        visible: true,
-        pointStyles: `
-          .ngucarouselPoint {
-            list-style-type: none;
-            text-align: center;
-            padding: 12px;
-            margin: 0;
-            white-space: nowrap;
-            overflow: auto;
-            box-sizing: border-box;
-          }
-          .ngucarouselPoint li {
-            display: inline-block;
-            border-radius: 50%;
-            background: #6b6b6b;
-            padding: 5px;
-            margin: 0 3px;
-            transition: .4s;
-          }
-          .ngucarouselPoint li.active {
-              border: 2px solid rgba(0, 0, 0, 0.55);
-              transform: scale(1.2);
-              background: transparent;
-            }
-        `
+        visible: true
       },
       load: 2,
       loop: true,
@@ -178,7 +124,9 @@ export class AppComponent {
     this.carouselTileTwo = {
       grid: { xs: 1, sm: 3, md: 4, lg: 4, all: 0 },
       speed: 600,
-      interval: 3000,
+      interval: {
+        timing: 3000
+      },
       point: {
         visible: true
       },
@@ -257,17 +205,17 @@ export class AppComponent {
     console.log(this.mybanners);
   }
 
+  ngAfterViewInit() {
+    this.mybanners.moveTo(2, true);
+  }
+
   moveButton1() {
     this.indexr++;
     this.mybanners.moveTo(this.indexr);
   }
 
-  moveButton() {
-    this.mybanners.reset();
-  }
-
   onMoveData(data) {
-    console.log(data);
+    // console.log(data);
   }
 
   getCarouselData(ent) {

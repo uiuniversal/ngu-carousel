@@ -26,6 +26,8 @@ export class NguCarouselStore {
   button: NguButton;
   point: boolean;
   vertical: Vertical;
+  interval?: CarouselInterval;
+  velocity: number;
 }
 export type DeviceType = 'xs' | 'sm' | 'md' | 'lg' | 'all';
 
@@ -65,7 +67,7 @@ export class NguCarouselConfig {
   grid: Transfrom;
   slide?: number;
   speed?: number;
-  interval?: number;
+  interval?: CarouselInterval;
   animation?: Animate;
   point?: Point;
   type?: string;
@@ -77,6 +79,7 @@ export class NguCarouselConfig {
   RTL?: boolean;
   button?: NguButton;
   vertical?: Vertical;
+  velocity?: number;
 }
 
 export type Custom = 'banner';
@@ -84,7 +87,7 @@ export type Animate = 'lazy';
 
 export interface Point {
   visible: boolean;
-  pointStyles?: string;
+  // pointStyles?: string;
   hideOnSingleSlide?: boolean;
 }
 
@@ -98,4 +101,9 @@ export interface AnimationStyles {
   open?: string;
   close?: string;
   stagger?: number;
+}
+
+export interface CarouselInterval {
+  timing: number;
+  initialDelay?: number;
 }

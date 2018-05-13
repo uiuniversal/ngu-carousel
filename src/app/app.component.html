@@ -3,7 +3,24 @@
 </nav>
 
 <h2>Banner</h2>
-<ngu-carousel #mybanners class="banner" [inputs]="carouselBanner" (carouselLoad)="carouselBannerLoad()" (onMove)="onMoveData($event)">
+<ngu-carousel #mybanners class="banner" [inputs]="carouselBanner" (carouselLoad)="carouselBannerLoad()" (onMove)="onMoveData($event)"
+  style="height: 400px">
+  <ngu-item class="bannerStyle" NguCarouselItem *ngFor="let tile of carouselBannerItems; let i = index;">
+    <div [style.background]="'url(' + tile + ')'">
+      <h1>{{i}}</h1>
+    </div>
+  </ngu-item>
+  <button NguCarouselPrev class="leftRs" [@btnAnim]="{value: mybanners.isHovered, params: {btn: '-'}}" [class.carouselHoved]="!mybanners.isHovered">&lt;</button>
+  <button NguCarouselNext class="rightRs" [@btnAnim]="{value: mybanners.isHovered, params: {btn: ''}}" [class.carouselHoved]="!mybanners.isHovered">&gt;</button>
+  <ul class="myBannerPoint" NguCarouselPoint>
+    <li *ngFor="let i of mybanners.pointNumbers; let i = index" [class.active]="i==mybanners.activePoint" (click)="mybanners.moveTo(i)"
+      [style.background]="'url(' + carouselTileItems[i] + ')'"></li>
+  </ul>
+</ngu-carousel>
+<button>onHovered: {{mybanners.isHovered}}</button>
+<!-- <button (click)="myBannerVisible = !myBannerVisible">Disabled</button> -->
+<!-- <ngu-carousel #mybannerss class="banner" [inputs]="carouselBanner1" (carouselLoad)="carouselBannerLoad()" (onMove)="onMoveData($event)"
+  style="height: 400px">
   <ngu-item class="bannerStyle" NguCarouselItem *ngFor="let tile of carouselBannerItems; let i = index;">
     <div [style.background]="'url(' + tile + ')'">
       <h1>{{i}}</h1>
@@ -11,8 +28,9 @@
   </ngu-item>
   <button NguCarouselPrev class="leftRs">&lt;</button>
   <button NguCarouselNext class="rightRs">&gt;</button>
-</ngu-carousel>
-<button (click)="moveButton()">Moveth</button>
+</ngu-carousel> -->
+
+<button (click)="mybanners.reset(true)">Reset</button>
 
 <!-- <ngu-carousel class="banner" [inputs]="carouselBanner" (carouselLoad)="carouselBannerLoad()" (onMove)="onMoveData($event)">
   <ngu-item NguCarouselItem>
@@ -29,20 +47,21 @@
 <div class="container">
   <h2>Tile</h2>
   <input type="text">
-  <ngu-carousel #myCarousels [inputs]="carouselTile" (carouselLoad)="carouselTileLoad()">
+  <ngu-carousel #myCarousel [inputs]="carouselTile" (carouselLoad)="carouselTileLoad()">
     <ngu-tile NguCarouselItem *ngFor="let tile of carouselTileItems; let i = index;">
       <div class="tile" [style.background]="'url(' + tile + ')'">
-        <h1>{{i}}</h1>
+        <h1>{{i + 1}}</h1>
       </div>
     </ngu-tile>
     <button NguCarouselPrev class="leftRs">&lt;</button>
     <button NguCarouselNext class="rightRs">&gt;</button>
-    <div NguCarouselPoint>
-      <ul class="myPoint">
-        <li *ngFor="let i of myCarousels.pointNumbers; let i = index" [class.active]="i==myCarousels.pointers" (click)="myCarousels.moveTo(i)"></li>
-      </ul>
-    </div>
+    <ul class="myPoint" NguCarouselPoint>
+      <li *ngFor="let i of myCarousel.pointNumbers; let i = index" [class.active]="i==myCarousel.activePoint" (click)="myCarousel.moveTo(i)"
+        [style.background]="'url(' + carouselTileItems[i] + ')'"></li>
+    </ul>
   </ngu-carousel>
+  <button (click)="myCarousel.reset(true)">reset</button>
+  <button (click)="myCarousel.moveTo(2, true)">move to 2</button>
 
   <h2>Tile-WithLoop and Animation</h2>
   <form class="example-form">
@@ -61,12 +80,7 @@
     </ngu-tile>
     <button NguCarouselPrev class="leftRs">&lt;</button>
     <button NguCarouselNext class="rightRs">&gt;</button>
-    <div NguCarouselPoint>
-      <div>{{myCarousels1.pointers+1}}/{{myCarousels1.pointNumbers.length}}</div>
-      <!-- <ul class="myPoint">
-        <li #pointInner *ngFor="let i of myCarousels.pointNumbers; let i = index" [class.active]="i==myCarousels.pointers" (click)="myCarousels.moveTo(i)"></li>
-      </ul> -->
-    </div>
+    <h4 NguCarouselPoint>{{myCarousels1.activePoint + 1}}/{{myCarousels1.pointNumbers.length}}</h4>
   </ngu-carousel>
   {{stateCtrl.value}}
 

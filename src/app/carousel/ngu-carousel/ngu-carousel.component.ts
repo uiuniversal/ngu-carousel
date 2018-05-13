@@ -2,6 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import {
   AfterContentInit,
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ContentChild,
   ContentChildren,
@@ -15,21 +16,21 @@ import {
   PLATFORM_ID,
   QueryList,
   Renderer2,
-  ViewChild,
-  ViewChildren
+  ViewChild
 } from '@angular/core';
 import {
   NguCarouselItemDirective,
   NguCarouselNextDirective,
   NguCarouselPrevDirective
 } from './../ngu-carousel.directive';
-import { NguCarouselStore } from './ngu-carousel';
+import { NguCarouselConfig, NguCarouselStore } from './ngu-carousel';
 
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'ngu-carousel',
   templateUrl: 'ngu-carousel.component.html',
-  styleUrls: ['ngu-carousel.component.scss']
+  styleUrls: ['ngu-carousel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 // tslint:disable-next-line:component-class-suffix
 export class NguCarousel
@@ -38,24 +39,22 @@ export class NguCarousel
   private directionSym: string;
   private carouselCssNode: any;
   private pointIndex: number;
-  private withAnim: boolean;
-  pointers: number;
+  private withAnim = true;
+  activePoint: number;
+  isHovered = false;
 
   // tslint:disable-next-line:no-input-rename
-  @Input('inputs') private userData: any;
-  // @Input('moveToSlide') moveToSlide: number;
+  @Input('inputs') private userData: NguCarouselConfig;
   // tslint:disable-next-line:no-input-rename
   @Input('reset') private reseter: boolean;
 
   @Output('carouselLoad') private carouselLoad = new EventEmitter();
   // tslint:disable-next-line:no-output-on-prefix
   @Output('onMove') private onMove = new EventEmitter();
-  @Output('initData') private initData = new EventEmitter();
+  // @Output('itemClicked') private itemClicked = new EventEmitter();
 
   @ContentChildren(NguCarouselItemDirective, { read: ElementRef })
   private items: QueryList<ElementRef>;
-  @ViewChildren('pointInner', { read: ElementRef })
-  private points: QueryList<ElementRef>;
 
   @ContentChild(NguCarouselNextDirective, { read: ElementRef })
   private next: ElementRef;
@@ -68,10 +67,8 @@ export class NguCarousel
   private carouselInner1: ElementRef;
   @ViewChild('main', { read: ElementRef })
   private carousel1: ElementRef;
-  @ViewChild('points', { read: ElementRef })
-  private pointMain: ElementRef;
-  @ViewChild('forTouch', { read: ElementRef })
-  private forTouch: ElementRef;
+  // @ViewChild('forTouch', { read: ElementRef })
+  // private forTouch: ElementRef;
 
   private leftBtn: any;
   private rightBtn: any;
@@ -82,7 +79,6 @@ export class NguCarousel
   private carousel: any;
   private carouselMain: any;
   private carouselInner: any;
-  // private carouselItems: any;
 
   private onResize: any;
   private onScrolling: any;
@@ -117,7 +113,8 @@ export class NguCarousel
     RTL: false,
     button: { visibility: 'disabled' },
     point: true,
-    vertical: { enabled: false, height: 400 }
+    vertical: { enabled: false, height: 400 },
+    velocity: 1
   };
 
   private listener1: any;
@@ -135,55 +132,38 @@ export class NguCarousel
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
-  ngOnInit() {
-    this.carousel = this.el.nativeElement;
-    this.carouselMain = this.carouselMain1.nativeElement;
-    this.carouselInner = this.carouselInner1.nativeElement;
+  ngOnInit() {}
 
-    this.rightBtn = this.next.nativeElement;
-    this.leftBtn = this.prev.nativeElement;
-
+  inputValidation() {
     this.data.type = this.userData.grid.all !== 0 ? 'fixed' : 'responsive';
     this.data.loop = this.userData.loop || false;
     this.userData.easing = this.userData.easing || 'cubic-bezier(0, 0, 0.2, 1)';
     this.data.touch.active = this.userData.touch || false;
     this.data.RTL = this.userData.RTL ? true : false;
+    this.data.interval = this.userData.interval || null;
+    this.data.velocity = this.userData.velocity || this.data.velocity;
 
     if (this.userData.vertical && this.userData.vertical.enabled) {
       this.data.vertical.enabled = this.userData.vertical.enabled;
       this.data.vertical.height = this.userData.vertical.height;
-      // this.data.vertical.numHeight = +this.userData.vertical.height
-      //   .match(/[0-9]/g)
-      //   .join('');
     }
     this.directionSym = this.data.RTL ? '' : '-';
     this.data.point =
       this.userData.point && typeof this.userData.point.visible !== 'undefined'
         ? this.userData.point.visible
         : true;
-    this.withAnim = true;
 
     this.carouselSize();
-    // const datas = this.itemsElements.first.nativeElement.getBoundingClientRect().width;
-
-    // this.carouselSerSub = this.carouselSer.getData.subscribe(res => {
-    //   if (res.id === this.data.token) {
-    //     if (res.ref === 'moveToSlide') {
-    //       if (this.pointers !== res.index && res.index < this.pointIndex) {
-    //         this.withAnim = res.animation === false ? false : true;
-    //         this.moveTo(res.index);
-    //       }
-    //     } else if (res.ref === 'reset') {
-    //       if (this.pointers !== 0 && 0 < this.pointIndex) {
-    //         this.withAnim = false;
-    //         this.reset();
-    //       }
-    //     }
-    //   }
-    // });
   }
 
-  ngAfterContentInit() {
+  ngAfterViewInit() {
+    this.carousel = this.el.nativeElement;
+    this.carouselMain = this.carouselMain1.nativeElement;
+    this.carouselInner = this.carouselInner1.nativeElement;
+
+    this.rightBtn = this.next.nativeElement;
+    this.leftBtn = this.prev.nativeElement;
+    this.inputValidation();
     this.listener1 = this.renderer.listen(this.leftBtn, 'click', () =>
       this.carouselScrollOne(0)
     );
@@ -193,7 +173,6 @@ export class NguCarousel
 
     this.carouselCssNode = this.createStyleElem();
 
-    this.storeCarouselData();
     this.buttonControl();
 
     if (isPlatformBrowser(this.platformId)) {
@@ -206,51 +185,28 @@ export class NguCarousel
         this.onResizing(event);
       });
     }
+  }
 
+  ngAfterContentInit() {
     this.items.changes.subscribe(val => {
       this.data.isLast = false;
       this.carouselPoint();
       this.buttonControl();
     });
-    // tslint:disable-next-line:no-unused-expression
-    // this.moveToSlide > -1 && this.moveTo(this.moveToSlide);
-  }
-
-  ngAfterViewInit() {
-    if (this.userData.point.pointStyles) {
-      const datas = this.userData.point.pointStyles.replace(
-        /.ngucarouselPoint/g,
-        `.${this.data.token} .ngucarouselPoint`
-      );
-
-      this.createStyleElem(datas);
-    } else if (this.userData.point && this.userData.point.visible) {
-      this.renderer.addClass(
-        this.pointMain.nativeElement,
-        'ngucarouselPointDefault'
-      );
-    }
   }
 
   ngOnDestroy() {
     clearInterval(this.carouselInt);
     this.carouselLoad.complete();
+    this.onMove.complete();
 
-    // remove listeners
+    /** remove listeners */
     for (let i = 1; i <= 8; i++) {
       this[`listener${i}`] && this[`listener${i}`]();
     }
   }
 
   private onResizing(event: any): void {
-    // Observable.fromEvent(window, 'resize')
-    // .debounceTime(500)
-    // .subscribe((event: any) => {
-    //   if (this.data.deviceWidth !== event.target.outerWidth) {
-    //     this.setStyle(this.carouselInner, 'transition', ``);
-    //     this.storeCarouselData();
-    //   }
-    // });
     clearTimeout(this.onResize);
     this.onResize = setTimeout(() => {
       if (this.data.deviceWidth !== event.target.outerWidth) {
@@ -288,21 +244,14 @@ export class NguCarousel
         });
       }
       hammertime.on('panend', (ev: any) => {
-        // this.data.touch.velocity = ev.velocity;
-
-        // if (this.data.shouldSlide) {
-        if (Math.abs(ev.velocity) > 1) {
+        if (Math.abs(ev.velocity) > this.data.velocity) {
           this.data.touch.velocity = ev.velocity;
-          // this.data.touch.swipe === 'panright'
-          //   ? this.carouselScrollOne(0)
-          //   : this.carouselScrollOne(1);
           let direc = 0;
           if (!this.data.RTL) {
             direc = this.data.touch.swipe === 'panright' ? 0 : 1;
           } else {
             direc = this.data.touch.swipe === 'panright' ? 1 : 0;
           }
-          // this.data.touchTransform = this.data.transform[this.data.deviceType];
           this.carouselScrollOne(direc);
         } else {
           this.data.dexVal = 0;
@@ -311,18 +260,8 @@ export class NguCarousel
             'transition',
             'transform 324ms cubic-bezier(0, 0, 0.2, 1)'
           );
-          // const tran = this.data.touchTransform * +`${this.directionSym}1`;
-          this.setStyle(
-            this.carouselInner,
-            'transform',
-            ''
-            // this.setStyle(
-            //   this.carouselInner,
-            //   'transform',
-            //   'translate3d(' + tran + '%, 0px, 0px)'
-          );
+          this.setStyle(this.carouselInner, 'transform', '');
         }
-        // this.carouselScrollOne(direc);
       });
       hammertime.on('hammer.input', function(ev) {
         // allow nested touch events to no propagate, this may have other side affects but works for now.
@@ -352,46 +291,34 @@ export class NguCarousel
         : valt;
     this.data.dexVal = ev;
     this.data.touch.swipe = e;
-    if (!this.data.RTL) {
-      this.data.touchTransform =
-        e === 'panleft'
-          ? valt + this.data.touchTransform
-          : this.data.touchTransform - valt;
-    } else {
-      this.data.touchTransform =
-        e === 'panright'
-          ? valt + this.data.touchTransform
-          : this.data.touchTransform - valt;
-    }
-    if (this.data.touchTransform > 0) {
-      if (this.data.type === 'responsive') {
-        this.setStyle(
-          this.carouselInner,
-          'transform',
-          this.data.vertical.enabled
-            ? `translate3d(0, ${this.directionSym}${
-                this.data.touchTransform
-              }%, 0)`
-            : `translate3d(${this.directionSym}${
-                this.data.touchTransform
-              }%, 0, 0)`
-        );
-      } else {
-        this.setStyle(
-          this.carouselInner,
-          'transform',
-          this.data.vertical.enabled
-            ? `translate3d(0, ${this.directionSym}${
-                this.data.touchTransform
-              }px, 0)`
-            : `translate3d(${this.directionSym}${
-                this.data.touchTransform
-              }px, 0px, 0px)`
-        );
-      }
-    } else {
+    this.setTouchTransfrom(e, valt);
+    this.setTransformFromTouch();
+  }
+
+  private setTouchTransfrom(e: string, valt: number) {
+    const condition = this.data.RTL ? 'panright' : 'panleft';
+    this.data.touchTransform =
+      e === condition
+        ? valt + this.data.touchTransform
+        : this.data.touchTransform - valt;
+  }
+
+  private setTransformFromTouch() {
+    if (this.data.touchTransform < 0) {
       this.data.touchTransform = 0;
     }
+    const type = this.data.type === 'responsive' ? '%' : 'px';
+    this.setStyle(
+      this.carouselInner,
+      'transform',
+      this.data.vertical.enabled
+        ? `translate3d(0, ${this.directionSym}${
+            this.data.touchTransform
+          }${type}, 0)`
+        : `translate3d(${this.directionSym}${
+            this.data.touchTransform
+          }${type}, 0, 0)`
+    );
   }
 
   /** this used to disable the scroll when it is not on the display */
@@ -400,11 +327,11 @@ export class NguCarousel
     const scrollY = window.scrollY;
     const heightt = window.innerHeight;
     const carouselHeight = this.carousel.offsetHeight;
-
-    if (
+    const isCarouselOnScreen =
       top <= scrollY + heightt - carouselHeight / 4 &&
-      top + carouselHeight / 2 >= scrollY
-    ) {
+      top + carouselHeight / 2 >= scrollY;
+
+    if (isCarouselOnScreen) {
       this.carouselIntervalEvent(0);
     } else {
       this.carouselIntervalEvent(1);
@@ -413,11 +340,10 @@ export class NguCarousel
 
   /** store data based on width of the screen for the carousel */
   private storeCarouselData(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.data.deviceWidth = window.innerWidth;
-    } else {
-      this.data.deviceWidth = 1200;
-    }
+    this.data.deviceWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 1200;
+
     this.data.carouselWidth = this.carouselMain.offsetWidth;
 
     if (this.data.type === 'responsive') {
@@ -452,12 +378,12 @@ export class NguCarousel
         ? this.userData.speed
         : 400;
 
-    this.initData.emit(this.data);
     this.carouselPoint();
   }
 
   /** Used to reset the carousel */
-  public reset(): void {
+  public reset(withOutAnimation?: boolean): void {
+    withOutAnimation && (this.withAnim = false);
     this.carouselCssNode.innerHTML = '';
     this.moveTo(0);
     this.carouselPoint();
@@ -494,24 +420,29 @@ export class NguCarousel
   /** change the active point in carousel */
   private carouselPointActiver(): void {
     const i = Math.ceil(this.data.currentSlide / this.data.slideItems);
-    this.pointers = i;
+    this.activePoint = i;
   }
 
   /** this function is used to scoll the carousel when point is clicked */
-  public moveTo(index: number) {
-    if (this.pointers !== index && index < this.pointIndex) {
-      let slideremains = 0;
-      const btns = this.data.currentSlide < index ? 1 : 0;
+  public moveTo(slide: number, withOutAnimation?: boolean) {
+    // slide = slide - 1;
+    withOutAnimation && (this.withAnim = false);
+    if (this.activePoint !== slide && slide < this.pointIndex) {
+      let slideremains;
+      const btns = this.data.currentSlide < slide ? 1 : 0;
 
-      if (index === 0) {
-        this.btnBoolean(1, 0);
-        slideremains = index * this.data.slideItems;
-      } else if (index === this.pointIndex - 1) {
-        this.btnBoolean(0, 1);
-        slideremains = this.items.length - this.data.items;
-      } else {
-        this.btnBoolean(0, 0);
-        slideremains = index * this.data.slideItems;
+      switch (slide) {
+        case 0:
+          this.btnBoolean(1, 0);
+          slideremains = slide * this.data.slideItems;
+          break;
+        case this.pointIndex - 1:
+          this.btnBoolean(0, 1);
+          slideremains = this.items.length - this.data.items;
+          break;
+        default:
+          this.btnBoolean(0, 0);
+          slideremains = slide * this.data.slideItems;
       }
       this.carouselScrollTwo(btns, slideremains, this.data.speed);
     }
@@ -521,9 +452,7 @@ export class NguCarousel
   private carouselSize(): void {
     this.data.token = this.generateID();
     let dism = '';
-    this.styleid = `.${
-      this.data.token
-    } > .ngucarousel > .ngucarousel-inner > .ngucarousel-items`;
+    this.styleid = `.${this.data.token} > .ngucarousel > .ngucarousel-items`;
 
     if (this.userData.custom === 'banner') {
       this.renderer.addClass(this.carousel, 'banner');
@@ -576,7 +505,7 @@ export class NguCarousel
     if (this.data.vertical.enabled) {
       this.renderer.addClass(this.carouselInner, 'nguvertical');
       this.renderer.setStyle(
-        this.forTouch.nativeElement,
+        this.carouselMain,
         'height',
         `${this.data.vertical.height}px`
       );
@@ -587,6 +516,7 @@ export class NguCarousel
       !this.data.vertical.enabled &&
       this.renderer.addClass(this.carousel, 'ngurtl');
     this.createStyleElem(`${dism} ${itemStyle}`);
+    this.storeCarouselData();
   }
 
   /** logic to scroll the carousel step 1 */
@@ -708,13 +638,8 @@ export class NguCarousel
 
   /** boolean function for making isFirst and isLast */
   private btnBoolean(first: number, last: number) {
-    // if (this.data.direction === 'rtl') {
-    //   this.data.isFirst = first ? false : true;
-    //   this.data.isLast = last ? false : true;
-    // } else {
     this.data.isFirst = first ? true : false;
     this.data.isLast = last ? true : false;
-    // }
   }
 
   private transformString(grid: string, slide: number): string {
@@ -737,10 +662,6 @@ export class NguCarousel
   private transformStyle(slide: number): void {
     let slideCss = '';
     if (this.data.type === 'responsive') {
-      // this.data.transform.xs = 100 / this.userData.grid.xs * slide;
-      // this.data.transform.sm = 100 / this.userData.grid.sm * slide;
-      // this.data.transform.md = 100 / this.userData.grid.md * slide;
-      // this.data.transform.lg = 100 / this.userData.grid.lg * slide;
       slideCss = `@media (max-width: 767px) {${this.transformString(
         'xs',
         slide
@@ -754,7 +675,6 @@ export class NguCarousel
         this.directionSym
       }${this.data.transform.all}px, 0, 0);`;
     }
-    // this.renderer.createText(this.carouselCssNode, slideCss);
     this.carouselCssNode.innerHTML = slideCss;
   }
 
@@ -782,7 +702,7 @@ export class NguCarousel
 
   /** handle the auto slide */
   private carouselInterval(): void {
-    if (typeof this.userData.interval === 'number' && this.data.loop) {
+    if (this.data.interval && this.data.loop) {
       this.listener4 = this.renderer.listen(
         this.carouselMain,
         'touchstart',
@@ -804,6 +724,7 @@ export class NguCarousel
         'mouseenter',
         () => {
           this.carouselIntervalEvent(1);
+          this.isHovered = true;
         }
       );
 
@@ -812,6 +733,7 @@ export class NguCarousel
         'mouseleave',
         () => {
           this.carouselIntervalEvent(0);
+          this.isHovered = false;
         }
       );
 
@@ -822,10 +744,11 @@ export class NguCarousel
         }, 600);
       });
 
-      this.carouselInt = setInterval(() => {
-        // tslint:disable-next-line:no-unused-expression
-        !this.pauseCarousel && this.carouselScrollOne(1);
-      }, this.userData.interval);
+      setTimeout(() => {
+        this.carouselInt = setInterval(() => {
+          !this.pauseCarousel && this.carouselScrollOne(1);
+        }, this.userData.interval.timing);
+      }, this.data.interval.initialDelay);
     }
   }
 
@@ -891,17 +814,6 @@ export class NguCarousel
         this.data.isFirst ? 'none' : 'block',
         this.data.isLast ? 'none' : 'block'
       ];
-      // this.setStyle(
-      //   this.leftBtn,
-      //   'display',
-      //   this.data.isFirst ? 'none' : 'block'
-      // );
-      // this.setStyle(
-      //   this.rightBtn,
-      //   'display',
-      //   this.data.isLast ? 'none' : 'block'
-      // );
-      // this.leftBtn.nativeElement
     } else {
       arr = ['block', 'block'];
     }

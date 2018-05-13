@@ -42,3 +42,7 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# other files
+.ng_pkg_build/
+lib/
