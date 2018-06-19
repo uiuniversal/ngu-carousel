@@ -244,7 +244,7 @@ export class NguCarousel
         });
       }
       hammertime.on('panend', (ev: any) => {
-        if (Math.abs(ev.velocity) > this.data.velocity) {
+        if (Math.abs(ev.velocity) >= this.data.velocity) {
           this.data.touch.velocity = ev.velocity;
           let direc = 0;
           if (!this.data.RTL) {
