@@ -12,6 +12,8 @@ for ChangeLog go to [releases](https://github.com/sheikalthaf/ngu-carousel/relea
 
 Demo available [Here](https://github-pocj3k.stackblitz.io)
 
+Another demo [Here](https://stackblitz.com/github/sheikalthaf/ngu-carousel)
+
 ## Installation
 
 `npm install @ngu/carousel --save`
