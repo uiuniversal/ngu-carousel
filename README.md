@@ -10,7 +10,7 @@ for ChangeLog go to [releases](https://github.com/sheikalthaf/ngu-carousel/relea
 
 ## Demo
 
-Demo available [Here](https://github-pocj3k.stackblitz.io)
+SSR Demo available [Here](https://ngu-carousel.firebaseapp.com)
 
 ## Installation
 
