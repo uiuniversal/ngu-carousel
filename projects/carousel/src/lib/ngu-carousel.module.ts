@@ -2,7 +2,9 @@ import {
   NguCarouselPointDirective,
   NguCarouselItemDirective,
   NguCarouselNextDirective,
-  NguCarouselPrevDirective
+  NguCarouselPrevDirective,
+  NguCarouselDefDirective,
+  NguCarouselOutlet
 } from './ngu-carousel.directive';
 import { NguItemComponent } from './ngu-item/ngu-item.component';
 import {
@@ -23,7 +25,9 @@ import { NguTileComponent } from './ngu-tile/ngu-tile.component';
     NguCarouselPointDirective,
     NguCarouselItemDirective,
     NguCarouselNextDirective,
-    NguCarouselPrevDirective
+    NguCarouselPrevDirective,
+    NguCarouselDefDirective,
+    NguCarouselOutlet
   ],
   declarations: [
     NguCarousel,
@@ -32,7 +36,9 @@ import { NguTileComponent } from './ngu-tile/ngu-tile.component';
     NguCarouselPointDirective,
     NguCarouselItemDirective,
     NguCarouselNextDirective,
-    NguCarouselPrevDirective
+    NguCarouselPrevDirective,
+    NguCarouselDefDirective,
+    NguCarouselOutlet
   ]
 })
 export class NguCarouselModule {}

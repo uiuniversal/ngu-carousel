@@ -1,101 +1,25 @@
-<nav>
-  <h1>Ngx-Carouel</h1>
-</nav>
+<ngu-carousel #myCarousel [inputs]="carouselTile" [dataSource]="carouselTileItems">
+  <ngu-tile *nguCarouselDef="let item; let i = index">
 
-<h2>Banner</h2>
-<ngu-carousel #mybanners class="banner" [inputs]="carouselBanner" (carouselLoad)="carouselBannerLoad()" (onMove)="onMoveData($event)"
-  style="height: 400px">
-  <ngu-item class="bannerStyle" NguCarouselItem *ngFor="let tile of carouselBannerItems; let i = index;">
-    <div [style.background]="'url(' + tile + ')'">
-      <h1>{{i}}</h1>
-    </div>
-  </ngu-item>
-  <button NguCarouselPrev class="leftRs" [@btnAnim]="{value: mybanners.isHovered, params: {btn: '-'}}" [class.carouselHoved]="!mybanners.isHovered">&lt;</button>
-  <button NguCarouselNext class="rightRs" [@btnAnim]="{value: mybanners.isHovered, params: {btn: ''}}" [class.carouselHoved]="!mybanners.isHovered">&gt;</button>
-  <ul class="myBannerPoint" NguCarouselPoint>
-    <li *ngFor="let i of mybanners.pointNumbers; let i = index" [class.active]="i==mybanners.activePoint" (click)="mybanners.moveTo(i)"
+    <ngu-carousel #myCarousel [inputs]="carouselTile" (carouselLoad)="carouselTileLoad(i)" [dataSource]="carouselTiles[i]">
+      <ngu-tile *nguCarouselDef="let item; let j = index">
+        <div class="tile" [style.background]="'url(' + item + ')'" style="min-height: 200px">
+          <h1>{{j}}</h1>
+        </div>
+      </ngu-tile>
+      <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst ? 0.5:1">&lt;</button>
+      <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast ? 0.5:1">&gt;</button>
+      <ul class="myPoint" NguCarouselPoint>
+        <li *ngFor="let j of myCarousel.pointNumbers; let j = index" [class.active]="j==myCarousel.activePoint" (click)="myCarousel.moveTo(j)"
+          [style.background]="'url(' + carouselTileItems[j] + ')'"></li>
+      </ul>
+    </ngu-carousel>
+
+  </ngu-tile>
+  <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst ? 0.5:1">&lt;</button>
+  <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast ? 0.5:1">&gt;</button>
+  <ul class="myPoint" NguCarouselPoint>
+    <li *ngFor="let i of myCarousel.pointNumbers; let i = index" [class.active]="i==myCarousel.activePoint" (click)="myCarousel.moveTo(i)"
       [style.background]="'url(' + carouselTileItems[i] + ')'"></li>
   </ul>
 </ngu-carousel>
-<button>onHovered: {{mybanners.isHovered}}</button>
-<!-- <button (click)="myBannerVisible = !myBannerVisible">Disabled</button> -->
-<!-- <ngu-carousel #mybannerss class="banner" [inputs]="carouselBanner1" (carouselLoad)="carouselBannerLoad()" (onMove)="onMoveData($event)"
-  style="height: 400px">
-  <ngu-item class="bannerStyle" NguCarouselItem *ngFor="let tile of carouselBannerItems; let i = index;">
-    <div [style.background]="'url(' + tile + ')'">
-      <h1>{{i}}</h1>
-    </div>
-  </ngu-item>
-  <button NguCarouselPrev class="leftRs">&lt;</button>
-  <button NguCarouselNext class="rightRs">&gt;</button>
-</ngu-carousel> -->
-
-<button (click)="mybanners.reset(true)">Reset</button>
-
-<!-- <ngu-carousel class="banner" [inputs]="carouselBanner" (carouselLoad)="carouselBannerLoad()" (onMove)="onMoveData($event)">
-  <ngu-item NguCarouselItem>
-    <div>data</div>
-  </ngu-item>
-  <ngu-item class="bannerStyle" NguCarouselItem *ngFor="let tile of carouselBannerItems; let i = index;">
-    <div >sdfgdf</div>
-  </ngu-item>
-  <button NguCarouselPrev class="leftRs1">&lt;</button>
-  <button NguCarouselNext class="rightRs1">&gt;</button>
-</ngu-carousel> -->
-
-<!-- main -->
-<div class="container">
-  <h2>Tile</h2>
-  <input type="text">
-  <ngu-carousel #myCarousel [inputs]="carouselTile" (carouselLoad)="carouselTileLoad()">
-    <ngu-tile NguCarouselItem *ngFor="let tile of carouselTileItems; let i = index;">
-      <div class="tile" [style.background]="'url(' + tile + ')'">
-        <h1>{{i + 1}}</h1>
-      </div>
-    </ngu-tile>
-    <button NguCarouselPrev class="leftRs">&lt;</button>
-    <button NguCarouselNext class="rightRs">&gt;</button>
-    <ul class="myPoint" NguCarouselPoint>
-      <li *ngFor="let i of myCarousel.pointNumbers; let i = index" [class.active]="i==myCarousel.activePoint" (click)="myCarousel.moveTo(i)"
-        [style.background]="'url(' + carouselTileItems[i] + ')'"></li>
-    </ul>
-  </ngu-carousel>
-  <button (click)="myCarousel.reset(true)">reset</button>
-  <button (click)="myCarousel.moveTo(2, true)">move to 2</button>
-
-  <h2>Tile-WithLoop and Animation</h2>
-  <form class="example-form">
-    <input type="text" [formControl]="stateCtrl">
-  </form>
-  <ngu-carousel #myCarousels1 [inputs]="carouselTileOne" (carouselLoad)="carouselTileOneLoad()" (onMove)="onMoveData($event)"
-    [reset]="rsts" (initData)="getCarouselData($event)">
-    <ngu-tile NguCarouselItem *ngFor="let tile of states; let i = index;">
-      <div class="wBg">
-        <div class="tile" [style.background]="'url(' + tile.img + ')'">
-          <h1>{{i}}</h1>
-        </div>
-        <h4>{{tile.name}}</h4>
-        <p>content</p>
-      </div>
-    </ngu-tile>
-    <button NguCarouselPrev class="leftRs">&lt;</button>
-    <button NguCarouselNext class="rightRs">&gt;</button>
-    <h4 NguCarouselPoint>{{myCarousels1.activePoint + 1}}/{{myCarousels1.pointNumbers.length}}</h4>
-  </ngu-carousel>
-  {{stateCtrl.value}}
-
-  <h2>Fixed-Width</h2>
-  <ngu-carousel [inputs]="carouselTileTwo" (carouselLoad)="carouselTileTwoLoad()">
-    <ngu-tile NguCarouselItem *ngFor="let tile of carouselTileTwoItems; let i = index;">
-      <div class="wBg">
-        <div class="tile" [style.background]="'url(' + tile + ')'">
-          <h1>{{i}}</h1>
-        </div>
-        <h4>Tile</h4>
-        <p>content</p>
-      </div>
-    </ngu-tile>
-    <button NguCarouselPrev class="leftRs">&lt;</button>
-    <button NguCarouselNext class="rightRs">&gt;</button>
-  </ngu-carousel>
-</div>

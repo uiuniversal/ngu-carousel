@@ -1,4 +1,4 @@
-import { Directive } from '@angular/core';
+import { Directive, TemplateRef, ViewContainerRef } from '@angular/core';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
@@ -32,3 +32,22 @@ export class NguCarouselPrevDirective {
   selector: '[NguCarouselPoint]'
 })
 export class NguCarouselPointDirective {}
+
+@Directive({
+  // tslint:disable-next-line:directive-selector
+  selector: '[nguCarouselDef]'
+})
+export class NguCarouselDefDirective<T> {
+  when: (index: number, nodeData: T) => boolean;
+
+  constructor(public template: TemplateRef<any>) {}
+}
+
+@Directive({
+  // tslint:disable-next-line:directive-selector
+  selector: '[nguCarouselOutlet]'
+})
+// tslint:disable-next-line:directive-class-suffix
+export class NguCarouselOutlet {
+  constructor(public viewContainer: ViewContainerRef) {}
+}
