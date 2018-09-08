@@ -18,10 +18,10 @@
     ],
     "paths": {
       "carousel": [
-        "dist/@ngu/carousel"
+        "dist/carousel"
       ],
       "carousel/*": [
-        "dist/@ngu/carousel/*"
+        "dist/carousel/*"
       ]
     }
   }

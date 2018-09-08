@@ -1,8 +1,13 @@
 {
   "name": "@ngu/carousel",
-  "version": "1.4.9-beta-3",
+  "version": "1.5.1",
   "license": "MIT",
   "description": "Angular Universal carousel",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sheikalthaf/ngu-carousel.git"
+  },
+  "homepage": "https://ngu-carousel.firebaseapp.com",
   "peerDependencies": {
     "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
     "@angular/core": "^6.0.0-rc.0 || ^6.0.0",

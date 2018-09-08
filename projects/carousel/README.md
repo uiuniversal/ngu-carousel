@@ -10,7 +10,9 @@ for ChangeLog go to [CHANGELOG.md](https://github.com/sheikalthaf/ngu-carousel/b
 
 ## Demo
 
-Demo available [Here](https://github-pocj3k.stackblitz.io)
+Demo available in Stackblitz [Here](https://stackblitz.com/edit/ngu-carousel-ng6)
+
+Demo available [Here](https://ngu-carousel.firebaseapp.com)
 
 ## Installation
 
@@ -31,7 +33,7 @@ Now ngu-carousel supports touch with the help of hammerjs
 
 `npm install hammerjs --save`
 
-Import hammerjs in `polyfills.ts` file
+Import hammerjs in `main.ts` file
 
 ```javascript
 import 'hammerjs';
@@ -172,11 +174,11 @@ export class Touch {
   velocity: number;
 }
 
-export class NguCarousel {
+export class NguCarouselConfig {
   grid: Transfrom;
   slide?: number;
   speed?: number;
-  interval?: number;
+  interval?: CarouselInterval;
   animation?: Animate;
   point?: Point;
   type?: string;
@@ -186,7 +188,9 @@ export class NguCarousel {
   touch?: boolean;
   easing?: string;
   RTL?: boolean;
+  button?: NguButton;
   vertical?: Vertical;
+  velocity?: number;
 }
 
 export class Grid {
@@ -200,7 +204,6 @@ export class Grid {
 export interface Point {
   visible: boolean;
   hideOnSingleSlide?: boolean;
-  pointStyles?: string;
 }
 
 export type Custom = 'banner';
@@ -215,7 +218,6 @@ export type Animate = 'lazy';
 | `interval`                | milli seconds | optional | It is used to make carousel auto slide with given value. interval defines the interval between slides                                                                                                                         |
 | `load`                    | number        | optional | is used to load the items similar to pagination. the carousel will tigger the carouslLoad function to load another set of items. it will help you to improve the performance of the app.**`(carouselLoad)="myfunc($event)"`** |
 | `point.visible`           | boolean       | optional | It is used to indicate no. of slides and also shows the current active slide.                                                                                                                                                 |
-| `point.pointStyle`        | string        | optional | It is used to customize the point indicator. make sure your check the guide.                                                                                                                                                  |
 | `point.hideOnSingleSlide` | boolean       | optional | It is used to hide the point indicator when slide is less than one.                                                                                                                                                           |
 | `touch`                   | boolean       | optional | It is used to active touch support to the carousel.                                                                                                                                                                           |
 | `easing`                  | string        | optional | It is used to define the easing style of the carousel. Only define the ease name without any timing like `ease`,`ease-in`                                                                                                     |
@@ -239,27 +241,14 @@ This is HTML I'm using in the carousel. Add your own css according to this eleme
 ```html
 <ngu-carousel
       [inputs]="carouselBanner"
-      (initData)="initDataFn($event)"
       (onMove)="onmoveFn($event)"
       (carouselLoad)="loadItemsFn()">
 </ngu-carousel>
 ```
 
-- `inputs` is an `Input` and It accepts `NguCarousel`.
-- `initData` is an `Output` which triggered on carousel init and it emits token to exchange with service to contol the carousel.
+- `inputs` is an `Input` and It accepts `NguCarouselConfig`.
 - `onMove` is an `Output` which triggered on every slide before start and it will emit `$event` as `NguCarouselStore` object.
 - `carouselLoad` is an `Output` which triggered when slide reaches the end on items based on inputs `load`.
-
-## Carousel Service
-
-```javascript
-import { NguCarouselService } from '@ngu/carousel';
-```
-
-This carousel Service supports:
-
-- `reset(token)` - This function will reset the carousel
-- `moveToSlide(token, index, animate)` - This function is used to move to index with animation control.
 
 # Getstarted guide
 
@@ -332,36 +321,12 @@ export class Sample implements OnInit {
       grid: { xs: 1, sm: 1, md: 1, lg: 1, all: 0 },
       slide: 1,
       speed: 400,
-      interval: 4000,
+      interval: {
+        timing: 3000,
+        initialDelay: 1000
+      },
       point: {
-        visible: true,
-        pointStyles: `
-          .ngucarouselPoint {
-            list-style-type: none;
-            text-align: center;
-            padding: 12px;
-            margin: 0;
-            white-space: nowrap;
-            overflow: auto;
-            position: absolute;
-            width: 100%;
-            bottom: 20px;
-            left: 0;
-            box-sizing: border-box;
-          }
-          .ngucarouselPoint li {
-            display: inline-block;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.55);
-            padding: 5px;
-            margin: 0 3px;
-            transition: .4s ease all;
-          }
-          .ngucarouselPoint li.active {
-              background: white;
-              width: 10px;
-          }
-        `
+        visible: true
       },
       load: 2,
       loop: true,
@@ -380,7 +345,7 @@ export class Sample implements OnInit {
 
 ```javascript
 import { Component } from '@angular/core';
-import { NguCarousel, NguCarouselStore } from '@ngu/carousel';
+import { NguCarousel, NguCarouselConfig } from '@ngu/carousel';
 
 @Component({
   selector: 'app-carousel',
@@ -436,6 +401,32 @@ import { NguCarousel, NguCarouselStore } from '@ngu/carousel';
         border-radius: 999px;
         right: 0;
     }
+
+    .ngucarouselPoint {
+      list-style-type: none;
+      text-align: center;
+      padding: 12px;
+      margin: 0;
+      white-space: nowrap;
+      overflow: auto;
+      position: absolute;
+      width: 100%;
+      bottom: 20px;
+      left: 0;
+      box-sizing: border-box;
+    }
+    .ngucarouselPoint li {
+      display: inline-block;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.55);
+      padding: 5px;
+      margin: 0 3px;
+      transition: .4s ease all;
+    }
+    .ngucarouselPoint li.active {
+        background: white;
+        width: 10px;
+    }
   `
   ]
 })
@@ -447,34 +438,7 @@ export class Sample implements OnInit {
       speed: 400,
       interval: 4000,
       point: {
-        visible: true,
-        pointStyles: `
-          .ngucarouselPoint {
-            list-style-type: none;
-            text-align: center;
-            padding: 12px;
-            margin: 0;
-            white-space: nowrap;
-            overflow: auto;
-            position: absolute;
-            width: 100%;
-            bottom: 20px;
-            left: 0;
-            box-sizing: border-box;
-          }
-          .ngucarouselPoint li {
-            display: inline-block;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.55);
-            padding: 5px;
-            margin: 0 3px;
-            transition: .4s ease all;
-          }
-          .ngucarouselPoint li.active {
-              background: white;
-              width: 10px;
-          }
-        `
+        visible: true
       },
       load: 2,
       loop: true,
@@ -487,24 +451,23 @@ export class Sample implements OnInit {
   }
 
   /* It will be triggered on every slide*/
-  onmoveFn(data: NguCarouselStore) {
+  onmoveFn(data: NguCarousel) {
     console.log(data);
   }
 }
 ```
 
-## Tile with Service
+## Tile with Carousel Control
 
 ```javascript
 import { Component } from '@angular/core';
-import { NguCarousel, NguCarouselStore, NguCarouselService } from '@ngu/carousel';
+import { NguCarousel, NguCarouselConfig } from '@ngu/carousel';
 
 @Component({
   selector: 'app-carousel',
   template: `
-    <ngu-carousel
+    <ngu-carousel #carousel
       [inputs]="carouselTile"
-      (initData)="initDataFn($event)"
       (carouselLoad)="carouselTileLoad($event)">
 
             <ngu-tile NguCarouselItem *ngFor="let Tile of carouselTileItems">
@@ -553,9 +516,10 @@ export class Sample implements OnInit {
   private carouselToken: string;
 
   public carouselTileItems: Array<any>;
-  public carouselTile: NguCarousel;
+  public carouselTile: NguCarouselConfig;
+  @ViewChild('carousel') carousel: NguCarousel;
 
-  constructor(private carousel: NguCarouselService) {  }
+  constructor() {  }
 
   ngOnInit(){
     this.carouselTileItems = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];

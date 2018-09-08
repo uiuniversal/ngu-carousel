@@ -25,14 +25,18 @@ export class AppComponent implements OnInit {
   public carouselTile: NguCarouselConfig = {
     grid: { xs: 1, sm: 1, md: 3, lg: 3, all: 0 },
     slide: 3,
-    speed: 250,
+    speed: 350,
+    interval: {
+      timing: 3000,
+      initialDelay: 1000
+    },
     point: {
       visible: true
     },
     load: 2,
     velocity: 0,
     touch: true,
-    easing: 'cubic-bezier(0, 0, 0.2, 1)'
+    easing: 'cubic-bezier(.17,.67,.83,.67)'
   };
   constructor() {}
 

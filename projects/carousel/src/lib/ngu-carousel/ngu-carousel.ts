@@ -91,7 +91,6 @@ export type Animate = 'lazy';
 
 export interface Point {
   visible: boolean;
-  // pointStyles?: string;
   hideOnSingleSlide?: boolean;
 }
 

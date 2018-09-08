@@ -60,10 +60,13 @@ export class NguCarousel extends NguCarouselStore
   activePoint: number;
   isHovered = false;
 
-  @Input('inputs') private inputs: NguCarouselConfig;
-  @Output('carouselLoad') private carouselLoad = new EventEmitter();
+  @Input('inputs')
+  private inputs: NguCarouselConfig;
+  @Output('carouselLoad')
+  private carouselLoad = new EventEmitter();
   // tslint:disable-next-line:no-output-on-prefix
-  @Output('onMove') private onMove = new EventEmitter();
+  @Output('onMove')
+  private onMove = new EventEmitter<NguCarousel>();
   // isFirstss = 0;
   arrayChanges: IterableChanges<{}>;
 
@@ -87,7 +90,8 @@ export class NguCarousel extends NguCarouselStore
   @ContentChildren(NguCarouselDefDirective)
   private _defDirec: QueryList<NguCarouselDefDirective<any>>;
 
-  @ViewChild(NguCarouselOutlet) _nodeOutlet: NguCarouselOutlet;
+  @ViewChild(NguCarouselOutlet)
+  _nodeOutlet: NguCarouselOutlet;
 
   @ContentChild(NguCarouselNextDirective, { read: ElementRef })
   private next: ElementRef;
@@ -465,9 +469,8 @@ export class NguCarousel extends NguCarouselStore
       : this.items);
     this.load =
       this.inputs.load >= this.slideItems ? this.inputs.load : this.slideItems;
-    this.inputs.speed =
-      this.inputs.speed || this.inputs.speed > -1 ? this.inputs.speed : 400;
-
+    this.speed =
+      this.inputs.speed && this.inputs.speed > -1 ? this.inputs.speed : 400;
     this._carouselPoint();
   }
 
@@ -573,8 +576,10 @@ export class NguCarousel extends NguCarouselStore
     } else if (this.type === 'responsive') {
       const itemWidth_xs =
         this.inputs.type === 'mobile'
-          ? `${this.styleid} .item {flex: 0 0 ${95 / +this.inputs.grid.xs}%; width: ${95 / +this.inputs.grid.xs}%;}`
-          : `${this.styleid} .item {flex: 0 0 ${100 / +this.inputs.grid.xs}%; width: ${100 / +this.inputs.grid.xs}%;}`;
+          ? `${this.styleid} .item {flex: 0 0 ${95 /
+              +this.inputs.grid.xs}%; width: ${95 / +this.inputs.grid.xs}%;}`
+          : `${this.styleid} .item {flex: 0 0 ${100 /
+              +this.inputs.grid.xs}%; width: ${100 / +this.inputs.grid.xs}%;}`;
 
       const itemWidth_sm = `${this.styleid} > .item {flex: 0 0 ${100 /
         +this.inputs.grid.sm}%; width: ${100 / +this.inputs.grid.sm}%}`;
@@ -588,7 +593,9 @@ export class NguCarousel extends NguCarouselStore
                     @media (min-width:992px){${itemWidth_md}}
                     @media (min-width:1200px){${itemWidth_lg}}`;
     } else {
-      itemStyle = `${this.styleid} .item {flex: 0 0 ${this.inputs.grid.all}px; width: ${this.inputs.grid.all}px;}`;
+      itemStyle = `${this.styleid} .item {flex: 0 0 ${
+        this.inputs.grid.all
+      }px; width: ${this.inputs.grid.all}px;}`;
     }
 
     this._renderer.addClass(this.carousel, this.token);
@@ -687,7 +694,6 @@ export class NguCarousel extends NguCarouselStore
       itemSpeed = somt < 200 ? 200 : somt;
       this.dexVal = 0;
     }
-
     if (this.withAnim) {
       this._setStyle(
         this.carouselInner1.nativeElement,
@@ -709,7 +715,7 @@ export class NguCarousel extends NguCarouselStore
     this.itemLength = this.dataSource.length;
     this._transformStyle(currentSlide);
     this.currentSlide = currentSlide;
-    this.onMove.emit();
+    this.onMove.emit(this);
     this._carouselPointActiver();
     this._carouselLoadTrigger();
     this._buttonControl();

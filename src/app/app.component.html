@@ -3,15 +3,14 @@
 
     <ngu-carousel #myCarousel [inputs]="carouselTile" (carouselLoad)="carouselTileLoad(i)" [dataSource]="carouselTiles[i]">
       <ngu-tile *nguCarouselDef="let item; let j = index">
-        <div class="tile" [style.background]="'url(' + item + ')'" style="min-height: 200px">
+        <div class="tile" style="min-height: 200px">
           <h1>{{j}}</h1>
         </div>
       </ngu-tile>
       <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst ? 0.5:1">&lt;</button>
       <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast ? 0.5:1">&gt;</button>
       <ul class="myPoint" NguCarouselPoint>
-        <li *ngFor="let j of myCarousel.pointNumbers; let j = index" [class.active]="j==myCarousel.activePoint" (click)="myCarousel.moveTo(j)"
-          [style.background]="'url(' + carouselTileItems[j] + ')'"></li>
+        <li *ngFor="let j of myCarousel.pointNumbers; let j = index" [class.active]="j==myCarousel.activePoint" (click)="myCarousel.moveTo(j)"></li>
       </ul>
     </ngu-carousel>
 
@@ -19,7 +18,6 @@
   <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst ? 0.5:1">&lt;</button>
   <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast ? 0.5:1">&gt;</button>
   <ul class="myPoint" NguCarouselPoint>
-    <li *ngFor="let i of myCarousel.pointNumbers; let i = index" [class.active]="i==myCarousel.activePoint" (click)="myCarousel.moveTo(i)"
-      [style.background]="'url(' + carouselTileItems[i] + ')'"></li>
+    <li *ngFor="let i of myCarousel.pointNumbers; let i = index" [class.active]="i==myCarousel.activePoint" (click)="myCarousel.moveTo(i)"></li>
   </ul>
 </ngu-carousel>
