@@ -325,7 +325,7 @@ export class NguCarousel extends NguCarouselStore
   /** Get Touch input */
   private _touch(): void {
     if (this.inputs.touch) {
-      const hammertime = new Hammer(this.carouselInner1.nativeElement);
+      const hammertime = new Hammer(this.carouselMain1.nativeElement);
       hammertime.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL });
 
       hammertime.on('panstart', (ev: any) => {
