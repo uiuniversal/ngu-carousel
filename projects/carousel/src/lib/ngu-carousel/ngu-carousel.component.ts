@@ -37,7 +37,17 @@ import {
   NguCarouselStore,
   NguCarouselOutletContext
 } from './ngu-carousel';
-import { Observable, Subscription, of } from 'rxjs';
+import {
+  Observable,
+  Subscription,
+  of,
+  fromEvent,
+  interval,
+  merge,
+  empty,
+  Subject
+} from 'rxjs';
+import { mapTo, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -69,6 +79,12 @@ export class NguCarousel extends NguCarouselStore
   private onMove = new EventEmitter<NguCarousel>();
   // isFirstss = 0;
   arrayChanges: IterableChanges<{}>;
+  carouselInt: Subscription;
+
+  listener1: () => void;
+  listener2: () => void;
+  listener3: () => void;
+  listener8: () => void;
 
   @Input('dataSource')
   get dataSource(): any {
@@ -84,50 +100,55 @@ export class NguCarousel extends NguCarouselStore
 
   private _defaultNodeDef: NguCarouselDefDirective<any> | null;
 
-  // @ContentChildren(NguCarouselItemDirective, { read: ElementRef })
-  // private items: QueryList<ElementRef>;
-
   @ContentChildren(NguCarouselDefDirective)
   private _defDirec: QueryList<NguCarouselDefDirective<any>>;
 
   @ViewChild(NguCarouselOutlet)
   _nodeOutlet: NguCarouselOutlet;
 
+  /** The setter is used to catch the button if the button has ngIf
+   * issue id #91
+   */
   @ContentChild(NguCarouselNextDirective, { read: ElementRef })
-  private next: ElementRef;
+  set nextBtn(btn: ElementRef) {
+    this.listener2 && this.listener2();
+    if (btn) {
+      this.listener2 = this._renderer.listen(btn.nativeElement, 'click', () =>
+        this._carouselScrollOne(1)
+      );
+    }
+  }
 
+  /** The setter is used to catch the button if the button has ngIf
+   * issue id #91
+   */
   @ContentChild(NguCarouselPrevDirective, { read: ElementRef })
-  private prev: ElementRef;
+  set prevBtn(btn: ElementRef) {
+    this.listener1 && this.listener1();
+    if (btn) {
+      this.listener1 = this._renderer.listen(btn.nativeElement, 'click', () =>
+        this._carouselScrollOne(0)
+      );
+    }
+  }
 
   @ViewChild('ngucarousel', { read: ElementRef })
   private carouselMain1: ElementRef;
-  @ViewChild('nguitems', { read: ElementRef })
-  private carouselInner1: ElementRef;
-  // @ViewChild('main', { read: ElementRef })
-  // private carousel1: ElementRef;
-  // @ViewChild('forTouch', { read: ElementRef })
-  // private forTouch: ElementRef;
 
-  private evtValue: number;
-  private pauseCarousel = false;
-  private pauseInterval: any;
+  @ViewChild('nguItemsContainer', { read: ElementRef })
+  private nguItemsContainer: ElementRef;
+
+  @ViewChild('touchContainer', { read: ElementRef })
+  private touchContainer: ElementRef;
+
+  private _intervalController$ = new Subject<number>();
 
   private carousel: any;
 
   private onResize: any;
   private onScrolling: any;
-  private carouselInt: any;
 
   pointNumbers: Array<any> = [];
-
-  private listener1: any;
-  private listener2: any;
-  private listener3: any;
-  private listener4: any;
-  private listener5: any;
-  private listener6: any;
-  private listener7: any;
-  private listener8: any;
 
   constructor(
     private _el: ElementRef,
@@ -235,24 +256,8 @@ export class NguCarousel extends NguCarouselStore
   }
 
   ngAfterViewInit() {
-    // console.log(window);
     this.carousel = this._el.nativeElement;
-    // this.carouselMain = this.carouselMain1.nativeElement;
-    // this.carouselInner = this.carouselInner1.nativeElement;
-
-    // this.rightBtn = this.next.nativeElement;
-    // this.leftBtn = this.prev.nativeElement;
     this._inputValidation();
-    this.listener1 = this._renderer.listen(
-      this.prev.nativeElement,
-      'click',
-      () => this._carouselScrollOne(0)
-    );
-    this.listener2 = this._renderer.listen(
-      this.next.nativeElement,
-      'click',
-      () => this._carouselScrollOne(1)
-    );
 
     this.carouselCssNode = this._createStyleElem();
 
@@ -260,13 +265,13 @@ export class NguCarousel extends NguCarouselStore
 
     if (window) {
       this._carouselInterval();
-      this._onWindowScrolling();
       if (!this.vertical.enabled) {
         this._touch();
       }
       this.listener3 = this._renderer.listen('window', 'resize', event => {
         this._onResizing(event);
       });
+      this._onWindowScrolling();
     }
   }
 
@@ -302,7 +307,9 @@ export class NguCarousel extends NguCarouselStore
   }
 
   ngOnDestroy() {
-    clearInterval(this.carouselInt);
+    // clearInterval(this.carouselInt);
+    this.carouselInt && this.carouselInt.unsubscribe();
+    this._intervalController$.unsubscribe();
     this.carouselLoad.complete();
     this.onMove.complete();
 
@@ -316,7 +323,7 @@ export class NguCarousel extends NguCarouselStore
     clearTimeout(this.onResize);
     this.onResize = setTimeout(() => {
       if (this.deviceWidth !== event.target.outerWidth) {
-        this._setStyle(this.carouselInner1.nativeElement, 'transition', ``);
+        this._setStyle(this.nguItemsContainer.nativeElement, 'transition', ``);
         this._storeCarouselData();
       }
     }, 500);
@@ -325,14 +332,14 @@ export class NguCarousel extends NguCarouselStore
   /** Get Touch input */
   private _touch(): void {
     if (this.inputs.touch) {
-      const hammertime = new Hammer(this.carouselInner1.nativeElement);
+      const hammertime = new Hammer(this.touchContainer.nativeElement);
       hammertime.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL });
 
       hammertime.on('panstart', (ev: any) => {
-        this.carouselWidth = this.carouselInner1.nativeElement.offsetWidth;
+        this.carouselWidth = this.nguItemsContainer.nativeElement.offsetWidth;
         this.touchTransform = this.transform[this.deviceType];
         this.dexVal = 0;
-        this._setStyle(this.carouselInner1.nativeElement, 'transition', '');
+        this._setStyle(this.nguItemsContainer.nativeElement, 'transition', '');
       });
       if (this.vertical.enabled) {
         hammertime.on('panup', (ev: any) => {
@@ -362,11 +369,11 @@ export class NguCarousel extends NguCarouselStore
         } else {
           this.dexVal = 0;
           this._setStyle(
-            this.carouselInner1.nativeElement,
+            this.nguItemsContainer.nativeElement,
             'transition',
             'transform 324ms cubic-bezier(0, 0, 0.2, 1)'
           );
-          this._setStyle(this.carouselInner1.nativeElement, 'transform', '');
+          this._setStyle(this.nguItemsContainer.nativeElement, 'transform', '');
         }
       });
       hammertime.on('hammer.input', function(ev) {
@@ -413,7 +420,7 @@ export class NguCarousel extends NguCarouselStore
     }
     const type = this.type === 'responsive' ? '%' : 'px';
     this._setStyle(
-      this.carouselInner1.nativeElement,
+      this.nguItemsContainer.nativeElement,
       'transform',
       this.vertical.enabled
         ? `translate3d(0, ${this.directionSym}${this.touchTransform}${type}, 0)`
@@ -421,7 +428,7 @@ export class NguCarousel extends NguCarouselStore
     );
   }
 
-  /** this used to disable the scroll when it is not on the display */
+  /** this fn used to disable the interval when it is not on the viewport */
   private _onWindowScrolling(): void {
     const top = this.carousel.offsetTop;
     const scrollY = window.scrollY;
@@ -432,9 +439,11 @@ export class NguCarousel extends NguCarouselStore
       top + carouselHeight / 2 >= scrollY;
 
     if (isCarouselOnScreen) {
-      this._carouselIntervalEvent(0);
+      // this._carouselIntervalEvent(0);
+      this._intervalController$.next(1);
     } else {
-      this._carouselIntervalEvent(1);
+      this._intervalController$.next(0);
+      // this._carouselIntervalEvent(1);
     }
   }
 
@@ -548,7 +557,9 @@ export class NguCarousel extends NguCarouselStore
   private _carouselSize(): void {
     this.token = this._generateID();
     let dism = '';
-    this.styleid = `.${this.token} > .ngucarousel > .ngucarousel-items`;
+    this.styleid = `.${
+      this.token
+    } > .ngucarousel > .ngu-touch-container > .ngucarousel-items`;
 
     if (this.inputs.custom === 'banner') {
       this._renderer.addClass(this.carousel, 'banner');
@@ -600,7 +611,10 @@ export class NguCarousel extends NguCarouselStore
 
     this._renderer.addClass(this.carousel, this.token);
     if (this.vertical.enabled) {
-      this._renderer.addClass(this.carouselInner1.nativeElement, 'nguvertical');
+      this._renderer.addClass(
+        this.nguItemsContainer.nativeElement,
+        'nguvertical'
+      );
       this._renderer.setStyle(
         this.carouselMain1.nativeElement,
         'height',
@@ -622,7 +636,7 @@ export class NguCarousel extends NguCarouselStore
     let translateXval,
       currentSlide = 0;
     const touchMove = Math.ceil(this.dexVal / this.itemWidth);
-    this._setStyle(this.carouselInner1.nativeElement, 'transform', '');
+    this._setStyle(this.nguItemsContainer.nativeElement, 'transform', '');
 
     if (this.pointIndex === 1) {
       return;
@@ -633,7 +647,7 @@ export class NguCarousel extends NguCarouselStore
       const MoveSlide = currentSlideD + this.slideItems;
       this._btnBoolean(0, 1);
       if (this.currentSlide === 0) {
-        currentSlide = this._defDirec.length - this.items;
+        currentSlide = this.dataSource.length - this.items;
         itemSpeed = 400;
         this._btnBoolean(0, 1);
       } else if (this.slideItems >= MoveSlide) {
@@ -696,20 +710,20 @@ export class NguCarousel extends NguCarouselStore
     }
     if (this.withAnim) {
       this._setStyle(
-        this.carouselInner1.nativeElement,
+        this.nguItemsContainer.nativeElement,
         'transition',
         `transform ${itemSpeed}ms ${this.inputs.easing}`
       );
-      this.inputs.animation &&
-        this._carouselAnimator(
-          Btn,
-          currentSlide + 1,
-          currentSlide + this.items,
-          itemSpeed,
-          Math.abs(this.currentSlide - currentSlide)
-        );
+      // this.inputs.animation &&
+      //   this._carouselAnimator(
+      //     Btn,
+      //     currentSlide + 1,
+      //     currentSlide + this.items,
+      //     itemSpeed,
+      //     Math.abs(this.currentSlide - currentSlide)
+      //   );
     } else {
-      this._setStyle(this.carouselInner1.nativeElement, 'transition', ``);
+      this._setStyle(this.nguItemsContainer.nativeElement, 'transition', ``);
     }
     // console.log(this.dataSource);
     this.itemLength = this.dataSource.length;
@@ -789,40 +803,25 @@ export class NguCarousel extends NguCarouselStore
 
   /** handle the auto slide */
   private _carouselInterval(): void {
+    const container = this.carouselMain1.nativeElement;
     if (this.interval && this.loop) {
-      this.listener4 = this._renderer.listen(
-        this.carouselMain1.nativeElement,
-        'touchstart',
-        () => {
-          this._carouselIntervalEvent(1);
-        }
-      );
+      // this.listener4 = this._renderer.listen(container, 'touchstart', () => {
+      //   this._carouselIntervalEvent(1);
+      // });
 
-      this.listener5 = this._renderer.listen(
-        this.carouselMain1.nativeElement,
-        'touchend',
-        () => {
-          this._carouselIntervalEvent(0);
-        }
-      );
+      // this.listener5 = this._renderer.listen(container, 'touchend', () => {
+      //   this._carouselIntervalEvent(0);
+      // });
 
-      this.listener6 = this._renderer.listen(
-        this.carouselMain1.nativeElement,
-        'mouseenter',
-        () => {
-          this._carouselIntervalEvent(1);
-          this.isHovered = true;
-        }
-      );
+      // this.listener6 = this._renderer.listen(container, 'mouseenter', () => {
+      //   this._carouselIntervalEvent(1);
+      //   this.isHovered = true;
+      // });
 
-      this.listener7 = this._renderer.listen(
-        this.carouselMain1.nativeElement,
-        'mouseleave',
-        () => {
-          this._carouselIntervalEvent(0);
-          this.isHovered = false;
-        }
-      );
+      // this.listener7 = this._renderer.listen(container, 'mouseleave', () => {
+      //   this._carouselIntervalEvent(0);
+      //   this.isHovered = false;
+      // });
 
       this.listener8 = this._renderer.listen('window', 'scroll', () => {
         clearTimeout(this.onScrolling);
@@ -831,27 +830,54 @@ export class NguCarousel extends NguCarouselStore
         }, 600);
       });
 
+      const play$ = fromEvent(container, 'mouseleave').pipe(mapTo(1));
+      const pause$ = fromEvent(container, 'mouseenter').pipe(mapTo(0));
+
+      const touchPlay$ = fromEvent(container, 'touchstart').pipe(mapTo(1));
+      const touchPause$ = fromEvent(container, 'touchend').pipe(mapTo(0));
+
+      const interval$ = interval(this.inputs.interval.timing).pipe(mapTo(1));
+
       setTimeout(() => {
-        this.carouselInt = setInterval(() => {
-          !this.pauseCarousel && this._carouselScrollOne(1);
-        }, this.inputs.interval.timing);
+        // this.carouselInt = setInterval(() => {
+        //   !this.pauseCarousel && this._carouselScrollOne(1);
+        // }, this.inputs.interval.timing);
+
+        this.carouselInt = merge(
+          play$,
+          touchPlay$,
+          pause$,
+          touchPause$,
+          this._intervalController$
+        )
+          .pipe(
+            startWith(1),
+            switchMap(val => {
+              this.isHovered = !val;
+              this.cdr.markForCheck();
+              return val ? interval$ : empty();
+            })
+          )
+          .subscribe(res => {
+            this._carouselScrollOne(1);
+          });
       }, this.interval.initialDelay);
     }
   }
 
   /** pause interval for specific time */
-  private _carouselIntervalEvent(ev: number): void {
-    this.evtValue = ev;
-    if (this.evtValue === 0) {
-      clearTimeout(this.pauseInterval);
-      this.pauseInterval = setTimeout(() => {
-        // tslint:disable-next-line:no-unused-expression
-        this.evtValue === 0 && (this.pauseCarousel = false);
-      }, this.inputs.interval);
-    } else {
-      this.pauseCarousel = true;
-    }
-  }
+  // private _carouselIntervalEvent(ev: number): void {
+  //   this.evtValue = ev;
+  //   if (this.evtValue === 0) {
+  //     clearTimeout(this.pauseInterval);
+  //     this.pauseInterval = setTimeout(() => {
+  //       // tslint:disable-next-line:no-unused-expression
+  //       this.evtValue === 0 && (this.pauseCarousel = false);
+  //     }, this.inputs.interval);
+  //   } else {
+  //     this.pauseCarousel = true;
+  //   }
+  // }
 
   /** animate the carousel items */
   private _carouselAnimator(
@@ -863,6 +889,7 @@ export class NguCarousel extends NguCarouselStore
   ): void {
     let val = length < 5 ? length : 5;
     val = val === 1 ? 3 : val;
+    console.log(this._defDirec);
     const itemList = this._defDirec.toArray();
 
     if (direction === 1) {

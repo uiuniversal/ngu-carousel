@@ -7,6 +7,7 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
+    "run-lib": "ng build --prod --project carousel && ng serve",
     "e2e": "ng e2e"
   },
   "private": true,
