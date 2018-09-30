@@ -4,7 +4,7 @@ Angular Universal carousel
 
 `Note: This carousel doesn't include any css. go and customize css for buttons, items except ngucarousel and ngucarousel-inner`
 
-## changelog [![NPM version](https://badge.fury.io/js/ngu-carousel.png)](http://badge.fury.io/js/ngu-carousel)
+## changelog [![npm version](https://badge.fury.io/js/%40ngu%2Fcarousel.svg)](https://badge.fury.io/js/%40ngu%2Fcarousel)
 
 for ChangeLog go to [CHANGELOG.md](https://github.com/sheikalthaf/ngu-carousel/blob/master/CHANGELOG.md)
 
