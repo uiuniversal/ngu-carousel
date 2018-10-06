@@ -3,13 +3,18 @@ import {
   AfterContentInit,
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChild,
   ContentChildren,
+  DoCheck,
   ElementRef,
   EventEmitter,
   Inject,
   Input,
+  isDevMode,
+  IterableChangeRecord,
+  IterableChanges,
   IterableDiffer,
   IterableDiffers,
   OnDestroy,
@@ -18,36 +23,32 @@ import {
   PLATFORM_ID,
   QueryList,
   Renderer2,
+  TrackByFunction,
   ViewChild,
-  ViewContainerRef,
-  IterableChangeRecord,
-  ChangeDetectorRef,
-  DoCheck,
-  IterableChanges
+  ViewContainerRef
 } from '@angular/core';
 import {
-  NguCarouselItemDirective,
-  NguCarouselNextDirective,
-  NguCarouselPrevDirective,
-  NguCarouselDefDirective,
-  NguCarouselOutlet
-} from './../ngu-carousel.directive';
-import {
-  NguCarouselConfig,
-  NguCarouselStore,
-  NguCarouselOutletContext
-} from './ngu-carousel';
-import {
-  Observable,
-  Subscription,
-  of,
+  empty,
   fromEvent,
   interval,
   merge,
-  empty,
-  Subject
+  Observable,
+  of,
+  Subject,
+  Subscription
 } from 'rxjs';
-import { mapTo, startWith, switchMap } from 'rxjs/operators';
+import { mapTo, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import {
+  NguCarouselDefDirective,
+  NguCarouselNextDirective,
+  NguCarouselOutlet,
+  NguCarouselPrevDirective
+} from './../ngu-carousel.directive';
+import {
+  NguCarouselConfig,
+  NguCarouselOutletContext,
+  NguCarouselStore
+} from './ngu-carousel';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -57,7 +58,7 @@ import { mapTo, startWith, switchMap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 // tslint:disable-next-line:component-class-suffix
-export class NguCarousel extends NguCarouselStore
+export class NguCarousel<T> extends NguCarouselStore
   implements OnInit, AfterContentInit, AfterViewInit, OnDestroy, DoCheck {
   _dataSubscription: Subscription;
   _dataSource: any;
@@ -74,9 +75,10 @@ export class NguCarousel extends NguCarouselStore
   private inputs: NguCarouselConfig;
   @Output('carouselLoad')
   private carouselLoad = new EventEmitter();
+
   // tslint:disable-next-line:no-output-on-prefix
   @Output('onMove')
-  private onMove = new EventEmitter<NguCarousel>();
+  private onMove = new EventEmitter<NguCarousel<T>>();
   // isFirstss = 0;
   arrayChanges: IterableChanges<{}>;
   carouselInt: Subscription;
@@ -84,7 +86,7 @@ export class NguCarousel extends NguCarouselStore
   listener1: () => void;
   listener2: () => void;
   listener3: () => void;
-  listener8: () => void;
+  listener4: () => void;
 
   @Input('dataSource')
   get dataSource(): any {
@@ -150,6 +152,32 @@ export class NguCarousel extends NguCarouselStore
 
   pointNumbers: Array<any> = [];
 
+  /**
+   * Tracking function that will be used to check the differences in data changes. Used similarly
+   * to `ngFor` `trackBy` function. Optimize Items operations by identifying a Items based on its data
+   * relative to the function to know if a Items should be added/removed/moved.
+   * Accepts a function that takes two parameters, `index` and `item`.
+   */
+  @Input()
+  get trackBy(): TrackByFunction<T> {
+    return this._trackByFn;
+  }
+  set trackBy(fn: TrackByFunction<T>) {
+    if (
+      isDevMode() &&
+      fn != null &&
+      typeof fn !== 'function' &&
+      <any>console &&
+      <any>console.warn
+    ) {
+      console.warn(
+        `trackBy must be a function, but received ${JSON.stringify(fn)}.`
+      );
+    }
+    this._trackByFn = fn;
+  }
+  private _trackByFn: TrackByFunction<T>;
+
   constructor(
     private _el: ElementRef,
     private _renderer: Renderer2,
@@ -161,7 +189,11 @@ export class NguCarousel extends NguCarouselStore
   }
 
   ngOnInit() {
-    this._dataDiffer = this._differs.find([]).create(null);
+    this._dataDiffer = this._differs
+      .find([])
+      .create((_i: number, item: any) => {
+        return this.trackBy ? this.trackBy(item.dataIndex, item.data) : item;
+      });
   }
 
   ngDoCheck() {
@@ -172,12 +204,9 @@ export class NguCarousel extends NguCarouselStore
     }
   }
 
-  _switchDataSource(dataSource: any): any {
+  private _switchDataSource(dataSource: any): any {
     this._dataSource = dataSource;
-    // console.log('carouselSwitch', this._defDirec);
-    // if (this._defDirec && this.isFirstss > 1) {
     if (this._defDirec) {
-      // console.log('carouselobser', this._defDirec);
       this._observeRenderChanges();
     }
   }
@@ -185,35 +214,28 @@ export class NguCarousel extends NguCarouselStore
   private _observeRenderChanges() {
     let dataStream: Observable<any[]> | undefined;
 
-    if (Array.isArray(this._dataSource)) {
+    if (this._dataSource instanceof Observable) {
+      dataStream = this._dataSource;
+    } else if (Array.isArray(this._dataSource)) {
       dataStream = of(this._dataSource);
     }
 
     if (dataStream) {
-      this._dataSubscription = dataStream.subscribe(data => {
-        this.renderNodeChanges(data);
-        this.isLast = false;
-        // console.log('observerRender', !!this.carousel);
-        // console.log(this.carouselMain1.nativeElement.offsetWidth);
-        // this._storeCarouselData();
-        // this._buttonControl();
-      });
+      this._dataSubscription = dataStream
+        .pipe(takeUntil(this._intervalController$))
+        .subscribe(data => {
+          this.renderNodeChanges(data);
+          this.isLast = false;
+        });
     }
   }
 
-  renderNodeChanges(
+  private renderNodeChanges(
     data: any[],
-    dataDiffer: IterableDiffer<any> = this._dataDiffer,
-    viewContainer: ViewContainerRef = this._nodeOutlet.viewContainer,
-    parentData?: any
+    viewContainer: ViewContainerRef = this._nodeOutlet.viewContainer
   ) {
-    // console.log(data);
-    // const changes = dataDiffer.diff(data);
-    // console.log(this.arrayChanges);
-    if (!this.arrayChanges) {
-      return;
-    }
-    // console.log(this.arrayChanges);
+    if (!this.arrayChanges) return;
+
     this.arrayChanges.forEachOperation(
       (
         item: IterableChangeRecord<any>,
@@ -222,27 +244,54 @@ export class NguCarousel extends NguCarouselStore
       ) => {
         // const node = this._defDirec.find(items => item.item);
         const node = this._getNodeDef(data[currentIndex], currentIndex);
-        const context = new NguCarouselOutletContext<any>(data[currentIndex]);
-        // console.log(context);
-        context.index = currentIndex;
-        // if (item.previousIndex == null) {
-        viewContainer.createEmbeddedView(node.template, context, currentIndex);
-        // } else if (currentIndex == null) {
-        //   viewContainer.remove(adjustedPreviousIndex);
-        //   this._levels.delete(item.item);
-        // } else {
-        //   const view = viewContainer.get(adjustedPreviousIndex);
-        //   viewContainer.move(view!, currentIndex);
-        // }
+
+        if (item.previousIndex == null) {
+          const context = new NguCarouselOutletContext<any>(data[currentIndex]);
+          context.index = currentIndex;
+          viewContainer.createEmbeddedView(
+            node.template,
+            context,
+            currentIndex
+          );
+        } else if (currentIndex == null) {
+          viewContainer.remove(adjustedPreviousIndex);
+        } else {
+          const view = viewContainer.get(adjustedPreviousIndex);
+          viewContainer.move(view, currentIndex);
+        }
       }
     );
+    this._updateItemIndexContext();
+
     if (this.carousel) {
       this._storeCarouselData();
     }
     // console.log(this.dataSource);
   }
 
-  _getNodeDef(data: any, i: number): NguCarouselDefDirective<any> {
+  /**
+   * Updates the index-related context for each row to reflect any changes in the index of the rows,
+   * e.g. first/last/even/odd.
+   */
+  private _updateItemIndexContext() {
+    const viewContainer = this._nodeOutlet.viewContainer;
+    for (
+      let renderIndex = 0, count = viewContainer.length;
+      renderIndex < count;
+      renderIndex++
+    ) {
+      const viewRef = viewContainer.get(renderIndex) as any;
+      const context = viewRef.context as any;
+      context.count = count;
+      context.first = renderIndex === 0;
+      context.last = renderIndex === count - 1;
+      context.even = renderIndex % 2 === 0;
+      context.odd = !context.even;
+      context.index = renderIndex;
+    }
+  }
+
+  private _getNodeDef(data: any, i: number): NguCarouselDefDirective<any> {
     // console.log(this._defDirec);
     if (this._defDirec.length === 1) {
       return this._defDirec.first;
@@ -261,9 +310,9 @@ export class NguCarousel extends NguCarouselStore
 
     this.carouselCssNode = this._createStyleElem();
 
-    this._buttonControl();
+    // this._buttonControl();
 
-    if (isPlatformBrowser(this.platformId)) {
+    if (window) {
       this._carouselInterval();
       if (!this.vertical.enabled) {
         this._touch();
@@ -314,8 +363,9 @@ export class NguCarousel extends NguCarouselStore
     this.onMove.complete();
 
     /** remove listeners */
-    for (let i = 1; i <= 8; i++) {
-      this[`listener${i}`] && this[`listener${i}`]();
+    for (let i = 1; i <= 4; i++) {
+      const str = `listener${i}`;
+      this[str] && this[str]();
     }
   }
 
@@ -439,11 +489,9 @@ export class NguCarousel extends NguCarouselStore
       top + carouselHeight / 2 >= scrollY;
 
     if (isCarouselOnScreen) {
-      // this._carouselIntervalEvent(0);
       this._intervalController$.next(1);
     } else {
       this._intervalController$.next(0);
-      // this._carouselIntervalEvent(1);
     }
   }
 
@@ -516,7 +564,6 @@ export class NguCarousel extends NguCarouselStore
         this._btnBoolean(0, 0);
       }
     }
-    this._buttonControl();
     // }
   }
 
@@ -714,14 +761,14 @@ export class NguCarousel extends NguCarouselStore
         'transition',
         `transform ${itemSpeed}ms ${this.inputs.easing}`
       );
-      // this.inputs.animation &&
-      //   this._carouselAnimator(
-      //     Btn,
-      //     currentSlide + 1,
-      //     currentSlide + this.items,
-      //     itemSpeed,
-      //     Math.abs(this.currentSlide - currentSlide)
-      //   );
+      this.inputs.animation &&
+        this._carouselAnimator(
+          Btn,
+          currentSlide + 1,
+          currentSlide + this.items,
+          itemSpeed,
+          Math.abs(this.currentSlide - currentSlide)
+        );
     } else {
       this._setStyle(this.nguItemsContainer.nativeElement, 'transition', ``);
     }
@@ -732,7 +779,6 @@ export class NguCarousel extends NguCarouselStore
     this.onMove.emit(this);
     this._carouselPointActiver();
     this._carouselLoadTrigger();
-    this._buttonControl();
     this.withAnim = true;
     // if (currentSlide === 12) {
     //   this._switchDataSource(this.dataSource);
@@ -805,25 +851,7 @@ export class NguCarousel extends NguCarouselStore
   private _carouselInterval(): void {
     const container = this.carouselMain1.nativeElement;
     if (this.interval && this.loop) {
-      // this.listener4 = this._renderer.listen(container, 'touchstart', () => {
-      //   this._carouselIntervalEvent(1);
-      // });
-
-      // this.listener5 = this._renderer.listen(container, 'touchend', () => {
-      //   this._carouselIntervalEvent(0);
-      // });
-
-      // this.listener6 = this._renderer.listen(container, 'mouseenter', () => {
-      //   this._carouselIntervalEvent(1);
-      //   this.isHovered = true;
-      // });
-
-      // this.listener7 = this._renderer.listen(container, 'mouseleave', () => {
-      //   this._carouselIntervalEvent(0);
-      //   this.isHovered = false;
-      // });
-
-      this.listener8 = this._renderer.listen('window', 'scroll', () => {
+      this.listener4 = this._renderer.listen('window', 'scroll', () => {
         clearTimeout(this.onScrolling);
         this.onScrolling = setTimeout(() => {
           this._onWindowScrolling();
@@ -839,10 +867,6 @@ export class NguCarousel extends NguCarouselStore
       const interval$ = interval(this.inputs.interval.timing).pipe(mapTo(1));
 
       setTimeout(() => {
-        // this.carouselInt = setInterval(() => {
-        //   !this.pauseCarousel && this._carouselScrollOne(1);
-        // }, this.inputs.interval.timing);
-
         this.carouselInt = merge(
           play$,
           touchPlay$,
@@ -865,19 +889,23 @@ export class NguCarousel extends NguCarouselStore
     }
   }
 
-  /** pause interval for specific time */
-  // private _carouselIntervalEvent(ev: number): void {
-  //   this.evtValue = ev;
-  //   if (this.evtValue === 0) {
-  //     clearTimeout(this.pauseInterval);
-  //     this.pauseInterval = setTimeout(() => {
-  //       // tslint:disable-next-line:no-unused-expression
-  //       this.evtValue === 0 && (this.pauseCarousel = false);
-  //     }, this.inputs.interval);
-  //   } else {
-  //     this.pauseCarousel = true;
-  //   }
-  // }
+  private _updateItemIndexContextAni() {
+    const viewContainer = this._nodeOutlet.viewContainer;
+    for (
+      let renderIndex = 0, count = viewContainer.length;
+      renderIndex < count;
+      renderIndex++
+    ) {
+      const viewRef = viewContainer.get(renderIndex) as any;
+      const context = viewRef.context as any;
+      context.count = count;
+      context.first = renderIndex === 0;
+      context.last = renderIndex === count - 1;
+      context.even = renderIndex % 2 === 0;
+      context.odd = !context.even;
+      context.index = renderIndex;
+    }
+  }
 
   /** animate the carousel items */
   private _carouselAnimator(
@@ -885,55 +913,44 @@ export class NguCarousel extends NguCarouselStore
     start: number,
     end: number,
     speed: number,
-    length: number
+    length: number,
+    viewContainer = this._nodeOutlet.viewContainer
   ): void {
     let val = length < 5 ? length : 5;
     val = val === 1 ? 3 : val;
-    console.log(this._defDirec);
-    const itemList = this._defDirec.toArray();
+    const collectIndex = [];
 
     if (direction === 1) {
       for (let i = start - 1; i < end; i++) {
+        collectIndex.push(i);
         val = val * 2;
-        itemList[i].template.elementRef.nativeElement &&
-          this._setStyle(
-            itemList[i].template.elementRef.nativeElement,
-            'transform',
-            `translate3d(${val}px, 0, 0)`
-          );
+        const viewRef = viewContainer.get(i) as any;
+        const context = viewRef.context as any;
+        context.animate = { value: true, params: { distance: val } };
       }
     } else {
       for (let i = end - 1; i >= start - 1; i--) {
+        collectIndex.push(i);
         val = val * 2;
-        itemList[i] &&
-          this._setStyle(
-            itemList[i],
-            'transform',
-            `translate3d(-${val}px, 0, 0)`
-          );
+        const viewRef = viewContainer.get(i) as any;
+        const context = viewRef.context as any;
+        context.animate = { value: true, params: { distance: -val } };
       }
     }
+    this.cdr.markForCheck();
     setTimeout(() => {
-      this._defDirec.forEach(elem =>
-        this._setStyle(
-          elem.template.elementRef.nativeElement,
-          'transform',
-          `translate3d(0, 0, 0)`
-        )
-      );
+      this._removeAnimations(collectIndex);
     }, speed * 0.7);
   }
 
-  /** control button for loop */
-  private _buttonControl(): void {
-    let arr = [];
-    if (!this.loop || (this.isFirst && this.isLast)) {
-      arr = [this.isFirst ? 'none' : 'block', this.isLast ? 'none' : 'block'];
-    } else {
-      arr = ['block', 'block'];
-    }
-    // this._setStyle(this.prev.nativeElement, 'display', arr[0]);
-    // this._setStyle(this.next.nativeElement, 'display', arr[1]);
+  private _removeAnimations(indexs: number[]) {
+    const viewContainer = this._nodeOutlet.viewContainer;
+    indexs.forEach(i => {
+      const viewRef = viewContainer.get(i) as any;
+      const context = viewRef.context as any;
+      context.animate = { value: false, params: { distance: 0 } };
+    });
+    this.cdr.markForCheck();
   }
 
   /** Short form for setElementStyle */
