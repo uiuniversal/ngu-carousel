@@ -1,6 +1,7 @@
 :host {
   display: block;
   position: relative;
+
   &.ngurtl {
     direction: rtl;
   }
@@ -12,11 +13,14 @@
   position: relative;
   overflow: hidden;
   height: 100%;
+
   .ngucarousel-items {
     position: relative;
     display: flex;
     height: 100%;
-  } // }
+  }
+
+  // }
 }
 
 .nguvertical {
@@ -29,11 +33,14 @@
       position: absolute;
       width: 100%;
       bottom: 20px;
+
       li {
         background: rgba(255, 255, 255, 0.55);
+
         &.active {
           background: white;
         }
+
         &:hover {
           cursor: pointer;
         }
@@ -51,6 +58,7 @@
     white-space: nowrap;
     overflow: auto;
     box-sizing: border-box;
+
     li {
       display: inline-block;
       border-radius: 50%;
@@ -59,10 +67,12 @@
       margin: 0 4px;
       transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
       transition: 0.4s;
+
       &.active {
         background: #6b6b6b;
         transform: scale(1.8);
       }
+
       &:hover {
         cursor: pointer;
       }

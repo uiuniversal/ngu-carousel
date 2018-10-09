@@ -19,5 +19,5 @@ export const slider: AnimationTriggerMetadata = trigger('slider', [
   state('false', style({ transform: 'translate3d({{distance}}px,0,0)' }), {
     params: { distance: '0' }
   }),
-  transition('* => *', animate('200ms ease-in'))
+  transition('* => *', animate('200ms ease'))
 ]);

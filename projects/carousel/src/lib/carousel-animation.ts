@@ -13,11 +13,14 @@ export const EXPANSION_PANEL_ANIMATION_TIMING =
 
 /** Animations used by the Material expansion panel. */
 export const slider: AnimationTriggerMetadata = trigger('slider', [
-  state('rtl', style({ transform: 'translate3d({{distance}}%,0,0)' }), {
+  state('true, false', style({ transform: 'none' })),
+  state('true', style({ transform: '{{distance}}' }), {
     params: { distance: '0' }
   }),
-  state('withoutRTL', style({ transform: 'translate3d({{distance}}%,0,0)' }), {
+  state('false', style({ transform: '{{distance}}' }), {
     params: { distance: '0' }
   }),
-  transition('* => *', animate('200ms ease-in'))
+  transition('* => *', animate('{{timing}}'), {
+    params: { timing: '500ms cubic-bezier(0.35, 0, 0.25, 1)' }
+  })
 ]);

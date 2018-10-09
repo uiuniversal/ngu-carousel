@@ -5,7 +5,7 @@ import {
   AfterViewInit,
   ChangeDetectorRef
 } from '@angular/core';
-import { NguCarouselConfig } from 'carousel';
+import { NguCarouselConfig } from '../../projects/carousel/src/public_api';
 import { Observable, interval, of } from 'rxjs';
 import { startWith, switchMap, take, map } from 'rxjs/operators';
 import { slider } from './slide-animation';
@@ -21,6 +21,10 @@ export class AppComponent implements OnInit, AfterViewInit {
   imgags = [
     'assets/bg.jpg',
     'assets/car.png',
+    'assets/bg.jpg',
+    'assets/canberra.jpg',
+    'assets/car.png',
+    'assets/holi.jpg',
     'assets/canberra.jpg',
     'assets/holi.jpg'
   ];
@@ -34,7 +38,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     5: []
   };
   public carouselTile: NguCarouselConfig = {
-    grid: { xs: 1, sm: 1, md: 3, lg: 5, all: 0 },
+    grid: { xs: 1, all: 0 },
     slide: 3,
     speed: 350,
     interval: {
@@ -49,20 +53,23 @@ export class AppComponent implements OnInit, AfterViewInit {
     loop: true,
     touch: true,
     animation: 'lazy',
-    easing: 'cubic-bezier(.17,.67,.83,.67)'
+    easing: '500ms cubic-bezier(0.35, 0, 0.25, 1)'
   };
 
-  public carouselTileItems$: Observable<number[]>;
+  public carouselTileItems$: Observable<string[]>;
   public carouselTileConfig: NguCarouselConfig = {
-    grid: { xs: 1, sm: 1, md: 1, lg: 5, all: 0 },
-    speed: 250,
+    grid: { xs: 3, all: 0 },
+    speed: 500,
     point: {
-      visible: true
+      visible: true,
+      hideOnSingleSlide: true
     },
     touch: true,
     loop: true,
-    interval: { timing: 1500 },
-    animation: 'lazy'
+    interval: { timing: 4000 },
+    velocity: 0,
+    // animation: 'lazy',
+    easing: 'cubic-bezier(0.35, 0, 0.25, 1)'
   };
   tempData: any[];
 
@@ -74,17 +81,16 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.carouselTileLoad(el);
     });
 
-    this.carouselTileItems$ = interval(500).pipe(
-      startWith(-1),
-      take(30),
-      map(val => {
-        const data = (this.tempData = [
-          ...this.tempData,
-          this.imgags[Math.floor(Math.random() * this.imgags.length)]
-        ]);
-        return data;
-      })
-    );
+    this.carouselTileItems$ = of(this.imgags);
+    // this.carouselTileItems$ = interval(3000).pipe(
+    //   startWith(-1),
+    //   take(3),
+    //   map(val => {
+    //     console.log(val);
+    //     const data = (this.tempData = [...this.tempData, this.imgags[val]]);
+    //     return data;
+    //   })
+    // );
   }
 
   // switchMap(val => {

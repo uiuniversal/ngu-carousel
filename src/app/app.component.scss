@@ -31,6 +31,7 @@
   line-height: 200px;
   background: rgba(0, 0, 0, 0.32);
   color: white;
+  font-size: 14px;
   margin: 0;
 }
 
@@ -137,6 +138,7 @@ nav h1 {
   white-space: nowrap;
   overflow: auto;
   box-sizing: border-box;
+
   li {
     display: inline-block;
     border-radius: 50%;
@@ -145,6 +147,7 @@ nav h1 {
     margin: 0 3px;
     transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
     transition: 0.4s;
+
     &.active {
       background: #6b6b6b;
       transform: scale(1.2);
@@ -172,11 +175,13 @@ nav h1 {
   margin: 0;
   padding: 10px;
   box-sizing: border-box;
+
   li {
     background: #6b6b6b;
     width: 50px;
     height: 50px;
     margin-right: 10px;
+
     &.active {
       transform: translateY(-10px);
       transition: .3s ease all;

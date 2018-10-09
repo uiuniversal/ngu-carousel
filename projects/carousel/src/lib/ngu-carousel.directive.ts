@@ -1,40 +1,42 @@
 import { Directive, TemplateRef, ViewContainerRef } from '@angular/core';
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[NguCarouselItem]'
 })
 export class NguCarouselItemDirective {}
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[NguCarouselNext]'
 })
-export class NguCarouselNextDirective {
-  // @HostBinding('disabled') disabled: boolean;
-  // @HostBinding('style.display') display = 'block';
-  // @HostListener('click')
-  // onClick() {
-  // }
-}
+export class NguCarouselNextDirective {}
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[NguCarouselPrev]'
 })
-export class NguCarouselPrevDirective {
-  // @HostBinding('disabled') disabled: boolean;
-  // @HostBinding('style.display') display = 'block';
-}
+export class NguCarouselPrevDirective {}
 
+/**
+ * This is used to add Carousel Button
+ * This directive replaces the Prev and Next buttons
+ */
 @Directive({
-  // tslint:disable-next-line:directive-selector
+  selector: '[NguCarouselButton]'
+})
+export class NguCarouselButton {}
+
+/**
+ * This Directive is used to add Custom carousel points
+ * This just used as a selector
+ */
+@Directive({
   selector: '[NguCarouselPoint]'
 })
 export class NguCarouselPointDirective {}
 
+/**
+ * This Directive is used as a carousel Def selector
+ */
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[nguCarouselDef]'
 })
 export class NguCarouselDefDirective<T> {
@@ -44,10 +46,24 @@ export class NguCarouselDefDirective<T> {
 }
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[nguCarouselOutlet]'
 })
 // tslint:disable-next-line:directive-class-suffix
 export class NguCarouselOutlet {
+  constructor(public viewContainer: ViewContainerRef) {}
+}
+
+@Directive({
+  selector: '[nguCarouselOutletLeft]'
+})
+// tslint:disable-next-line:directive-class-suffix
+export class NguCarouselOutletLeft {
+  constructor(public viewContainer: ViewContainerRef) {}
+}
+@Directive({
+  selector: '[nguCarouselOutletRight]'
+})
+// tslint:disable-next-line:directive-class-suffix
+export class NguCarouselOutletRight {
   constructor(public viewContainer: ViewContainerRef) {}
 }

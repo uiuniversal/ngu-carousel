@@ -41,7 +41,7 @@ export class ItemsControl {
 }
 
 export class Vertical {
-  enabled: boolean;
+  enabled = false;
   height: number;
   // numHeight?: number;
 }
@@ -60,9 +60,9 @@ export class Touch {
 export class Transfrom {
   constructor(
     public xs = 0,
-    public sm = 0,
-    public md = 0,
-    public lg = 0,
+    // public sm = 0,
+    // public md = 0,
+    // public lg = 0,
     public all = 0
   ) {}
 }
@@ -87,7 +87,7 @@ export class NguCarouselConfig {
 }
 
 export type Custom = 'banner';
-export type Animate = 'lazy';
+export type Animate = 'lazy' | 'fade';
 
 export interface Point {
   visible: boolean;
