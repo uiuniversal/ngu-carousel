@@ -312,7 +312,7 @@ export class NguCarousel<T> extends NguCarouselStore
 
     // this._buttonControl();
 
-    if (window) {
+    if (isPlatformBrowser(this.platformId)) {
       this._carouselInterval();
       if (!this.vertical.enabled) {
         this._touch();
