@@ -66,6 +66,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     },
     touch: true,
     loop: true,
+    load: 2,
     interval: { timing: 4000 },
     velocity: 0,
     // animation: 'lazy',
@@ -81,7 +82,10 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.carouselTileLoad(el);
     });
 
-    this.carouselTileItems$ = of(this.imgags);
+    this.carouselTileItems$ = interval(10000).pipe(
+      startWith(this.imgags),
+      map(e => this.shuffle(this.imgags))
+    );
     // this.carouselTileItems$ = interval(3000).pipe(
     //   startWith(-1),
     //   take(3),
@@ -114,6 +118,18 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (len <= 30) {
       for (let i = len; i < len + 100; i++) {
         this.carouselTiles[j].push(
+          this.imgags[Math.floor(Math.random() * this.imgags.length)]
+        );
+      }
+    }
+  }
+
+  loadCarousel(carousel) {
+    console.log('loadCalled');
+    const len = carousel.length;
+    if (len <= 30) {
+      for (let i = len; i < len + 4; i++) {
+        carousel.push(
           this.imgags[Math.floor(Math.random() * this.imgags.length)]
         );
       }

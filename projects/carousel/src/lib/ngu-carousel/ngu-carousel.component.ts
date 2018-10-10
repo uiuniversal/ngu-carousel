@@ -265,13 +265,14 @@ export class NguCarousel<T> extends NguCarouselStore
     setTimeout(() => {
       const leftContainer = this._nodeOutletLeft.viewContainer;
       const rightContainer = this._nodeOutletRight.viewContainer;
+      leftContainer.clear();
+      rightContainer.clear();
       for (let it = 0; it < this.slideItems; it++) {
         this._createNodeItem(data, rightContainer, it, true);
         // console.log(this.collectExtractItemIndex);
       }
       const ln = data.length;
       for (let it = ln - 1; it >= ln - this.slideItems - 1; it--) {
-        console.log(ln, it);
         this._createNodeItem(data, leftContainer, it, false, 0);
       }
       this.extraLoopItemsWidth =
@@ -294,7 +295,6 @@ export class NguCarousel<T> extends NguCarouselStore
     tempItem = false,
     insertIndex?: number
   ) {
-    console.log(data[currentIndex]);
     const node = this._getNodeDef(data[currentIndex], currentIndex);
     const context = new NguCarouselOutletContext<T>(data[currentIndex]);
     context.index = currentIndex;
@@ -303,7 +303,6 @@ export class NguCarousel<T> extends NguCarouselStore
       : typeof insertIndex === 'number'
         ? insertIndex
         : undefined;
-    console.log(context, insertIndex, indexx);
     return viewContainer.createEmbeddedView(node.template, context, indexx);
   }
 
