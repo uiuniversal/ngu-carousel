@@ -3,9 +3,13 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   AfterViewInit,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ViewChild
 } from '@angular/core';
-import { NguCarouselConfig } from '../../projects/carousel/src/public_api';
+import {
+  NguCarouselConfig,
+  NguCarousel
+} from '../../projects/carousel/src/public_api';
 import { Observable, interval, of } from 'rxjs';
 import { startWith, switchMap, take, map } from 'rxjs/operators';
 import { slider } from './slide-animation';
@@ -18,6 +22,10 @@ import { slider } from './slide-animation';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit, AfterViewInit {
+  @ViewChild('myCarousel')
+  myCarousel: NguCarousel<any>;
+
+  hideShow = true;
   imgags = [
     'assets/bg.jpg',
     'assets/car.png',
@@ -38,7 +46,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     5: []
   };
   public carouselTile: NguCarouselConfig = {
-    grid: { xs: 1, all: 0 },
+    grid: { size: 1 },
     slide: 3,
     speed: 350,
     interval: {
@@ -58,7 +66,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public carouselTileItems$: Observable<string[]>;
   public carouselTileConfig: NguCarouselConfig = {
-    grid: { xs: 3, all: 0 },
+    grid: { size: 2, offset: 0 },
     speed: 500,
     point: {
       visible: true,
@@ -67,14 +75,16 @@ export class AppComponent implements OnInit, AfterViewInit {
     touch: true,
     loop: true,
     load: 2,
-    interval: { timing: 4000 },
+    // interval: { timing: 1000 },
     velocity: 0,
-    // animation: 'lazy',
-    easing: 'cubic-bezier(0.35, 0, 0.25, 1)'
+    animation: 'lazy',
+    easing: 'cubic-bezier(0.35, 0, 0.25, 1)',
+    RTL: false,
+    type: 'mobile'
   };
   tempData: any[];
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(public cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.tempData = [];
@@ -82,9 +92,11 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.carouselTileLoad(el);
     });
 
-    this.carouselTileItems$ = interval(10000).pipe(
+    this.carouselTileItems$ = interval(100000).pipe(
       startWith(this.imgags),
-      map(e => this.shuffle(this.imgags))
+      map(e => {
+        return this.shuffle(this.imgags);
+      })
     );
     // this.carouselTileItems$ = interval(3000).pipe(
     //   startWith(-1),
@@ -112,6 +124,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.cdr.detectChanges();
   }
 
+  changeGridConfig() {
+    this.myCarousel.changeGridConfig({ size: 1, offset: 15 });
+  }
+
   public carouselTileLoad(j) {
     // console.log(this.carouselTiles[j]);
     const len = this.carouselTiles[j].length;
@@ -125,7 +141,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   loadCarousel(carousel) {
-    console.log('loadCalled');
+    // console.log('loadCalled');
     const len = carousel.length;
     if (len <= 30) {
       for (let i = len; i < len + 4; i++) {
@@ -154,5 +170,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
     return array;
+  }
+
+  touch(arr) {
+    this.myCarousel[arr ? 'enableTouch' : 'disableTouch']();
   }
 }

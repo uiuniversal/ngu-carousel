@@ -1,4 +1,9 @@
-import { Directive, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  Directive,
+  TemplateRef,
+  ViewContainerRef,
+  ElementRef
+} from '@angular/core';
 
 @Directive({
   selector: '[NguCarouselItem]'
@@ -46,24 +51,39 @@ export class NguCarouselDefDirective<T> {
 }
 
 @Directive({
-  selector: '[nguCarouselOutlet]'
+  selector: '[nguCarouselOutlet]',
+  host: {
+    '[style.maxWidth]': 'width',
+    '[style.flexBasis]': 'width'
+  }
 })
 // tslint:disable-next-line:directive-class-suffix
 export class NguCarouselOutlet {
-  constructor(public viewContainer: ViewContainerRef) {}
+  width = '33.33%';
+  constructor(public viewContainer: ViewContainerRef, private el: ElementRef) {
+    console.log(viewContainer.length);
+  }
 }
 
 @Directive({
-  selector: '[nguCarouselOutletLeft]'
+  selector: '[nguCarouselOutletLeft]',
+  host: {
+    '[style.width]': 'width'
+  }
 })
 // tslint:disable-next-line:directive-class-suffix
 export class NguCarouselOutletLeft {
+  width: string;
   constructor(public viewContainer: ViewContainerRef) {}
 }
 @Directive({
-  selector: '[nguCarouselOutletRight]'
+  selector: '[nguCarouselOutletRight]',
+  host: {
+    '[style.width]': 'width'
+  }
 })
 // tslint:disable-next-line:directive-class-suffix
 export class NguCarouselOutletRight {
+  width: string;
   constructor(public viewContainer: ViewContainerRef) {}
 }
