@@ -36,6 +36,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     'assets/canberra.jpg',
     'assets/holi.jpg'
   ];
+  dataCounts = [1, 2, 3, 4, 5, 6, 7, 8];
   public carouselTileItems: Array<any> = [0, 1, 2, 3, 4, 5];
   public carouselTiles = {
     0: [],
@@ -66,7 +67,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public carouselTileItems$: Observable<string[]>;
   public carouselTileConfig: NguCarouselConfig = {
-    grid: { size: 2, offset: 0 },
+    grid: { size: 1, offset: 15 },
     speed: 500,
     point: {
       visible: true,
@@ -79,8 +80,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     velocity: 0,
     animation: 'lazy',
     easing: 'cubic-bezier(0.35, 0, 0.25, 1)',
-    RTL: false,
-    type: 'mobile'
+    RTL: false
   };
   tempData: any[];
 
@@ -125,7 +125,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   changeGridConfig() {
-    this.myCarousel.changeGridConfig({ size: 1, offset: 15 });
+    this.myCarousel.changeGridConfig({ size: 2, offset: 15 });
   }
 
   public carouselTileLoad(j) {

@@ -112,7 +112,6 @@ export class NguCarouselConfig {
   interval?: CarouselInterval;
   animation?: Animate;
   point?: Point;
-  type?: string;
   load?: number;
   custom?: Custom;
   loop?: boolean;

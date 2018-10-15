@@ -36,8 +36,7 @@
   </ngu-carousel>
 </ng-container> -->
 <!-- <ng-container *ngFor="let item of [1,2,3,4,5]"> -->
-<ngu-carousel #myCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItems$ | async" (carouselLoad)="loadCarousel(imgags)"
-  *ngIf="hideShow">
+<ngu-carousel #myCarousel [inputs]="carouselTileConfig" [dataSource]="imgags" *ngIf="hideShow">
   <div *nguCarouselDef="let item; let i = index; let ani = animate" class="carouselTile item">
     <div class="tile" [style.background]="'url('+item+')'">
       <h1>{{i + 1}}--{{item}}</h1>
