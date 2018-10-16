@@ -53,7 +53,8 @@
 </ngu-carousel>
 <!-- </ng-container> -->
 <button (click)="hideShow = !hideShow">hideShow</button>
-<button (click)="changeGridConfig()">changeGridConfig</button>
+<input type="text" #val value="2">
+<button (click)="changeGridConfig(val.value)">changeGridConfig</button>
 <button (click)="touch(0)">touch</button>
 <button (click)="touch(1)">touchEnable</button>
 <!-- {{ (carouselTileItems$ | async)?.length }} -->

@@ -15,7 +15,7 @@ export class NguCarouselStore {
   slideItems = 0;
   itemWidthPer = 0;
   itemLength = 0;
-  currentSlide = 0;
+  currentSlideItems = 0;
   easing = 'cubic-bezier(0.35, 0, 0.25, 1)';
   speed = 200;
   loop = false;
@@ -103,11 +103,12 @@ export class ItemConfig {
   size: number;
   offset?: number;
   isFixed?: boolean;
+  slide?: number;
 }
 
 export class NguCarouselConfig {
   grid: ItemConfig;
-  slide?: number;
+  // slide?: number;
   speed?: number;
   interval?: CarouselInterval;
   animation?: Animate;

@@ -47,8 +47,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     5: []
   };
   public carouselTile: NguCarouselConfig = {
-    grid: { size: 1 },
-    slide: 3,
+    grid: { size: 1, slide: 3 },
     speed: 350,
     interval: {
       timing: 3000,
@@ -124,8 +123,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.cdr.detectChanges();
   }
 
-  changeGridConfig() {
-    this.myCarousel.changeGridConfig({ size: 2, offset: 15 });
+  changeGridConfig(val) {
+    this.myCarousel.changeGridConfig({ size: +val, offset: 15, slide: 2 });
   }
 
   public carouselTileLoad(j) {
