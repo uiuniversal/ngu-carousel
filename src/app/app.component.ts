@@ -66,7 +66,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public carouselTileItems$: Observable<string[]>;
   public carouselTileConfig: NguCarouselConfig = {
-    grid: { size: 1, offset: 15 },
+    grid: { size: 250, offset: 0, isFixed: true },
     speed: 500,
     point: {
       visible: true,
@@ -76,6 +76,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     loop: true,
     load: 2,
     // interval: { timing: 1000 },
+    // vertical: { enabled: true, height: 200 },
     velocity: 0,
     animation: 'lazy',
     easing: 'cubic-bezier(0.35, 0, 0.25, 1)',

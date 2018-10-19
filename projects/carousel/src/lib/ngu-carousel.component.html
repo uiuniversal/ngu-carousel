@@ -1,7 +1,7 @@
 <div #ngucarousel class="ngucarousel" [style.height.px]="vertical.height">
   <div #touchContainer class="ngu-touch-container">
     <div #nguItemsContainer class="ngucarousel-items" [@slider]="{value: alternatives, params: { distance: carouselTransform, timing: carouselTransition}}"
-      (@slider.done)="animationCompleted()">
+      (@slider.done)="animationCompleted()" [class.nguvertical]="vertical.enabled">
       <!-- [ngStyle]="{transition: carouselTransition, transform: carouselTransform}" -->
       <ng-container nguCarouselOutletLeft></ng-container>
       <ng-container nguCarouselOutlet></ng-container>
@@ -10,5 +10,4 @@
   </div>
   <ng-content select="[NguCarouselButton]"></ng-content>
 </div>
-<button (click)="cdr.detectChanges()">detechChanges</button>
 <ng-content select="[NguCarouselPoint]"></ng-content>
