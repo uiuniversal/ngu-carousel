@@ -43,8 +43,8 @@
     </div>
   </div>
 
-  <button NguCarouselButton class="leftRs" (click)="myCarousel.carouselScrollOne(0)" [style.opacity]="myCarousel.isFirst ? 0.5:1">&lt;</button>
-  <button NguCarouselButton class="rightRs" (click)="myCarousel.carouselScrollOne(1)" [style.opacity]="myCarousel.isLast ? 0.5:1">&gt;</button>
+  <button NguCarouselButton class="leftRs" (click)="myCarousel.slide(0)" [style.opacity]="myCarousel.isFirst ? 0.5:1">&lt;</button>
+  <button NguCarouselButton class="rightRs" (click)="myCarousel.slide(1)" [style.opacity]="myCarousel.isLast ? 0.5:1">&gt;</button>
 
   <ul class="myPoint" NguCarouselPoint>
     <li *ngFor="let i of myCarousel.pointNumbers; let i = index" [class.active]="i==myCarousel.activePoint" (click)="myCarousel.moveTo(i)"></li>

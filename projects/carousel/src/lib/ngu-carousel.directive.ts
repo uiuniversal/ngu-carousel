@@ -10,16 +10,6 @@ import {
 })
 export class NguCarouselItemDirective {}
 
-@Directive({
-  selector: '[NguCarouselNext]'
-})
-export class NguCarouselNextDirective {}
-
-@Directive({
-  selector: '[NguCarouselPrev]'
-})
-export class NguCarouselPrevDirective {}
-
 /**
  * This is used to add Carousel Button
  * This directive replaces the Prev and Next buttons
@@ -50,40 +40,32 @@ export class NguCarouselDefDirective<T> {
   constructor(public template: TemplateRef<any>) {}
 }
 
+/**
+ * This Directive is used as a ViewContainerRef for main items
+ */
 @Directive({
-  selector: '[nguCarouselOutlet]',
-  host: {
-    '[style.maxWidth]': 'width',
-    '[style.flexBasis]': 'width'
-  }
+  selector: '[nguCarouselOutlet]'
 })
-// tslint:disable-next-line:directive-class-suffix
 export class NguCarouselOutlet {
-  width = '33.33%';
-  constructor(public viewContainer: ViewContainerRef, private el: ElementRef) {
-    console.log(viewContainer.length);
-  }
+  constructor(public viewContainer: ViewContainerRef, private el: ElementRef) {}
 }
 
+/**
+ * This Directive is used as a ViewContainerRef for extra left items for loop
+ */
 @Directive({
-  selector: '[nguCarouselOutletLeft]',
-  host: {
-    '[style.width]': 'width'
-  }
+  selector: '[nguCarouselOutletLeft]'
 })
-// tslint:disable-next-line:directive-class-suffix
 export class NguCarouselOutletLeft {
-  width: string;
   constructor(public viewContainer: ViewContainerRef) {}
 }
+
+/**
+ * This Directive is used as a ViewContainerRef for extra right items for loop
+ */
 @Directive({
-  selector: '[nguCarouselOutletRight]',
-  host: {
-    '[style.width]': 'width'
-  }
+  selector: '[nguCarouselOutletRight]'
 })
-// tslint:disable-next-line:directive-class-suffix
 export class NguCarouselOutletRight {
-  width: string;
   constructor(public viewContainer: ViewContainerRef) {}
 }

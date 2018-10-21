@@ -40,10 +40,10 @@ import 'hammerjs';
   <div *nguCarouselDef="let tile; let j = index">
     {{tile.text}}
   </div>
-  
-  <button NguCarouselPrev [disabled]="isFirst && !carouselConf.loop" *ngIf="myCarousel.pointNumbers.length > 1"></button>
-  <button NguCarouselNext [disabled]="isLast && !carouselConf.loop" *ngIf="myCarousel.pointNumbers.length > 1"></button>
-  
+
+  <button [disabled]="isFirst && !carouselConf.loop" (click)="myCarousel.slide(0)" *ngIf="myCarousel.pointNumbers.length > 1"></button>
+  <button [disabled]="isLast && !carouselConf.loop" (click)="myCarousel.slide(1)" *ngIf="myCarousel.pointNumbers.length > 1"></button>
+
   <ul NguCarouselPoint>
     <li *ngFor="let point of myCarousel.pointNumbers; let j = index" [class.active]="j === myCarousel.activePoint" (click)="myCarousel.moveTo(j)">{{point}}</li>
   </ul>
@@ -51,14 +51,16 @@ import 'hammerjs';
 ```
 
 ```typescript
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NguCarouselConfig } from '@ngu/carousel';
 
 @Component({
   selector: 'sample'
 })
 export class SampleComponent {
-  
+  @ViewChild('myCarousel')
+  myCarousel: NguCarousel<{ text: string }>;
+
   public carouselConfig: NguCarouselConfig;
   public carouselTiles: any[] = [
     {
@@ -71,11 +73,11 @@ export class SampleComponent {
       text: 'third tile'
     }
   ];
-  
+
   constructor() {
     // See NguCarouselConfig below for available options
     this.carouselConfig = {
-      grid: { xs: 1, sm: 1, md: 3, lg: 3, all: 0 },
+      grid: { size: 2, offset: 15, isFixed: false, slide: 2 },
       slide: 3,
       speed: 250,
       interval: {
@@ -88,17 +90,16 @@ export class SampleComponent {
       velocity: 0,
       touch: true,
       easing: 'cubic-bezier(0, 0, 0.2, 1)'
-    }
+    };
   }
-  
+
   onMove() {
     // Carousel moved, do something
   }
-  
+
   loadMore() {
     // Load more tiles
   }
-  
 }
 ```
 
@@ -151,8 +152,7 @@ export class Touch {
 }
 
 export class NguCarouselConfig {
-  grid: Transfrom;
-  slide?: number;
+  grid: ItemConfig;
   speed?: number;
   interval?: CarouselInterval;
   animation?: Animate;
@@ -169,12 +169,11 @@ export class NguCarouselConfig {
   velocity?: number;
 }
 
-export class Grid {
-  xs: number;
-  sm: number;
-  md: number;
-  lg: number;
-  all: number;
+export class ItemConfig {
+  size: number;
+  offset?: number;
+  isFixed?: boolean;
+  slide?: number;
 }
 
 export interface Point {
@@ -186,23 +185,23 @@ export type Custom = 'banner';
 export type Animate = 'lazy';
 ```
 
-| Command                   | Type          | Required | Description                                                                                                                                                                                                                   |
-| ------------------------- | ------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `grid`                    | Object        | Yes      | **xs** - mobile, **sm** - tablet, **md** - desktop, **lg** - large desktops, **all** - fixed width (When you use **all** make others 0 and vise versa)                                                                        |
-| `slide`                   | number        | optional | It is used to slide the number items on click                                                                                                                                                                                 |
-| `speed`                   | milli seconds | optional | It is used for time taken to slide the number items                                                                                                                                                                           |
-| `interval`                | milli seconds | optional | It is used to make carousel auto slide with given value. interval defines the interval between slides                                                                                                                         |
+| Command                   | Type          | Required | Description                                                                                                                                                                                                                    |
+| ------------------------- | ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `grid`                    | Object        | Yes      | **xs** - mobile, **sm** - tablet, **md** - desktop, **lg** - large desktops, **all** - fixed width (When you use **all** make others 0 and vise versa)                                                                         |
+| `grid.slide`              | number        | optional | It is used to slide the number items on click                                                                                                                                                                                  |
+| `speed`                   | milli seconds | optional | It is used for time taken to slide the number items                                                                                                                                                                            |
+| `interval`                | milli seconds | optional | It is used to make carousel auto slide with given value. interval defines the interval between slides                                                                                                                          |
 | `load`                    | number        | optional | is used to load the items similar to pagination. the carousel will trigger the carouslLoad function to load another set of items. it will help you to improve the performance of the app.**`(carouselLoad)="myfunc($event)"`** |
-| `point.visible`           | boolean       | optional | It is used to indicate no. of slides and also shows the current active slide.                                                                                                                                                 |
-| `point.hideOnSingleSlide` | boolean       | optional | It is used to hide the point indicator when slide is less than one.                                                                                                                                                           |
-| `touch`                   | boolean       | optional | It is used to active touch support to the carousel.                                                                                                                                                                           |
-| `easing`                  | string        | optional | It is used to define the easing style of the carousel. Only define the ease name without any timing like `ease`,`ease-in`                                                                                                     |
-| `loop`                    | boolean       | optional | It is used to loop the `ngu-item | ngu-tile`. It must be true for `interval`                                                                                                                                                  |
-| `animation`               | string        | optional | It is used to animate the sliding items. currently it only supports `lazy`. more coming soon and also with custom css animation option                                                                                        |
-| `custom`                  | string        | optional | It is you to define the purpose of the carousel. currently it only supports `banner`. more coming soon and also with custom css animation option                                                                              |
-| `RTL`                     | boolean       | optional | This option enable the `rtl` direction and act as rtl. By default it is `ltr`                                                                                                                                                 |
-| `vertical.enabled`        | boolean       | optional | This option enable the `vertical` direction                                                                                                                                                                                   |
-| `vertical.height`         | boolean       | optional | This option is used to set the height of the carousel                                                                                                                                                                         |
+| `point.visible`           | boolean       | optional | It is used to indicate no. of slides and also shows the current active slide.                                                                                                                                                  |
+| `point.hideOnSingleSlide` | boolean       | optional | It is used to hide the point indicator when slide is less than one.                                                                                                                                                            |
+| `touch`                   | boolean       | optional | It is used to active touch support to the carousel.                                                                                                                                                                            |
+| `easing`                  | string        | optional | It is used to define the easing style of the carousel. Only define the ease name without any timing like `ease`,`ease-in`                                                                                                      |
+| `loop`                    | boolean       | optional | It is used to loop the `ngu-item | ngu-tile`. It must be true for `interval`                                                                                                                                                   |
+| `animation`               | string        | optional | It is used to animate the sliding items. currently it only supports `lazy`. more coming soon and also with custom css animation option                                                                                         |
+| `custom`                  | string        | optional | It is you to define the purpose of the carousel. currently it only supports `banner`. more coming soon and also with custom css animation option                                                                               |
+| `RTL`                     | boolean       | optional | This option enable the `rtl` direction and act as rtl. By default it is `ltr`                                                                                                                                                  |
+| `vertical.enabled`        | boolean       | optional | This option enable the `vertical` direction                                                                                                                                                                                    |
+| `vertical.height`         | boolean       | optional | This option is used to set the height of the carousel                                                                                                                                                                          |
 
 ## License
 

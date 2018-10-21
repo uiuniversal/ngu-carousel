@@ -66,7 +66,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public carouselTileItems$: Observable<string[]>;
   public carouselTileConfig: NguCarouselConfig = {
-    grid: { size: 250, offset: 0, isFixed: true },
+    grid: { size: 2, offset: 0, isFixed: false, slide: 2 },
     speed: 500,
     point: {
       visible: true,
@@ -98,6 +98,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         return this.shuffle(this.imgags);
       })
     );
+    // this.myCarousel.
     // this.carouselTileItems$ = interval(3000).pipe(
     //   startWith(-1),
     //   take(3),

@@ -7,7 +7,7 @@ export class NguCarouselStore {
   visibleItems?: ItemsControl;
   type: CarouselType = 'fixed';
   token = '';
-  items = 0;
+  maxSlideItems = 0;
   load = 0;
   deviceWidth = 0;
   carouselWidth = 0;
