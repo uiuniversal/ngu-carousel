@@ -67,27 +67,24 @@ import { slider } from './carousel-animation';
   animations: [slider]
 })
 // tslint:disable-next-line:component-class-suffix
-export class NguCarousel<T> extends NguCarouselStore
+export class NguCarousel<T = any> extends NguCarouselStore
   implements OnInit, AfterContentInit, AfterViewInit, OnDestroy, DoCheck {
   private _dataSubscription: Subscription;
   private _dataSource: T[];
   private _dataDiffer: IterableDiffer<{}>;
   styleid: string;
 
-  private pointIndex: number;
+  pointIndex: number;
   private _withAnim = true;
   activePoint: number;
   isHovered = false;
   alternatives = false;
 
-  @Input('inputs')
-  private inputs: NguCarouselConfig;
-  @Output('carouselLoad')
-  private carouselLoad = new EventEmitter();
+  @Input() private inputs: NguCarouselConfig;
+  @Output('carouselLoad') private carouselLoad = new EventEmitter();
 
   // tslint:disable-next-line:no-output-on-prefix
-  @Output('onMove')
-  private onMove = new EventEmitter<NguCarousel<T>>();
+  @Output('onMove') private onMove = new EventEmitter<NguCarousel<T>>();
   private _arrayChanges: IterableChanges<{}>;
   carouselInt: Subscription;
 
@@ -101,10 +98,11 @@ export class NguCarousel<T> extends NguCarouselStore
   private listener3: () => void;
   private listener4: () => void;
 
-  private _extraLoopItemsWidth: number;
+  _extraLoopItemsWidth: number;
   private _resetAferAnimation: any;
   private _carouselItemSize: number;
   private _maxSlideWidth: number;
+  itemWidthTest: number;
 
   @Input('dataSource')
   get dataSource(): T[] {
@@ -136,8 +134,8 @@ export class NguCarousel<T> extends NguCarouselStore
   @ViewChild('nguItemsContainer', { read: ElementRef })
   private nguItemsContainer: ElementRef;
 
-  @ViewChild('touchContainer', { read: ElementRef })
-  private touchContainer: ElementRef;
+  // @ViewChild('touchContainer', { read: ElementRef })
+  // private touchContainer: ElementRef;
 
   private _intervalController$ = new Subject<number>();
 
@@ -312,8 +310,8 @@ export class NguCarousel<T> extends NguCarouselStore
       !tempItem && typeof insertIndex !== 'number'
         ? currentIndex
         : typeof insertIndex === 'number'
-          ? insertIndex
-          : null;
+        ? insertIndex
+        : null;
     return viewContainer.createEmbeddedView(node.template, context, indexx);
   }
 
@@ -361,12 +359,12 @@ export class NguCarousel<T> extends NguCarouselStore
 
     if (isPlatformBrowser(this.platformId)) {
       this._carouselInterval();
-      if (!this.vertical.enabled) {
-        this._touch();
-      }
-      this.listener3 = this._renderer.listen('window', 'resize', event => {
-        this._onResizing(event);
-      });
+      // if (!this.vertical.enabled) {
+      //   this._touch();
+      // }
+      this.listener3 = this._renderer.listen('window', 'resize', event =>
+        this._onResizing(event)
+      );
       this._onWindowScrolling();
     }
     this.cdr.markForCheck();
@@ -434,106 +432,110 @@ export class NguCarousel<T> extends NguCarouselStore
   }
 
   /** Get Touch input */
-  private _touch(): void {
-    if (this.inputs.touch) {
-      const hammertime = new Hammer(this.touchContainer.nativeElement);
-      hammertime.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL });
+  // private _touch(): void {
+  //   if (this.inputs.touch) {
+  //     const hammertime = new Hammer(this.touchContainer.nativeElement);
+  //     hammertime.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL });
 
-      hammertime.on('panstart', (ev: any) => {
-        this.carouselWidth = this.nguItemsContainer.nativeElement.offsetWidth;
-        this.touchTransform = this.transform;
-        this.dexVal = 0;
-        // this._setStyle(this.nguItemsContainer.nativeElement, 'transition', '');
-        // this.carouselTransition = '';
-      });
-      if (this.vertical.enabled) {
-        hammertime.on('panup', (ev: any) => {
-          this._touchHandling('panleft', ev);
-        });
-        hammertime.on('pandown', (ev: any) => {
-          this._touchHandling('panright', ev);
-        });
-      } else {
-        hammertime.on('panleft', (ev: any) => {
-          this._touchHandling('panleft', ev);
-        });
-        hammertime.on('panright', (ev: any) => {
-          this._touchHandling('panright', ev);
-        });
-      }
-      hammertime.on('panend', (ev: any) => {
-        if (Math.abs(ev.velocity) >= this.velocity) {
-          this.touch.velocity = ev.velocity;
-          let direc = 0;
-          if (!this.RTL) {
-            direc = this.touch.swipe === 'panright' ? 0 : 1;
-          } else {
-            direc = this.touch.swipe === 'panright' ? 1 : 0;
-          }
-          // console.log('panend');
-          this.slide(direc);
-        } else {
-          this.dexVal = 0;
-          const transition = '300ms cubic-bezier(0, 0, 0.2, 1)';
-          const transform = `translate3d(-${this.transform +
-            this._extraLoopItemsWidth}%,0,0)`;
-          this.transformCarousel(transform, transition);
-        }
-      });
-      hammertime.on('hammer.input', function(ev) {
-        // allow nested touch events to no propagate, this may have other side affects but works for now.
-        // TODO: It is probably better to check the source element of the event and only apply the handle to the correct carousel
-        ev.srcEvent.stopPropagation();
-      });
-    }
-  }
+  //     hammertime.on('panstart', (ev: any) => {
+  //       this.carouselWidth = this.nguItemsContainer.nativeElement.offsetWidth;
+  //       this.touchTransform = this.transform;
+  //       this.dexVal = 0;
+  //       // this._setStyle(this.nguItemsContainer.nativeElement, 'transition', '');
+  //       // this.carouselTransition = '';
+  //     });
+  //     if (this.vertical.enabled) {
+  //       hammertime.on('panup', (ev: any) => {
+  //         this._touchHandling('panleft', ev);
+  //       });
+  //       hammertime.on('pandown', (ev: any) => {
+  //         this._touchHandling('panright', ev);
+  //       });
+  //     } else {
+  //       hammertime.on('panleft', (ev: any) => {
+  //         this._touchHandling('panleft', ev);
+  //       });
+  //       hammertime.on('panright', (ev: any) => {
+  //         this._touchHandling('panright', ev);
+  //       });
+  //     }
+  //     hammertime.on('panend', (ev: any) => {
+  //       if (Math.abs(ev.velocity) >= this.velocity) {
+  //         this.touch.velocity = ev.velocity;
+  //         let direc = 0;
+  //         if (!this.RTL) {
+  //           direc = this.touch.swipe === 'panright' ? 0 : 1;
+  //         } else {
+  //           direc = this.touch.swipe === 'panright' ? 1 : 0;
+  //         }
+  //         // console.log('panend');
+  //         this.slide(direc);
+  //       } else {
+  //         this.resetTouch();
+  //       }
+  //     });
+  //     hammertime.on('hammer.input', function(ev) {
+  //       // allow nested touch events to no propagate, this may have other side affects but works for now.
+  //       // TODO: It is probably better to check the source element of the event and only apply the handle to the correct carousel
+  //       ev.srcEvent.stopPropagation();
+  //     });
+  //   }
+  // }
+
+  // private resetTouch() {
+  //   this.dexVal = 0;
+  //   const transition = '300ms cubic-bezier(0, 0, 0.2, 1)';
+  //   const transform = `translate3d(-${this.transform +
+  //     this._extraLoopItemsWidth}%,0,0)`;
+  //   this.transformCarousel(transform, transition);
+  // }
 
   /** handle touch input */
-  private _touchHandling(e: string, ev: any): void {
-    // if (!this.inputs.touch) return;
-    // vertical touch events seem to cause to panstart event with an odd delta
-    // and a center of {x:0,y:0} so this will ignore them
-    if (ev.center.x === 0 || !this.inputs.touch) {
-      return;
-    }
+  // private _touchHandling(e: string, ev: any): void {
+  //   // if (!this.inputs.touch) return;
+  //   // vertical touch events seem to cause to panstart event with an odd delta
+  //   // and a center of {x:0,y:0} so this will ignore them
+  //   if (ev.center.x === 0 || !this.inputs.touch) {
+  //     return;
+  //   }
 
-    ev = Math.abs(this.vertical.enabled ? ev.deltaY : ev.deltaX);
-    let valt = ev - this.dexVal;
-    valt =
-      this.type === 'responsive'
-        ? (Math.abs(ev - this.dexVal) /
-            (this.vertical.enabled
-              ? this.vertical.height
-              : this.carouselWidth)) *
-          100
-        : valt;
-    this.dexVal = ev;
-    this.touch.swipe = e;
-    this._setTouchTransfrom(e, valt);
-    this._setTransformFromTouch();
-  }
+  //   ev = Math.abs(this.vertical.enabled ? ev.deltaY : ev.deltaX);
+  //   let valt = ev - this.dexVal;
+  //   valt =
+  //     this.type === 'responsive'
+  //       ? (Math.abs(ev - this.dexVal) /
+  //           (this.vertical.enabled
+  //             ? this.vertical.height
+  //             : this.carouselWidth)) *
+  //         100
+  //       : valt;
+  //   this.dexVal = ev;
+  //   this.touch.swipe = e;
+  //   this._setTouchTransfrom(e, valt);
+  //   this._setTransformFromTouch();
+  // }
 
-  private _setTouchTransfrom(e: string, valt: number) {
-    const condition = this.RTL ? 'panright' : 'panleft';
-    this.touchTransform =
-      e === condition ? valt + this.touchTransform : this.touchTransform - valt;
-  }
+  // private _setTouchTransfrom(e: string, valt: number) {
+  //   const condition = this.RTL ? 'panright' : 'panleft';
+  //   this.touchTransform =
+  //     e === condition ? valt + this.touchTransform : this.touchTransform - valt;
+  // }
 
-  private _setTransformFromTouch() {
-    if (this.touchTransform < 0 && !this.loop) {
-      this.touchTransform = 0;
-    }
-    const type = this.type === 'responsive' ? '%' : 'px';
+  // private _setTransformFromTouch() {
+  //   if (this.touchTransform < 0 && !this.loop) {
+  //     this.touchTransform = 0;
+  //   }
+  //   const type = this.type === 'responsive' ? '%' : 'px';
 
-    const transform = this.vertical.enabled
-      ? `translate3d(0, ${this.directionSym}${this.touchTransform}${type}, 0)`
-      : `translate3d(${this.directionSym}${this.touchTransform +
-          this._extraLoopItemsWidth}${type}, 0, 0)`;
+  //   const transform = this.vertical.enabled
+  //     ? `translate3d(0, ${this.directionSym}${this.touchTransform}${type}, 0)`
+  //     : `translate3d(${this.directionSym}${this.touchTransform +
+  //         this._extraLoopItemsWidth}${type}, 0, 0)`;
 
-    this.transformCarousel(transform);
-  }
+  //   this.transformCarousel(transform);
+  // }
 
-  private transformCarousel(transform: string, transition?: string) {
+  transformCarousel(transform: string, transition?: string) {
     // console.log(transform);
     // console.log(this.currentSlideItems);
     this.alternatives = !this.alternatives;
@@ -578,10 +580,12 @@ export class NguCarousel<T> extends NguCarouselStore
 
     if (this.type === 'responsive') {
       // this.deviceType = 'xs';
+      const offset = this.inputs.grid.offset || 1;
       this.maxSlideItems = this.inputs.grid.size;
       this.itemWidth =
-        this.carouselWidth -
-        this.carouselWidth / this.inputs.grid.offset / this.maxSlideItems;
+        this.carouselWidth - this.carouselWidth / offset / this.maxSlideItems;
+      this.itemWidthTest = this.carouselWidth / this.maxSlideItems;
+      // console.log(this.carouselWidth, this.inputs.grid.offset);
     } else {
       this.maxSlideItems = Math.trunc(
         this.carouselWidth / this.inputs.grid.size
@@ -592,6 +596,7 @@ export class NguCarousel<T> extends NguCarouselStore
       this._maxSlideWidth = this._carouselItemSize - width;
       // this.deviceType = 'all';
     }
+    console.log(this.itemWidthTest);
 
     this.slideItems = +(this.inputs.grid.slide < this.maxSlideItems
       ? this.inputs.grid.slide
@@ -740,8 +745,12 @@ export class NguCarousel<T> extends NguCarouselStore
     // this.carouselTransform = '';
 
     if (this.pointIndex === 1) {
+      console.log('lkj');
       return;
-    } else if (Btn === 0 && ((!this.loop && !this.isFirst) || this.loop)) {
+    }
+
+    if (Btn === 0 && ((!this.loop && !this.isFirst) || this.loop)) {
+      console.log('asdf');
       // const slide = this.slideItems * this.pointIndex;
       let preLast = false;
 
@@ -783,6 +792,7 @@ export class NguCarousel<T> extends NguCarouselStore
         this.loop && preLast
       );
     } else if (Btn === 1 && ((!this.loop && !this.isLast) || this.loop)) {
+      console.log('asdf1');
       let preLast = false;
       if (
         this.dataSource.length <=

@@ -18,8 +18,8 @@ import { slider } from './slide-animation';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  animations: [slider],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  animations: [slider]
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('myCarousel')
@@ -66,14 +66,14 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public carouselTileItems$: Observable<string[]>;
   public carouselTileConfig: NguCarouselConfig = {
-    grid: { size: 2, offset: 0, isFixed: false, slide: 2 },
+    grid: { size: 3, offset: 0, isFixed: false, slide: 2 },
     speed: 500,
     point: {
       visible: true,
       hideOnSingleSlide: true
     },
     touch: true,
-    loop: true,
+    loop: false,
     load: 2,
     // interval: { timing: 1000 },
     // vertical: { enabled: true, height: 200 },

@@ -16,6 +16,7 @@ export class NguCarouselStore {
   itemWidthPer = 0;
   itemLength = 0;
   currentSlideItems = 0;
+  resetOnDataChange = false;
   easing = 'cubic-bezier(0.35, 0, 0.25, 1)';
   speed = 200;
   loop = false;
@@ -122,6 +123,7 @@ export class NguCarouselConfig {
   button?: NguButton;
   vertical?: Vertical;
   velocity?: number;
+  resetOnDataChange?: boolean;
 }
 
 export type Custom = 'banner';

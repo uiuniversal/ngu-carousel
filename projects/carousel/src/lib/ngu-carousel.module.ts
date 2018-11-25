@@ -10,6 +10,7 @@ import {
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NguCarousel } from './ngu-carousel.component';
+import { NguCarouselTouch } from './carousel-touch';
 
 @NgModule({
   imports: [CommonModule],
@@ -25,6 +26,7 @@ import { NguCarousel } from './ngu-carousel.component';
   ],
   declarations: [
     NguCarousel,
+    NguCarouselTouch,
     NguCarouselPointDirective,
     NguCarouselItemDirective,
     NguCarouselButton,
