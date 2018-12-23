@@ -29,7 +29,7 @@ import {
   HostBinding
 } from '@angular/core';
 import {
-  empty,
+  EMPTY,
   fromEvent,
   interval,
   merge,
@@ -57,6 +57,7 @@ import {
   NguCarouselStore
 } from './ngu-carousel';
 import { slider } from './carousel-animation';
+import { CarouselPoint } from './carousel-point';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -103,6 +104,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
   private _carouselItemSize: number;
   private _maxSlideWidth: number;
   itemWidthTest: number;
+  carouselPoi: CarouselPoint;
 
   @Input('dataSource')
   get dataSource(): T[] {
@@ -180,6 +182,10 @@ export class NguCarousel<T = any> extends NguCarouselStore
     public cdr: ChangeDetectorRef
   ) {
     super();
+    this.carouselPoi = new CarouselPoint(this);
+    this.carouselPoi.buttonHandler.subscribe(([first, last]) =>
+      this._btnBoolean(first, last)
+    );
   }
 
   ngOnInit() {
@@ -619,26 +625,27 @@ export class NguCarousel<T = any> extends NguCarouselStore
 
   /** Init carousel point */
   private _carouselPoint(): void {
-    const Nos = this.dataSource.length - (this.maxSlideItems - this.slideItems);
-    this.pointIndex = Math.ceil(Nos / this.slideItems);
-    const pointers = [];
+    this.carouselPoi._carouselPoint();
+    // const Nos = this.dataSource.length - (this.maxSlideItems - this.slideItems);
+    // this.pointIndex = Math.ceil(Nos / this.slideItems);
+    // const pointers = [];
 
-    if (this.pointIndex > 1 || !this.inputs.point.hideOnSingleSlide) {
-      for (let i = 0; i < this.pointIndex; i++) {
-        pointers.push(i);
-      }
-    }
-    this.pointNumbers = pointers;
-    this._carouselPointActiver();
-    if (this.pointIndex <= 1) {
-      this._btnBoolean(1, 1);
-    } else {
-      if (this.currentSlideItems === 0 && !this.loop) {
-        this._btnBoolean(1, 0);
-      } else {
-        this._btnBoolean(0, 0);
-      }
-    }
+    // if (this.pointIndex > 1 || !this.inputs.point.hideOnSingleSlide) {
+    //   for (let i = 0; i < this.pointIndex; i++) {
+    //     pointers.push(i);
+    //   }
+    // }
+    // this.pointNumbers = pointers;
+    // this._carouselPointActiver();
+    // if (this.pointIndex <= 1) {
+    //   this._btnBoolean(1, 1);
+    // } else {
+    //   if (this.currentSlideItems === 0 && !this.loop) {
+    //     this._btnBoolean(1, 0);
+    //   } else {
+    //     this._btnBoolean(0, 0);
+    //   }
+    // }
   }
 
   /** change the active point in carousel */
@@ -838,6 +845,8 @@ export class NguCarousel<T = any> extends NguCarouselStore
         itemSpeed,
         this.loop && preLast
       );
+    } else {
+      console.log('no action');
     }
   }
 
@@ -991,7 +1000,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
             switchMap(val => {
               this.isHovered = !val;
               this.cdr.markForCheck();
-              return val ? interval$ : empty();
+              return val ? interval$ : EMPTY;
             })
           )
           .subscribe(res => {

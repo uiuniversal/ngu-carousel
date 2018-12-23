@@ -1,12 +1,8 @@
 import {
   Directive,
-  Input,
   ElementRef,
   Output,
   EventEmitter,
-  Optional,
-  Host,
-  SkipSelf,
   Inject,
   PLATFORM_ID
 } from '@angular/core';
@@ -25,7 +21,7 @@ export class NguCarouselTouch {
   maxTouchTransform = 0;
 
   constructor(
-    @Optional() @Host() @SkipSelf() private c: NguCarousel,
+    private c: NguCarousel,
     private el: ElementRef,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
@@ -49,7 +45,7 @@ export class NguCarouselTouch {
       this.touchTransform = this.c.transform;
       this.c.dexVal = 0;
       this.maxTouchTransform = this.c.itemWidthTest * this.c.dataSource.length;
-      console.log(this.maxTouchTransform);
+      this.setMaxTouch();
     });
     if (this.c.vertical.enabled) {
       hammertime.on('panup', (ev: any) => {
@@ -125,7 +121,12 @@ export class NguCarouselTouch {
   private _setTransformFromTouch() {
     if (this.touchTransform < 0 && !this.c.loop) {
       this.touchTransform = 0;
+    } else if (this.maxTouchTransform === this.touchTransform) {
+      return;
+    } else if (this.maxTouchTransform <= this.touchTransform) {
+      this.touchTransform = this.maxTouchTransform;
     }
+    // console.log(this.touchTransform, this.maxTouchTransform);
     const type = this.c.type === 'responsive' ? '%' : 'px';
 
     const transform = this.c.vertical.enabled
@@ -135,6 +136,12 @@ export class NguCarouselTouch {
 
     // this.transformCarousel(transform);
     this.touchMove.emit({ transform });
+  }
+
+  setMaxTouch() {
+    this.maxTouchTransform =
+      (100 / this.c.maxSlideItems) *
+      (this.c.dataSource.length - this.c.maxSlideItems);
   }
 
   resetTouch() {
