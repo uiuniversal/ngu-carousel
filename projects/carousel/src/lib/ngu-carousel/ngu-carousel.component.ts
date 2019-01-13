@@ -28,7 +28,7 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import {
-  empty,
+  EMPTY,
   fromEvent,
   interval,
   merge,
@@ -43,7 +43,7 @@ import {
   NguCarouselNextDirective,
   NguCarouselOutlet,
   NguCarouselPrevDirective
-} from './../ngu-carousel.directive';
+} from '../ngu-carousel.directive';
 import {
   NguCarouselConfig,
   NguCarouselOutletContext,
@@ -71,13 +71,13 @@ export class NguCarousel<T> extends NguCarouselStore
   activePoint: number;
   isHovered = false;
 
-  @Input('inputs')
+  @Input()
   private inputs: NguCarouselConfig;
-  @Output('carouselLoad')
+  @Output()
   private carouselLoad = new EventEmitter();
 
   // tslint:disable-next-line:no-output-on-prefix
-  @Output('onMove')
+  @Output()
   private onMove = new EventEmitter<NguCarousel<T>>();
   // isFirstss = 0;
   arrayChanges: IterableChanges<{}>;
@@ -879,7 +879,7 @@ export class NguCarousel<T> extends NguCarouselStore
             switchMap(val => {
               this.isHovered = !val;
               this.cdr.markForCheck();
-              return val ? interval$ : empty();
+              return val ? interval$ : EMPTY;
             })
           )
           .subscribe(res => {

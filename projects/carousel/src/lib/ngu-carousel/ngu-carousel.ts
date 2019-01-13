@@ -1,36 +1,3 @@
-export class NguCarouselStore {
-  constructor(
-    public touch = new Touch(),
-    public vertical = new Vertical(),
-    public interval?: CarouselInterval,
-    public transform = new Transfrom(),
-    public button?: NguButton,
-    public visibleItems?: ItemsControl,
-    public deviceType?: DeviceType,
-    public type = 'fixed',
-    public token = '',
-    public items = 0,
-    public load = 0,
-    public deviceWidth = 0,
-    public carouselWidth = 0,
-    public itemWidth = 0,
-    public slideItems = 0,
-    public itemWidthPer = 0,
-    public itemLength = 0,
-    public currentSlide = 0,
-    public easing = 'cubic-bezier(0, 0, 0.2, 1)',
-    public speed = 200,
-    public loop = false,
-    public dexVal = 0,
-    public touchTransform = 0,
-    public isEnd = false,
-    public isFirst = true,
-    public isLast = false,
-    public RTL = false,
-    public point = true,
-    public velocity = 1
-  ) {}
-}
 export type DeviceType = 'xs' | 'sm' | 'md' | 'lg' | 'all';
 
 export type ButtonVisible = 'disabled' | 'hide';
@@ -109,6 +76,40 @@ export interface AnimationStyles {
 export interface CarouselInterval {
   timing: number;
   initialDelay?: number;
+}
+
+export class NguCarouselStore {
+  constructor(
+    public touch = new Touch(),
+    public vertical = new Vertical(),
+    public interval?: CarouselInterval,
+    public transform = new Transfrom(),
+    public button?: NguButton,
+    public visibleItems?: ItemsControl,
+    public deviceType?: DeviceType,
+    public type = 'fixed',
+    public token = '',
+    public items = 0,
+    public load = 0,
+    public deviceWidth = 0,
+    public carouselWidth = 0,
+    public itemWidth = 0,
+    public slideItems = 0,
+    public itemWidthPer = 0,
+    public itemLength = 0,
+    public currentSlide = 0,
+    public easing = 'cubic-bezier(0, 0, 0.2, 1)',
+    public speed = 200,
+    public loop = false,
+    public dexVal = 0,
+    public touchTransform = 0,
+    public isEnd = false,
+    public isFirst = true,
+    public isLast = false,
+    public RTL = false,
+    public point = true,
+    public velocity = 1
+  ) {}
 }
 
 export class NguCarouselOutletContext<T> {

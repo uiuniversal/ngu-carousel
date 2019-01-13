@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { NguCarouselModule } from './carousel';
+import { NguCarouselModule } from 'carousel';
 
 @NgModule({
   declarations: [AppComponent],
