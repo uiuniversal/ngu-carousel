@@ -1,29 +1,35 @@
 import { NguCarousel } from './ngu-carousel.component';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 
 export class CarouselPoint {
   buttonHandler = new Subject<[number, number]>();
-  // pointIndex: number;
+
+  pointNumbers: number[] = [];
+
+  private _carouselPointsSouce = new BehaviorSubject(this.pointNumbers);
+  carouselPoints = this._carouselPointsSouce.asObservable();
+
+  pointIndex: number;
   hideOnSingleSlide: boolean;
-  // pointNumbers: number[];
-  // activePoint: number;
+  activePoint = 0;
 
   constructor(private c: NguCarousel) {}
 
   _carouselPoint(): void {
     const Nos =
       this.c.dataSource.length - (this.c.maxSlideItems - this.c.slideItems);
-    this.c.pointIndex = Math.ceil(Nos / this.c.slideItems);
+    this.pointIndex = Math.ceil(Nos / this.c.slideItems);
     const pointers = [];
 
-    if (this.c.pointIndex > 1 || !this.hideOnSingleSlide) {
-      for (let i = 0; i < this.c.pointIndex; i++) {
+    if (this.pointIndex > 1 || !this.hideOnSingleSlide) {
+      for (let i = 0; i < this.pointIndex; i++) {
         pointers.push(i);
       }
     }
-    this.c.pointNumbers = pointers;
-    this._carouselPointActiver();
-    if (this.c.pointIndex <= 1) {
+    this.pointNumbers = pointers;
+    this._carouselPointsSouce.next(this.pointNumbers);
+    this.carouselPointActiver();
+    if (this.pointIndex <= 1) {
       this.buttonHandler.next([1, 1]);
     } else {
       if (this.c.currentSlideItems === 0 && !this.c.loop) {
@@ -35,9 +41,9 @@ export class CarouselPoint {
   }
 
   /** change the active point in carousel */
-  private _carouselPointActiver(): void {
+  carouselPointActiver(): void {
     const i = Math.ceil(this.c.currentSlideItems / this.c.slideItems);
-    this.c.activePoint = i;
+    this.activePoint = i;
     this.c.cdr.markForCheck();
   }
 }

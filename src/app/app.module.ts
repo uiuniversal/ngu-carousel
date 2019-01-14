@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { NguCarouselModule } from '../../projects/carousel/src/public_api';
@@ -8,7 +9,7 @@ import { NguCarouselModule } from '../../projects/carousel/src/public_api';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, BrowserAnimationsModule, NguCarouselModule],
+  imports: [BrowserModule, BrowserAnimationsModule, FormsModule, NguCarouselModule],
   providers: [],
   bootstrap: [AppComponent]
 })

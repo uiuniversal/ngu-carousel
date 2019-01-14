@@ -125,8 +125,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.cdr.detectChanges();
   }
 
-  changeGridConfig(val) {
-    this.myCarousel.changeGridConfig({ size: +val, offset: 15, slide: 2 });
+  changeGridConfig() {
+    this.myCarousel.changeGridConfig(this.carouselTileConfig.grid);
   }
 
   public carouselTileLoad(j) {

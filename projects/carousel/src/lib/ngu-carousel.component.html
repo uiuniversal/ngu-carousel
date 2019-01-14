@@ -1,15 +1,28 @@
-<div #ngucarousel class="ngucarousel" [style.height.px]="vertical.height">
-  <div #touchContainer class="ngu-touch-container"
-      carouselTouch (touchMove)="transformCarousel($event.transform, $event.transition)"
-      (touchEnd)="slide($event)">
-    <div #nguItemsContainer class="ngucarousel-items" [@slider]="{value: alternatives, params: { distance: carouselTransform, timing: carouselTransition}}"
-      (@slider.done)="animationCompleted()" [class.nguvertical]="vertical.enabled">
-      <!-- [ngStyle]="{transition: carouselTransition, transform: carouselTransform}" -->
-      <ng-container nguCarouselOutletLeft></ng-container>
-      <ng-container nguCarouselOutlet></ng-container>
-      <ng-container nguCarouselOutletRight></ng-container>
+<div
+    #ngucarousel
+    class="ngucarousel"
+    [style.height.px]="vertical.height"
+>
+    <div
+        class="ngu-touch-container"
+        carouselTouch
+        (touchMove)="transformCarousel($event.transform, $event.transition)"
+        (touchEnd)="slide($event)"
+    >
+        <div
+            #nguItemsContainer
+            class="ngucarousel-items"
+            [@slider]="{value: alternatives, params: { distance: carouselTransform, timing: carouselTransition}}"
+            (@slider.done)="animationCompleted()"
+            [class.nguvertical]="vertical.enabled"
+        >
+            <!-- [ngStyle]="{transition: carouselTransition, transform: carouselTransform}" -->
+            <ng-container nguCarouselOutletLeft></ng-container>
+            <ng-container nguCarouselOutlet></ng-container>
+            <ng-container nguCarouselOutletRight></ng-container>
+        </div>
     </div>
-  </div>
-  <ng-content select="[NguCarouselButton]"></ng-content>
+    <ng-content select="[NguCarouselButton]"></ng-content>
 </div>
 <ng-content select="[NguCarouselPoint]"></ng-content>
+{{carouselOffsetWidth}}
