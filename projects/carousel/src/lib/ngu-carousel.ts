@@ -34,7 +34,7 @@ export class NguCarouselStore {
   carouselOffsetWidth = 100;
 
   validateInputs(data: NguCarouselConfig) {
-    this.type = data.grid.isFixed ? 'fixed' : 'responsive';
+    this.type = data.grid.type || 'responsive';
     this.loop = data.loop || false;
     data.easing = data.easing || 'cubic-bezier(0, 0, 0.2, 1)';
     this.carouselTransition = data.easing;
@@ -103,7 +103,7 @@ export interface GridBreakPoint {
 export class ItemConfig {
   size: number;
   offset?: number;
-  isFixed?: boolean;
+  type?: CarouselType;
   slide?: number;
 }
 
