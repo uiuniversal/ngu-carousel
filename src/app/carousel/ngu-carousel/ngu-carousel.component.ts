@@ -149,6 +149,7 @@ export class NguCarousel<T> extends NguCarouselStore
 
   private onResize: any;
   private onScrolling: any;
+  private onInitialDelay: any;
 
   pointNumbers: Array<any> = [];
 
@@ -357,6 +358,8 @@ export class NguCarousel<T> extends NguCarouselStore
 
   ngOnDestroy() {
     // clearInterval(this.carouselInt);
+
+    clearTimeout(this.onInitialDelay);
     this.carouselInt && this.carouselInt.unsubscribe();
     this._intervalController$.unsubscribe();
     this.carouselLoad.complete();
@@ -866,7 +869,7 @@ export class NguCarousel<T> extends NguCarouselStore
 
       const interval$ = interval(this.inputs.interval.timing).pipe(mapTo(1));
 
-      setTimeout(() => {
+      this.onInitialDelay = setTimeout(() => {
         this.carouselInt = merge(
           play$,
           touchPlay$,
