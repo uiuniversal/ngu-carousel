@@ -4,6 +4,7 @@ export class NguCarouselStore {
     public vertical = new Vertical(),
     public interval?: CarouselInterval,
     public transform = new Transfrom(),
+    public disableSlideWhenHidden = true,
     public button?: NguButton,
     public visibleItems?: ItemsControl,
     public deviceType?: DeviceType,
