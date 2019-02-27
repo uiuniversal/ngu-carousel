@@ -426,7 +426,7 @@ export class NguCarousel<T> extends NguCarouselStore
           this._setStyle(this.nguItemsContainer.nativeElement, 'transform', '');
         }
       });
-      hammertime.on('hammer.input', function(ev) {
+      hammertime.on('hammer.input', function (ev) {
         // allow nested touch events to no propagate, this may have other side affects but works for now.
         // TODO: It is probably better to check the source element of the event and only apply the handle to the correct carousel
         ev.srcEvent.stopPropagation();
@@ -447,10 +447,10 @@ export class NguCarousel<T> extends NguCarouselStore
     valt =
       this.type === 'responsive'
         ? (Math.abs(ev - this.dexVal) /
-            (this.vertical.enabled
-              ? this.vertical.height
-              : this.carouselWidth)) *
-          100
+          (this.vertical.enabled
+            ? this.vertical.height
+            : this.carouselWidth)) *
+        100
         : valt;
     this.dexVal = ev;
     this.touch.swipe = e;
@@ -606,7 +606,7 @@ export class NguCarousel<T> extends NguCarouselStore
     let dism = '';
     this.styleid = `.${
       this.token
-    } > .ngucarousel > .ngu-touch-container > .ngucarousel-items`;
+      } > .ngucarousel > .ngu-touch-container > .ngucarousel-items`;
 
     if (this.inputs.custom === 'banner') {
       this._renderer.addClass(this.carousel, 'banner');
@@ -635,9 +635,9 @@ export class NguCarousel<T> extends NguCarouselStore
       const itemWidth_xs =
         this.inputs.type === 'mobile'
           ? `${this.styleid} .item {flex: 0 0 ${95 /
-              +this.inputs.grid.xs}%; width: ${95 / +this.inputs.grid.xs}%;}`
+          +this.inputs.grid.xs}%; width: ${95 / +this.inputs.grid.xs}%;}`
           : `${this.styleid} .item {flex: 0 0 ${100 /
-              +this.inputs.grid.xs}%; width: ${100 / +this.inputs.grid.xs}%;}`;
+          +this.inputs.grid.xs}%; width: ${100 / +this.inputs.grid.xs}%;}`;
 
       const itemWidth_sm = `${this.styleid} > .item {flex: 0 0 ${100 /
         +this.inputs.grid.sm}%; width: ${100 / +this.inputs.grid.sm}%}`;
@@ -653,7 +653,7 @@ export class NguCarousel<T> extends NguCarouselStore
     } else {
       itemStyle = `${this.styleid} .item {flex: 0 0 ${
         this.inputs.grid.all
-      }px; width: ${this.inputs.grid.all}px;}`;
+        }px; width: ${this.inputs.grid.all}px;}`;
     }
 
     this._renderer.addClass(this.carousel, this.token);
@@ -713,7 +713,7 @@ export class NguCarousel<T> extends NguCarouselStore
     } else if (Btn === 1 && ((!this.loop && !this.isLast) || this.loop)) {
       if (
         this.dataSource.length <=
-          this.currentSlide + this.items + this.slideItems &&
+        this.currentSlide + this.items + this.slideItems &&
         !this.isLast
       ) {
         currentSlide = this.dataSource.length - this.items;
@@ -822,7 +822,7 @@ export class NguCarousel<T> extends NguCarouselStore
       this.transform.all = this.inputs.grid.all * slide;
       slideCss = `${this.styleid} { transform: translate3d(${
         this.directionSym
-      }${this.transform.all}px, 0, 0);`;
+        }${this.transform.all}px, 0, 0);`;
     }
     this.carouselCssNode.innerHTML = slideCss;
   }
@@ -851,13 +851,14 @@ export class NguCarousel<T> extends NguCarouselStore
   private _carouselInterval(): void {
     const container = this.carouselMain1.nativeElement;
     if (this.interval && this.loop) {
-      this.listener4 = this._renderer.listen('window', 'scroll', () => {
-        clearTimeout(this.onScrolling);
-        this.onScrolling = setTimeout(() => {
-          this._onWindowScrolling();
-        }, 600);
-      });
-
+      if (this.disableSlideWhenHidden) {
+        this.listener4 = this._renderer.listen('window', 'scroll', () => {
+          clearTimeout(this.onScrolling);
+          this.onScrolling = setTimeout(() => {
+            this._onWindowScrolling();
+          }, 600);
+        });
+      }
       const play$ = fromEvent(container, 'mouseleave').pipe(mapTo(1));
       const pause$ = fromEvent(container, 'mouseenter').pipe(mapTo(0));
 

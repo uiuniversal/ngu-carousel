@@ -851,12 +851,14 @@ export class NguCarousel<T> extends NguCarouselStore
   private _carouselInterval(): void {
     const container = this.carouselMain1.nativeElement;
     if (this.interval && this.loop) {
+      if(this.disableSlideWhenHidden){
       this.listener4 = this._renderer.listen('window', 'scroll', () => {
         clearTimeout(this.onScrolling);
         this.onScrolling = setTimeout(() => {
           this._onWindowScrolling();
         }, 600);
       });
+    }
 
       const play$ = fromEvent(container, 'mouseleave').pipe(mapTo(1));
       const pause$ = fromEvent(container, 'mouseenter').pipe(mapTo(0));
