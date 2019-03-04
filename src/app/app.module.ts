@@ -9,7 +9,12 @@ import { NguCarouselModule } from '../../projects/carousel/src/public_api';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, BrowserAnimationsModule, FormsModule, NguCarouselModule],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    NguCarouselModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

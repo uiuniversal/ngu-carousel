@@ -1,6 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
 import {
-  AfterContentInit,
   AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -44,7 +43,9 @@ import {
   startWith,
   switchMap,
   takeUntil,
-  debounceTime
+  debounceTime,
+  throttleTime,
+  tap
 } from 'rxjs/operators';
 import {
   NguCarouselDefDirective,
@@ -55,7 +56,8 @@ import {
 import {
   NguCarouselConfig,
   NguCarouselOutletContext,
-  NguCarouselStore
+  NguCarouselStore,
+  ItemConfig
 } from './ngu-carousel';
 import { slider } from './carousel-animation';
 import { CarouselPoint } from './carousel-point';
@@ -70,7 +72,7 @@ import { CarouselPoint } from './carousel-point';
 })
 // tslint:disable-next-line:component-class-suffix
 export class NguCarousel<T = any> extends NguCarouselStore
-  implements OnInit, AfterContentInit, AfterViewInit, OnDestroy, DoCheck {
+  implements OnInit, AfterViewInit, OnDestroy, DoCheck {
   private _dataSubscription: Subscription;
   private _dataSource: T[];
   private _dataDiffer: IterableDiffer<{}>;
@@ -97,13 +99,16 @@ export class NguCarousel<T = any> extends NguCarouselStore
   // token: string;
 
   private listener3: () => void;
-  private listener4: () => void;
+  // private listener4: () => void;
 
   _extraLoopItemsWidth: number;
   private _resetAfterAnimation: any;
   private _carouselItemSize: number;
   private _maxSlideWidth: number;
   itemWidthTest: number;
+  carouselPoi: CarouselPoint;
+  windowResizeSub: Subscription;
+  windowScrollSub: Subscription;
 
   @Input('dataSource')
   get dataSource(): T[] {
@@ -142,7 +147,6 @@ export class NguCarousel<T = any> extends NguCarouselStore
 
   private carousel: any;
 
-  private onResize: any;
   private onScrolling: any;
 
   pointNumbers: Array<any> = [];
@@ -366,9 +370,6 @@ export class NguCarousel<T = any> extends NguCarouselStore
 
     if (isPlatformBrowser(this.platformId)) {
       this._carouselInterval();
-      // if (!this.vertical.enabled) {
-      //   this._touch();
-      // }
       fromEventPattern(
         (handler: any) => this._renderer.listen('window', 'resize', handler),
         (handler, token) => handler()
@@ -381,7 +382,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
     this.cdr.markForCheck();
   }
 
-  changeGridConfig(grid?) {
+  changeGridConfig(grid?: ItemConfig) {
     if (grid) {
       this.inputs.grid = grid;
     }
@@ -389,7 +390,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
     this._carouselSize();
     this._storeCarouselData();
     this.calculateExtraItem();
-    grid && this.positionTheItem();
+    grid && this.extraItemsContainer(this._dataSource);
     // console.log(
     //   this.currentSlideItems,
     //   this.activePoint,
@@ -406,17 +407,6 @@ export class NguCarousel<T = any> extends NguCarouselStore
     }
   }
 
-  positionTheItem() {
-    this.extraItemsContainer(this._dataSource);
-    // console.log(this);
-  }
-
-  ngAfterContentInit() {
-    // console.log('ngAfterContentInit');
-    // this._observeRenderChanges();
-    // this.cdr.markForCheck();
-  }
-
   ngOnDestroy() {
     // clearInterval(this.carouselInt);
     this.carouselInt && this.carouselInt.unsubscribe();
@@ -424,6 +414,8 @@ export class NguCarousel<T = any> extends NguCarouselStore
     this._intervalController$.complete();
     this.carouselLoad.complete();
     this.onMove.complete();
+    this.windowScrollSub.unsubscribe();
+    this.windowResizeSub.unsubscribe();
 
     /** remove listeners */
     for (let i = 1; i <= 4; i++) {
@@ -464,14 +456,6 @@ export class NguCarousel<T = any> extends NguCarouselStore
       this._intervalController$.next(0);
     }
   }
-
-  // enableTouch() {
-  //   this.inputs.touch = true;
-  // }
-
-  // disableTouch() {
-  //   this.inputs.touch = false;
-  // }
 
   /** store data based on width of the screen for the carousel */
   private _storeCarouselData(): void {
@@ -581,6 +565,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
 
   /** set the style of the carousel based the inputs data */
   private _carouselSize(): void {
+    // debugger;
     if (!this.token) {
       this.token = this._generateID();
       this.styleid = `.${
@@ -699,11 +684,10 @@ export class NguCarousel<T = any> extends NguCarouselStore
     } else if (Btn === 1 && ((!this.loop && !this.isLast) || this.loop)) {
       console.log('asdf1');
       let preLast = false;
-      if (
+      const isMaxSilde =
         this.dataSource.length <=
-          this.currentSlideItems + this.maxSlideItems + this.slideItems &&
-        !this.isLast
-      ) {
+        this.currentSlideItems + this.maxSlideItems + this.slideItems;
+      if (isMaxSilde && !this.isLast) {
         currentSlide = this.dataSource.length - this.maxSlideItems;
         this._btnBoolean(0, 1);
       } else if (this.isLast && this.loop) {
@@ -815,8 +799,9 @@ export class NguCarousel<T = any> extends NguCarouselStore
       collect += `0, -${this.transform + this._extraLoopItemsWidth}px, 0`;
     } else {
       this.transform = this._carouselItemSize * items;
+      console.log(this._carouselItemSize, items);
       const collectSt = this.transform + this._extraLoopItemsWidth;
-      const unit = this.inputs.grid.isFixed ? 'px' : '%';
+      const unit = this.type === 'fixed' ? 'px' : '%';
       collect += `${this._addDirectionSym(collectSt)}${unit}, 0, 0`;
     }
     collect += `)`;
@@ -841,7 +826,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
     // console.log(this.carouselTransform, this.carouselTransition);
   }
 
-  private _addDirectionSym(val) {
+  private _addDirectionSym(val: number) {
     return val > 0 ? `${this.directionSym}${val}` : val;
   }
 
@@ -870,12 +855,15 @@ export class NguCarousel<T = any> extends NguCarouselStore
   private _carouselInterval(): void {
     const container = this.carouselMain1.nativeElement;
     if (this.interval && this.loop) {
-      this.listener4 = this._renderer.listen('window', 'scroll', () => {
-        clearTimeout(this.onScrolling);
-        this.onScrolling = setTimeout(() => {
-          this._onWindowScrolling();
-        }, 600);
-      });
+      this.windowScrollSub = fromEvent(window, 'scroll')
+        .pipe(throttleTime(600))
+        .subscribe(() => this._onWindowScrolling());
+      // this.listener4 = this._renderer.listen('window', 'scroll', () => {
+      //   clearTimeout(this.onScrolling);
+      //   this.onScrolling = setTimeout(() => {
+      //     this._onWindowScrolling();
+      //   }, 600);
+      // });
 
       const play$ = fromEvent(container, 'mouseleave').pipe(mapTo(1));
       const pause$ = fromEvent(container, 'mouseenter').pipe(mapTo(0));

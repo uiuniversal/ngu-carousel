@@ -49,12 +49,23 @@
   <ul class="myPoint" NguCarouselPoint>
     <li *ngFor="let i of myCarousel.pointNumbers; let i = index" [class.active]="i==myCarousel.points.activePoint" (click)="myCarousel.moveTo(i)"></li>
   </ul>
+
   <!-- {{myCarousel.isHovered}} -->
 </ngu-carousel>
 <!-- </ng-container> -->
 <button (click)="hideShow = !hideShow">hideShow</button>
-<label>Size: <input type="text" [(ngModel)]="carouselTileConfig.grid.size"></label>
-<label>Offset: <input type="text" [(ngModel)]="carouselTileConfig.grid.offset"></label>
+
+<div>
+  <label for="">Size <input type="text" [(ngModel)]="carouselTileConfig.grid.size"></label>
+</div>
+<div>
+  <label for="">offset <input type="text" [(ngModel)]="carouselTileConfig.grid.offset"></label>
+</div>
+<div>
+  <label for="">fixed <input type="radio" value="fixed" [(ngModel)]="carouselTileConfig.grid.type"></label>
+  <label for="">responsive <input type="radio" value="responsive" [(ngModel)]="carouselTileConfig.grid.type"></label>
+</div>
+
 <button (click)="changeGridConfig()">changeGridConfig</button>
 <button (click)="touch(0)">touch</button>
 <button (click)="touch(1)">touchEnable</button>

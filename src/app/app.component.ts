@@ -66,7 +66,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public carouselTileItems$: Observable<string[]>;
   public carouselTileConfig: NguCarouselConfig = {
-    grid: { size: 3, offset: 0, isFixed: false, slide: 2 },
+    grid: { size: 3, offset: 0, type: 'responsive', slide: 2 },
     speed: 500,
     point: {
       visible: true,
