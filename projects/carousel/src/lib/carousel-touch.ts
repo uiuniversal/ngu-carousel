@@ -1,13 +1,7 @@
-import {
-  Directive,
-  ElementRef,
-  Output,
-  EventEmitter,
-  Inject,
-  PLATFORM_ID
-} from '@angular/core';
+import { Directive, ElementRef, Output, EventEmitter, Inject, PLATFORM_ID } from '@angular/core';
 import { NguCarousel } from './ngu-carousel.component';
 import { isPlatformBrowser } from '@angular/common';
+import { Carousel } from './carousel';
 
 @Directive({
   selector: '[carouselTouch]'
@@ -19,21 +13,19 @@ export class NguCarouselTouch {
   @Output() touchMove = new EventEmitter();
   touchTransform = 0;
   maxTouchTransform = 0;
+  c: Carousel;
 
   constructor(
-    private c: NguCarousel,
+    private cs: NguCarousel,
     private el: ElementRef,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
+    this.c = cs.caro;
     this._touch();
   }
 
   private _touch(): void {
-    if (
-      !isPlatformBrowser(this.platformId) &&
-      !this.c.touch.active &&
-      this.c.vertical.enabled
-    )
+    if (!isPlatformBrowser(this.platformId) && !this.c.touch.active && this.c.vertical.enabled)
       return;
 
     const hammertime = new Hammer(this.el.nativeElement);
@@ -44,7 +36,7 @@ export class NguCarouselTouch {
       this.touchStart.emit();
       this.touchTransform = this.c.transform;
       this.c.dexVal = 0;
-      this.maxTouchTransform = this.c.itemWidthTest * this.c.dataSource.length;
+      this.maxTouchTransform = this.c.itemWidthTest * this.c._dataSource.length;
       this.setMaxTouch();
     });
     if (this.c.vertical.enabled) {
@@ -101,9 +93,7 @@ export class NguCarouselTouch {
     valt =
       this.c.type === 'responsive'
         ? (Math.abs(ev - this.c.dexVal) /
-            (this.c.vertical.enabled
-              ? this.c.vertical.height
-              : this.c.carouselWidth)) *
+            (this.c.vertical.enabled ? this.c.vertical.height : this.c.carouselWidth)) *
           100
         : valt;
     this.c.dexVal = ev;
@@ -114,8 +104,7 @@ export class NguCarouselTouch {
 
   private _setTouchTransfrom(e: string, valt: number) {
     const condition = this.c.RTL ? 'panright' : 'panleft';
-    this.touchTransform =
-      e === condition ? valt + this.touchTransform : this.touchTransform - valt;
+    this.touchTransform = e === condition ? valt + this.touchTransform : this.touchTransform - valt;
   }
 
   private _setTransformFromTouch() {
@@ -140,15 +129,13 @@ export class NguCarouselTouch {
 
   setMaxTouch() {
     this.maxTouchTransform =
-      (100 / this.c.maxSlideItems) *
-      (this.c.dataSource.length - this.c.maxSlideItems);
+      (100 / this.c.maxSlideItems) * (this.c._dataSource.length - this.c.maxSlideItems);
   }
 
   resetTouch() {
     this.c.dexVal = 0;
     const transition = '300ms cubic-bezier(0, 0, 0.2, 1)';
-    const transform = `translate3d(-${this.c.transform +
-      this.c._extraLoopItemsWidth}%,0,0)`;
+    const transform = `translate3d(-${this.c.transform + this.c._extraLoopItemsWidth}%,0,0)`;
     // this.transformCarousel(transform, transition);
     this.touchMove.emit({ transform, transition });
   }

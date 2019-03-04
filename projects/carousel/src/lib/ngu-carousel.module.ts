@@ -11,6 +11,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NguCarousel } from './ngu-carousel.component';
 import { NguCarouselTouch } from './carousel-touch';
+import { NguCarouselItemContainerComponent } from './carousel-item';
 
 @NgModule({
   imports: [CommonModule],
@@ -33,7 +34,8 @@ import { NguCarouselTouch } from './carousel-touch';
     NguCarouselDefDirective,
     NguCarouselOutlet,
     NguCarouselOutletLeft,
-    NguCarouselOutletRight
+    NguCarouselOutletRight,
+    NguCarouselItemContainerComponent
   ]
 })
 export class NguCarouselModule {}

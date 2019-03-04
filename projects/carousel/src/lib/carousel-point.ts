@@ -1,5 +1,6 @@
 import { NguCarousel } from './ngu-carousel.component';
 import { Subject } from 'rxjs';
+import { Carousel } from './carousel';
 
 export class CarouselPoint {
   buttonHandler = new Subject<[number, number]>();
@@ -8,11 +9,10 @@ export class CarouselPoint {
   // pointNumbers: number[];
   // activePoint: number;
 
-  constructor(private c: NguCarousel) {}
+  constructor(private c: Carousel) {}
 
   _carouselPoint(): void {
-    const Nos =
-      this.c.dataSource.length - (this.c.maxSlideItems - this.c.slideItems);
+    const Nos = this.c._dataSource.length - (this.c.maxSlideItems - this.c.slideItems);
     this.c.pointIndex = Math.ceil(Nos / this.c.slideItems);
     const pointers = [];
 
@@ -38,6 +38,6 @@ export class CarouselPoint {
   private _carouselPointActiver(): void {
     const i = Math.ceil(this.c.currentSlideItems / this.c.slideItems);
     this.c.activePoint = i;
-    this.c.cdr.markForCheck();
+    // this.c.cdr.markForCheck();
   }
 }

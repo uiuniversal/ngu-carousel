@@ -6,10 +6,7 @@ import {
   ChangeDetectorRef,
   ViewChild
 } from '@angular/core';
-import {
-  NguCarouselConfig,
-  NguCarousel
-} from '../../projects/carousel/src/public_api';
+import { NguCarouselConfig, NguCarousel } from '../../projects/carousel/src/public_api';
 import { Observable, interval, of } from 'rxjs';
 import { startWith, switchMap, take, map } from 'rxjs/operators';
 import { slider } from './slide-animation';
@@ -66,7 +63,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public carouselTileItems$: Observable<string[]>;
   public carouselTileConfig: NguCarouselConfig = {
-    grid: { size: 3, offset: 0, type: 'responsive', slide: 2 },
+    grid: { size: 1, offset: 0, type: 'responsive', slide: 2 },
     speed: 500,
     point: {
       visible: true,
@@ -75,7 +72,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     touch: true,
     loop: false,
     load: 2,
-    // interval: { timing: 1000 },
+    interval: { timing: 4000 },
     // vertical: { enabled: true, height: 200 },
     velocity: 0,
     animation: 'lazy',
@@ -83,6 +80,12 @@ export class AppComponent implements OnInit, AfterViewInit {
     RTL: false
   };
   tempData: any[];
+
+  dataSource = of(
+    Array(100)
+      .fill(0)
+      .map((c, i) => i)
+  );
 
   constructor(public cdr: ChangeDetectorRef) {}
 
@@ -134,9 +137,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     const len = this.carouselTiles[j].length;
     if (len <= 30) {
       for (let i = len; i < len + 100; i++) {
-        this.carouselTiles[j].push(
-          this.imgags[Math.floor(Math.random() * this.imgags.length)]
-        );
+        this.carouselTiles[j].push(this.imgags[Math.floor(Math.random() * this.imgags.length)]);
       }
     }
   }
@@ -146,9 +147,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     const len = carousel.length;
     if (len <= 30) {
       for (let i = len; i < len + 4; i++) {
-        carousel.push(
-          this.imgags[Math.floor(Math.random() * this.imgags.length)]
-        );
+        carousel.push(this.imgags[Math.floor(Math.random() * this.imgags.length)]);
       }
     }
   }

@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
+// import { CarouselModule } from './carousel';
 import { NguCarouselModule } from '../../projects/carousel/src/public_api';
 // import { NguCarouselModule } from 'carousel';
 
@@ -14,6 +15,7 @@ import { NguCarouselModule } from '../../projects/carousel/src/public_api';
     BrowserAnimationsModule,
     FormsModule,
     NguCarouselModule
+    // CarouselModule
   ],
   providers: [],
   bootstrap: [AppComponent]

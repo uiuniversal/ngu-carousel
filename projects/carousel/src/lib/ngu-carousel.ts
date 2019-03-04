@@ -41,8 +41,7 @@ export class NguCarouselStore {
     this.touch.active = data.touch || false;
     this.RTL = data.RTL ? true : false;
     this.interval = data.interval || null;
-    this.velocity =
-      typeof data.velocity === 'number' ? data.velocity : this.velocity;
+    this.velocity = typeof data.velocity === 'number' ? data.velocity : this.velocity;
     this.carouselOffsetWidth = 100 - (data.grid.offset || 0);
 
     if (data.vertical && data.vertical.enabled) {
@@ -51,13 +50,11 @@ export class NguCarouselStore {
     }
     this.directionSym = this.RTL ? '' : '-';
     this.point =
-      data.point && typeof data.point.visible !== 'undefined'
-        ? data.point.visible
-        : true;
+      data.point && typeof data.point.visible !== 'undefined' ? data.point.visible : true;
   }
 }
 
-type CarouselType = 'fixed' | 'responsive';
+export type CarouselType = 'fixed' | 'responsive';
 
 export type DeviceType = 'xs' | 'sm' | 'md' | 'lg' | 'all';
 
@@ -71,7 +68,12 @@ export class ItemsControl {
 export class Vertical {
   enabled = false;
   height: number;
-  // numHeight?: number;
+  constructor(public data?: { enabled: boolean; height: number }) {
+    if (data && data.enabled) {
+      this.enabled = data.enabled;
+      this.height = data.height;
+    }
+  }
 }
 
 export class NguButton {
@@ -167,4 +169,14 @@ export class NguCarouselOutletContext<T> {
   constructor(data: T) {
     this.$implicit = data;
   }
+}
+
+export function generateID(): string {
+  let text = '';
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  for (let i = 0; i < 6; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return `ngucarousel${text}`;
 }

@@ -27,16 +27,7 @@ import {
   EmbeddedViewRef,
   HostBinding
 } from '@angular/core';
-import {
-  EMPTY,
-  fromEvent,
-  interval,
-  merge,
-  Observable,
-  of,
-  Subject,
-  Subscription
-} from 'rxjs';
+import { EMPTY, fromEvent, interval, merge, Observable, of, Subject, Subscription } from 'rxjs';
 import {
   mapTo,
   startWith,
@@ -44,7 +35,9 @@ import {
   takeUntil,
   debounceTime,
   throttleTime,
-  tap
+  tap,
+  map,
+  filter
 } from 'rxjs/operators';
 import {
   NguCarouselDefDirective,
@@ -60,6 +53,8 @@ import {
 } from './ngu-carousel';
 import { slider } from './carousel-animation';
 import { CarouselPoint } from './carousel-point';
+import { NguCarouselItemContainerComponent } from './carousel-item';
+import { Carousel } from './carousel';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -70,8 +65,7 @@ import { CarouselPoint } from './carousel-point';
   animations: [slider]
 })
 // tslint:disable-next-line:component-class-suffix
-export class NguCarousel<T = any> extends NguCarouselStore
-  implements OnInit, AfterViewInit, OnDestroy, DoCheck {
+export class NguCarousel<T = any> implements OnInit, AfterViewInit, OnDestroy, DoCheck {
   private _dataSubscription: Subscription;
   private _dataSource: T[];
   private _dataDiffer: IterableDiffer<{}>;
@@ -105,10 +99,14 @@ export class NguCarousel<T = any> extends NguCarouselStore
   private _resetAferAnimation: any;
   private _carouselItemSize: number;
   private _maxSlideWidth: number;
-  itemWidthTest: number;
-  carouselPoi: CarouselPoint;
+  private itemWidthTest: number;
+  // carouselPoi = new CarouselPoint(this);
   windowResizeSub: Subscription;
   windowScrollSub: Subscription;
+  caro = new Carousel();
+  carouselTransform = '';
+  carouselTransition = '0ms';
+  carouselStylesContainer: any;
 
   @Input('dataSource')
   get dataSource(): T[] {
@@ -137,15 +135,15 @@ export class NguCarousel<T = any> extends NguCarouselStore
   @ViewChild('ngucarousel', { read: ElementRef })
   private carouselMain1: ElementRef;
 
-  @ViewChild('nguItemsContainer', { read: ElementRef })
-  private nguItemsContainer: ElementRef;
+  @ViewChild(NguCarouselItemContainerComponent)
+  private nguItemsContainer: NguCarouselItemContainerComponent<T>;
 
   // @ViewChild('touchContainer', { read: ElementRef })
   // private touchContainer: ElementRef;
 
   private _intervalController$ = new Subject<number>();
 
-  private carousel: any;
+  // private carousel: any;
 
   private onScrolling: any;
 
@@ -169,9 +167,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
       <any>console &&
       <any>console.warn
     ) {
-      console.warn(
-        `trackBy must be a function, but received ${JSON.stringify(fn)}.`
-      );
+      console.warn(`trackBy must be a function, but received ${JSON.stringify(fn)}.`);
     }
     this._trackByFn = fn;
   }
@@ -184,19 +180,25 @@ export class NguCarousel<T = any> extends NguCarouselStore
     @Inject(PLATFORM_ID) private platformId: Object,
     public cdr: ChangeDetectorRef
   ) {
-    super();
-    this.carouselPoi = new CarouselPoint(this);
-    this.carouselPoi.buttonHandler.subscribe(([first, last]) =>
-      this._btnBoolean(first, last)
-    );
+    // super();
+    // this.carouselPoi.buttonHandler.subscribe(([first, last]) => this._btnBoolean(first, last));
+    this._renderer.addClass(this._el.nativeElement, this.caro.token);
+    this.caro.transformss.subscribe(r => {
+      console.log(r);
+      this.alternatives = r.alternatives;
+      this.carouselTransform = r.carouselTransform;
+      this.carouselTransition = r.carouselTransition;
+    });
+    this.carouselStylesContainer = this._createStyleElem();
+    this.caro.stylesWrite.subscribe(r => {
+      this.carouselStylesContainer.innerHTML = r;
+    });
   }
 
   ngOnInit() {
-    this._dataDiffer = this._differs
-      .find([])
-      .create((_i: number, item: any) => {
-        return this.trackBy ? this.trackBy(item.dataIndex, item.data) : item;
-      });
+    this._dataDiffer = this._differs.find([]).create((_i: number, item: any) => {
+      return this.trackBy ? this.trackBy(item.dataIndex, item.data) : item;
+    });
   }
 
   ngDoCheck() {
@@ -209,7 +211,8 @@ export class NguCarousel<T = any> extends NguCarouselStore
 
   private _switchDataSource(dataSource: T[]): any {
     this._dataSource = dataSource;
-    if (this._defDirec && this.slideItems) {
+    this.caro._dataSource = dataSource;
+    if (this._defDirec && this.caro.slideItems) {
       this._observeRenderChanges();
     }
   }
@@ -231,7 +234,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
         )
         .subscribe(data => {
           this.renderNodeChanges(data);
-          this.isLast = false;
+          this.caro.isLast = false;
         });
     }
   }
@@ -243,11 +246,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
     if (!this._arrayChanges) return;
 
     this._arrayChanges.forEachOperation(
-      (
-        item: IterableChangeRecord<T>,
-        adjustedPreviousIndex: number,
-        currentIndex: number
-      ) => {
+      (item: IterableChangeRecord<T>, adjustedPreviousIndex: number, currentIndex: number) => {
         if (item.previousIndex == null) {
           // console.log(data[currentIndex], item);
 
@@ -266,13 +265,13 @@ export class NguCarousel<T = any> extends NguCarouselStore
 
   private extraItemsContainer(data: T[]) {
     this._extraLoopItemsWidth = 0;
-    if (this.loop) {
+    if (this.caro.loop) {
       // console.log(0, this.slideItems);
       const leftContainer = this._nodeOutletLeft.viewContainer;
       const rightContainer = this._nodeOutletRight.viewContainer;
       leftContainer.clear();
       rightContainer.clear();
-      const slideItems = this.maxSlideItems;
+      const slideItems = this.caro.maxSlideItems;
       const rightItems = this.inputs.grid.offset ? slideItems + 1 : slideItems;
       // console.log('rightItems', rightItems, this.slideItems);
       for (let it = 0; it < rightItems; it++) {
@@ -291,7 +290,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
         test++;
       }
       // console.log('device from renderer', this.deviceType);
-      this.calculateExtraItem();
+      this.caro.calculateExtraItem();
       // console.table(
       //   'test',
       //   this.activePoint,
@@ -299,7 +298,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
       //   this.slideItems
       // );
       if (this.activePoint === 0) {
-        this.transformCarousel(this._transformString(0));
+        this.caro.transformCarousel();
       }
     }
     this._carouselPoint();
@@ -330,11 +329,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
    */
   private _updateItemIndexContext() {
     const viewContainer = this._nodeOutlet.viewContainer;
-    for (
-      let renderIndex = 0, count = viewContainer.length;
-      renderIndex < count;
-      renderIndex++
-    ) {
+    for (let renderIndex = 0, count = viewContainer.length; renderIndex < count; renderIndex++) {
       const viewRef = viewContainer.get(renderIndex) as any;
       const context = viewRef.context as any;
       context.count = count;
@@ -352,15 +347,17 @@ export class NguCarousel<T = any> extends NguCarouselStore
     }
 
     const nodeDef =
-      this._defDirec.find(def => def.when && def.when(i, data)) ||
-      this._defaultNodeDef;
+      this._defDirec.find(def => def.when && def.when(i, data)) || this._defaultNodeDef;
 
     return nodeDef;
   }
 
   ngAfterViewInit() {
+    this.caro.mergeUserInput(this.inputs);
     // console.log('ngAfterViewInit');
-    this.carousel = this._el.nativeElement;
+    // this.carousel = this._el.nativeElement;
+    this.caro.carouselMain1 = this.carouselMain1.nativeElement;
+    this.caro.nguItemsContainer = this.nguItemsContainer.el.nativeElement;
     this.changeGridConfig();
     this._observeRenderChanges();
 
@@ -369,38 +366,40 @@ export class NguCarousel<T = any> extends NguCarouselStore
     if (isPlatformBrowser(this.platformId)) {
       this._carouselInterval();
 
-      this.windowResizeSub = fromEvent(window, 'resize')
-        .pipe(throttleTime(500))
-        .subscribe(event => this._onResizing(event));
+      // this.windowResizeSub = fromEvent(window, 'resize')
+      //   .pipe(
+      //     debounceTime(500),
+      //     filter((e: any) => this.caro.isWidthChanged(e.target.outerWidth))
+      //   )
+      //   .subscribe(event => {
+      //     this.caro._storeCarouselData();
+      //   });
 
-      this._onWindowScrolling();
+      // this._onWindowScrolling();
     }
     this.cdr.markForCheck();
   }
 
   changeGridConfig(grid?: ItemConfig) {
-    if (grid) {
-      this.inputs.grid = grid;
-    }
-    this.validateInputs(this.inputs);
-    this._carouselSize();
-    this._storeCarouselData();
-    this.calculateExtraItem();
+    this.caro.changeGridConfig(grid);
+    //   if (grid) {
+    //     this.inputs.grid = grid;
+    //   }
+    //   this.caro.mergeUserInput(this.inputs);
+    //   this._carouselSize();
+    //   this._storeCarouselData();
+    //   this.calculateExtraItem();
     grid && this.extraItemsContainer(this._dataSource);
-    // console.log(
-    //   this.currentSlideItems,
-    //   this.activePoint,
-    //   this.slideItems,
-    //   this.dataSource.length,
-    //   this.pointNumbers
-    // );
-    if (grid) {
-      this.moveTo(
-        Math.max(0, Math.ceil(this.currentSlideItems / this.slideItems) - 1),
-        true,
-        true
-      );
-    }
+    //   // console.log(
+    //   //   this.currentSlideItems,
+    //   //   this.activePoint,
+    //   //   this.slideItems,
+    //   //   this.dataSource.length,
+    //   //   this.pointNumbers
+    //   // );
+    //   if (grid) {
+    //     this.moveTo(Math.max(0, Math.ceil(this.currentSlideItems / this.slideItems) - 1), true, true);
+    //   }
   }
 
   ngOnDestroy() {
@@ -420,93 +419,77 @@ export class NguCarousel<T = any> extends NguCarouselStore
     }
   }
 
-  private _onResizing(event: any): void {
-    // clearTimeout(this.onResize);
-    // this.onResize = setTimeout(() => {
-    if (this.deviceWidth !== event.target.outerWidth) {
-      // this._setStyle(this.nguItemsContainer.nativeElement, 'transition', ``);
-      this._storeCarouselData();
-    }
-    // }, 500);
-  }
-
-  transformCarousel(transform: string, transition?: string) {
-    // console.log(transform);
-    // console.log(this.currentSlideItems);
-    this.alternatives = !this.alternatives;
-    this.carouselTransition = transition || '0ms';
-    this.carouselTransform = transform;
-    this.cdr.detectChanges();
-  }
+  // transformCarousel(transform: string, transition?: string) {
+  //   // console.log(transform);
+  //   // console.log(this.currentSlideItems);
+  //   this.alternatives = !this.alternatives;
+  //   this.carouselTransition = transition || '0ms';
+  //   this.carouselTransform = transform;
+  //   this.cdr.detectChanges();
+  // }
 
   /** this fn used to disable the interval when it is not on the viewport */
-  private _onWindowScrolling(): void {
-    const top = this.carousel.offsetTop;
+  private _onWindowScrolling(): boolean {
+    console.log('window scroll');
+    const top = this._el.nativeElement.carousel.offsetTop;
     const scrollY = window.scrollY;
     const heightt = window.innerHeight;
-    const carouselHeight = this.carousel.offsetHeight;
+    const carouselHeight = this._el.nativeElement.carousel.offsetHeight;
     const isCarouselOnScreen =
-      top <= scrollY + heightt - carouselHeight / 4 &&
-      top + carouselHeight / 2 >= scrollY;
+      top <= scrollY + heightt - carouselHeight / 4 && top + carouselHeight / 2 >= scrollY;
 
-    if (isCarouselOnScreen) {
-      this._intervalController$.next(1);
-    } else {
-      this._intervalController$.next(0);
-    }
+    return isCarouselOnScreen;
+
+    // if (isCarouselOnScreen) {
+    //   this._intervalController$.next(1);
+    // } else {
+    //   this._intervalController$.next(0);
+    // }
   }
 
   /** store data based on width of the screen for the carousel */
-  private _storeCarouselData(): void {
-    this.deviceWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 1200;
+  // private _storeCarouselData(): void {
+  //   this.deviceWidth = isPlatformBrowser(this.platformId) ? window.innerWidth : 1200;
 
-    this.carouselWidth = this.carouselMain1.nativeElement.offsetWidth;
-    this.carouselOffsetWidth = this.nguItemsContainer.nativeElement.offsetWidth;
+  //   this.carouselWidth = this.carouselMain1.nativeElement.offsetWidth;
+  //   this.carouselOffsetWidth = this.nguItemsContainer.el.nativeElement.offsetWidth;
 
-    if (this.type === 'responsive') {
-      // this.deviceType = 'xs';
-      const offset = this.inputs.grid.offset || 1;
-      this.maxSlideItems = this.inputs.grid.size;
-      this.itemWidth =
-        this.carouselWidth - this.carouselWidth / offset / this.maxSlideItems;
-      this.itemWidthTest = this.carouselWidth / this.maxSlideItems;
-      // console.log(this.carouselWidth, this.inputs.grid.offset);
-    } else {
-      this.maxSlideItems = Math.trunc(
-        this.carouselWidth / this.inputs.grid.size
-      );
-      this.itemWidth = this.inputs.grid.size;
-      const width =
-        this.carouselOffsetWidth - this._carouselItemSize * this.maxSlideItems;
-      this._maxSlideWidth = this._carouselItemSize - width;
-      // this.deviceType = 'all';
-    }
-    console.log(this.itemWidthTest);
+  //   if (this.type === 'responsive') {
+  //     // this.deviceType = 'xs';
+  //     const offset = this.inputs.grid.offset || 1;
+  //     this.maxSlideItems = this.inputs.grid.size;
+  //     this.itemWidth = this.carouselWidth - this.carouselWidth / offset / this.maxSlideItems;
+  //     this.itemWidthTest = this.carouselWidth / this.maxSlideItems;
+  //     // console.log(this.carouselWidth, this.inputs.grid.offset);
+  //   } else {
+  //     this.maxSlideItems = Math.trunc(this.carouselWidth / this.inputs.grid.size);
+  //     this.itemWidth = this.inputs.grid.size;
+  //     const width = this.carouselOffsetWidth - this._carouselItemSize * this.maxSlideItems;
+  //     this._maxSlideWidth = this._carouselItemSize - width;
+  //     // this.deviceType = 'all';
+  //   }
+  //   console.log(this.itemWidthTest);
 
-    this.slideItems = +(this.inputs.grid.slide < this.maxSlideItems
-      ? this.inputs.grid.slide
-      : this.maxSlideItems);
-    this.load =
-      this.inputs.load >= this.slideItems ? this.inputs.load : this.slideItems;
-    this.speed =
-      this.inputs.speed && this.inputs.speed > -1 ? this.inputs.speed : 400;
-    // console.log('device type', this.type);
-    this._carouselPoint();
-  }
+  //   this.slideItems = +(this.inputs.grid.slide < this.maxSlideItems
+  //     ? this.inputs.grid.slide
+  //     : this.maxSlideItems);
+  //   this.load = this.inputs.load >= this.slideItems ? this.inputs.load : this.slideItems;
+  //   this.speed = this.inputs.speed && this.inputs.speed > -1 ? this.inputs.speed : 400;
+  //   // console.log('device type', this.type);
+  //   this._carouselPoint();
+  // }
 
   /** Used to reset the carousel */
-  public reset(withOutAnimation?: boolean): void {
-    withOutAnimation && (this._withAnim = false);
-    // this.carouselCssNode.innerHTML = '';
-    this.moveTo(0);
-    this._carouselPoint();
-  }
+  // public reset(withOutAnimation?: boolean): void {
+  //   withOutAnimation && (this._withAnim = false);
+  //   // this.carouselCssNode.innerHTML = '';
+  //   this.moveTo(0);
+  //   this._carouselPoint();
+  // }
 
   /** Init carousel point */
   private _carouselPoint(): void {
-    this.carouselPoi._carouselPoint();
+    this.caro.carouselPoi._carouselPoint();
     // const Nos = this.dataSource.length - (this.maxSlideItems - this.slideItems);
     // this.pointIndex = Math.ceil(Nos / this.slideItems);
     // const pointers = [];
@@ -530,333 +513,308 @@ export class NguCarousel<T = any> extends NguCarouselStore
   }
 
   /** change the active point in carousel */
-  private _carouselPointActiver(): void {
-    const i = Math.ceil(this.currentSlideItems / this.slideItems);
-    this.activePoint = i;
-    this.cdr.markForCheck();
-  }
+  // private _carouselPointActiver(): void {
+  //   const i = Math.ceil(this.currentSlideItems / this.slideItems);
+  //   this.activePoint = i;
+  //   this.cdr.markForCheck();
+  // }
 
   /** this function is used to scoll the carousel when point is clicked */
-  public moveTo(slide: number, withOutAnimation?: boolean, force = false) {
-    // slide = slide - 1;
-    withOutAnimation && (this._withAnim = false);
-    if ((this.activePoint !== slide || force) && slide < this.pointIndex) {
-      this._resetAferAnimation = null;
-      let slideremains;
-      const btns = this.currentSlideItems < slide ? 1 : 0;
+  // public moveTo(slide: number, withOutAnimation?: boolean, force = false) {
+  //   // slide = slide - 1;
+  //   withOutAnimation && (this._withAnim = false);
+  //   if ((this.activePoint !== slide || force) && slide < this.pointIndex) {
+  //     this._resetAferAnimation = null;
+  //     let slideremains;
+  //     const btns = this.currentSlideItems < slide ? 1 : 0;
 
-      switch (slide) {
-        case 0:
-          this._btnBoolean(1, 0);
-          slideremains = slide * this.slideItems;
-          break;
-        case this.pointIndex - 1:
-          this._btnBoolean(0, 1);
-          slideremains = this.dataSource.length - this.maxSlideItems;
-          break;
-        default:
-          this._btnBoolean(0, 0);
-          slideremains = slide * this.slideItems;
-      }
-      this._carouselScrollTwo(btns, slideremains, this.speed);
-    }
-  }
+  //     switch (slide) {
+  //       case 0:
+  //         this._btnBoolean(1, 0);
+  //         slideremains = slide * this.slideItems;
+  //         break;
+  //       case this.pointIndex - 1:
+  //         this._btnBoolean(0, 1);
+  //         slideremains = this.dataSource.length - this.maxSlideItems;
+  //         break;
+  //       default:
+  //         this._btnBoolean(0, 0);
+  //         slideremains = slide * this.slideItems;
+  //     }
+  //     this._carouselScrollTwo(btns, slideremains, this.speed);
+  //   }
+  // }
 
   /** set the style of the carousel based the inputs data */
-  private _carouselSize(): void {
-    // debugger;
-    if (!this.token) {
-      this.token = this._generateID();
-      this.styleid = `.${
-        this.token
-      } > .ngucarousel > .ngu-touch-container > .ngucarousel-items`;
-      this._renderer.addClass(this.carousel, this.token);
-    }
-    const dism = '';
-    this.RTL &&
-      !this.vertical.enabled &&
-      this._renderer.addClass(this.carousel, 'ngurtl');
-    // if (this.inputs.custom === 'banner') {
-    //   this._renderer.addClass(this.carousel, 'banner');
-    // }
+  // private _carouselSize(): void {
+  //   // debugger;
+  //   if (!this.token) {
+  //     this.token = this._generateID();
+  //     this.styleid = `.${this.token} > .ngucarousel > .ngu-touch-container > .ngucarousel-items`;
+  //     this._renderer.addClass(this.carousel, this.token);
+  //   }
+  //   const dism = '';
+  //   this.RTL && !this.vertical.enabled && this._renderer.addClass(this.carousel, 'ngurtl');
+  //   // if (this.inputs.custom === 'banner') {
+  //   //   this._renderer.addClass(this.carousel, 'banner');
+  //   // }
 
-    // if (this.inputs.animation === 'lazy') {
-    //   dism += `${this.styleid} > .item {transition: transform .6s ease;}`;
-    // }
+  //   // if (this.inputs.animation === 'lazy') {
+  //   //   dism += `${this.styleid} > .item {transition: transform .6s ease;}`;
+  //   // }
 
-    let itemStyle = '';
-    if (this.vertical.enabled) {
-      this._carouselItemSize = this.vertical.height / +this.inputs.grid.size;
-      itemStyle = `${this.styleid} > .item {height: ${
-        this._carouselItemSize
-      }px}`;
+  //   let itemStyle = '';
+  //   if (this.vertical.enabled) {
+  //     this._carouselItemSize = this.vertical.height / +this.inputs.grid.size;
+  //     itemStyle = `${this.styleid} > .item {height: ${this._carouselItemSize}px}`;
 
-      // itemStyle = `${itemWidth_xs}`;
-    } else if (this.type === 'responsive') {
-      this._carouselItemSize =
-        this.carouselOffsetWidth / +this.inputs.grid.size;
-      itemStyle = `${this.styleid} .item {flex: 0 0 ${
-        this._carouselItemSize
-      }%; max-width: ${this._carouselItemSize}%;}`;
-      // itemStyle = `${itemWidth_xs}`;
-    } else {
-      this._carouselItemSize = this.inputs.grid.size;
-      itemStyle = `${this.styleid} .item {flex: 0 0 ${
-        this.inputs.grid.size
-      }px; max-width: ${this.inputs.grid.size}px;}`;
-    }
-    // console.log(this);
+  //     // itemStyle = `${itemWidth_xs}`;
+  //   } else if (this.type === 'responsive') {
+  //     this._carouselItemSize = this.carouselOffsetWidth / +this.inputs.grid.size;
+  //     itemStyle = `${this.styleid} .item {flex: 0 0 ${this._carouselItemSize}%; max-width: ${
+  //       this._carouselItemSize
+  //     }%;}`;
+  //     // itemStyle = `${itemWidth_xs}`;
+  //   } else {
+  //     this._carouselItemSize = this.inputs.grid.size;
+  //     itemStyle = `${this.styleid} .item {flex: 0 0 ${this.inputs.grid.size}px; max-width: ${
+  //       this.inputs.grid.size
+  //     }px;}`;
+  //   }
+  //   // console.log(this);
 
-    this._createStyleElem(`${dism} ${itemStyle}`);
-    this.cdr.markForCheck();
-  }
+  //   this._createStyleElem(`${dism} ${itemStyle}`);
+  //   this.cdr.markForCheck();
+  // }
 
-  private calculateExtraItem() {
-    // console.log(
-    //   'carouselItemSize',
-    //   this.carouselItemSize,
-    //   this.slideItems,
-    //   this.inputs.grid.offset
-    // );
-    this._extraLoopItemsWidth =
-      this._carouselItemSize *
-        (this.maxSlideItems + (this.inputs.grid.offset ? 1 : 0)) -
-      this.inputs.grid.offset +
-      this.inputs.grid.offset / 2;
-  }
+  // private calculateExtraItem() {
+  //   // console.log(
+  //   //   'carouselItemSize',
+  //   //   this.carouselItemSize,
+  //   //   this.slideItems,
+  //   //   this.inputs.grid.offset
+  //   // );
+  //   this._extraLoopItemsWidth =
+  //     this._carouselItemSize * (this.maxSlideItems + (this.inputs.grid.offset ? 1 : 0)) -
+  //     this.inputs.grid.offset +
+  //     this.inputs.grid.offset / 2;
+  // }
 
   /** logic to scroll the carousel step 1 */
-  slide(Btn: number): void {
-    let itemSpeed = this.speed;
-    let currentSlide = 0;
-    const touchMove = Math.ceil(this.dexVal / this.itemWidth);
-    // this._setStyle(this.nguItemsContainer.nativeElement, 'transform', '');
-    // this.carouselTransform = '';
-
-    if (this.pointIndex === 1) {
-      console.log('lkj');
-      return;
-    }
-
-    if (Btn === 0 && ((!this.loop && !this.isFirst) || this.loop)) {
-      console.log('asdf');
-      // const slide = this.slideItems * this.pointIndex;
-      let preLast = false;
-
-      const currentSlideD = this.currentSlideItems - this.slideItems;
-      const MoveSlide = currentSlideD + this.slideItems;
-      this._btnBoolean(0, 1);
-      if (this.currentSlideItems === 0 && this.loop) {
-        preLast = true;
-        this._btnBoolean(0, 0);
-        if (touchMove > this.slideItems) {
-          currentSlide = this.currentSlideItems - touchMove;
-          itemSpeed = 200;
-        } else {
-          currentSlide =
-            this.currentSlideItems -
-            this.slideItems -
-            (this.maxSlideItems - this.slideItems);
-        }
-      } else if (this.currentSlideItems === 0) {
-        currentSlide = this.dataSource.length - this.maxSlideItems;
-        itemSpeed = 400;
-        this._btnBoolean(0, 1);
-      } else if (this.slideItems >= MoveSlide) {
-        currentSlide = 0;
-        this._btnBoolean(1, 0);
-      } else {
-        this._btnBoolean(0, 0);
-        if (touchMove > this.slideItems) {
-          currentSlide = this.currentSlideItems - touchMove;
-          itemSpeed = 200;
-        } else {
-          currentSlide = this.currentSlideItems - this.slideItems;
-        }
-      }
-      this._carouselScrollTwo(
-        Btn,
-        currentSlide,
-        itemSpeed,
-        this.loop && preLast
-      );
-    } else if (Btn === 1 && ((!this.loop && !this.isLast) || this.loop)) {
-      console.log('asdf1');
-      let preLast = false;
-      const isMaxSilde =
-        this.dataSource.length <=
-        this.currentSlideItems + this.maxSlideItems + this.slideItems;
-      if (isMaxSilde && !this.isLast) {
-        currentSlide = this.dataSource.length - this.maxSlideItems;
-        this._btnBoolean(0, 1);
-      } else if (this.isLast && this.loop) {
-        preLast = true;
-        this._btnBoolean(1, 0);
-        if (touchMove > this.slideItems) {
-          currentSlide =
-            this.currentSlideItems +
-            this.slideItems +
-            (touchMove - this.slideItems);
-          itemSpeed = 200;
-        } else {
-          currentSlide =
-            this.currentSlideItems +
-            this.slideItems +
-            (this.maxSlideItems - this.slideItems);
-        }
-      } else if (this.isLast) {
-        currentSlide = 0;
-        itemSpeed = 400;
-        this._btnBoolean(1, 0);
-      } else {
-        this._btnBoolean(0, 0);
-        if (touchMove > this.slideItems) {
-          currentSlide =
-            this.currentSlideItems +
-            this.slideItems +
-            (touchMove - this.slideItems);
-          itemSpeed = 200;
-        } else {
-          currentSlide = this.currentSlideItems + this.slideItems;
-        }
-      }
-      this._carouselScrollTwo(
-        Btn,
-        currentSlide,
-        itemSpeed,
-        this.loop && preLast
-      );
-    } else {
-      console.log('no action');
-    }
+  slide(btn: number): void {
+    this.caro.slidess(btn);
   }
+  //   const itemSpeed = this.speed;
+  //   const currentSlide = 0;
+  //   const touchMove = Math.ceil(this.dexVal / this.itemWidth);
+  //   // this._setStyle(this.nguItemsContainer.nativeElement, 'transform', '');
+  //   // this.carouselTransform = '';
+
+  //   if (this.pointIndex === 1) return;
+
+  //   if (Btn === 0 && ((!this.loop && !this.isFirst) || this.loop)) {
+  //     console.log('asdf');
+  //     // const slide = this.slideItems * this.pointIndex;
+  //     this.rightScroll(touchMove, currentSlide, itemSpeed, Btn);
+  //   } else if (Btn === 1 && ((!this.loop && !this.isLast) || this.loop)) {
+  //     console.log('asdf1');
+  //     this.leftScroll(currentSlide, touchMove, itemSpeed, Btn);
+  //   } else {
+  //     console.log('no action');
+  //   }
+  // }
+
+  // private rightScroll(touchMove: number, currentSlide: number, itemSpeed: number, Btn: number) {
+  //   let preLast = false;
+  //   const currentSlideD = this.currentSlideItems - this.slideItems;
+  //   const MoveSlide = currentSlideD + this.slideItems;
+  //   this._btnBoolean(0, 1);
+  //   if (this.currentSlideItems === 0 && this.loop) {
+  //     preLast = true;
+  //     this._btnBoolean(0, 0);
+  //     if (touchMove > this.slideItems) {
+  //       currentSlide = this.currentSlideItems - touchMove;
+  //       itemSpeed = 200;
+  //     } else {
+  //       currentSlide =
+  //         this.currentSlideItems - this.slideItems - (this.maxSlideItems - this.slideItems);
+  //     }
+  //   } else if (this.currentSlideItems === 0) {
+  //     currentSlide = this.dataSource.length - this.maxSlideItems;
+  //     itemSpeed = 400;
+  //     this._btnBoolean(0, 1);
+  //   } else if (this.slideItems >= MoveSlide) {
+  //     currentSlide = 0;
+  //     this._btnBoolean(1, 0);
+  //   } else {
+  //     this._btnBoolean(0, 0);
+  //     if (touchMove > this.slideItems) {
+  //       currentSlide = this.currentSlideItems - touchMove;
+  //       itemSpeed = 200;
+  //     } else {
+  //       currentSlide = this.currentSlideItems - this.slideItems;
+  //     }
+  //   }
+  //   this._carouselScrollTwo(Btn, currentSlide, itemSpeed, this.loop && preLast);
+  // }
+
+  // private leftScroll(currentSlide: number, touchMove: number, itemSpeed: number, Btn: number) {
+  //   let preLast = false;
+  //   const isMaxSilde =
+  //     this.dataSource.length <= this.currentSlideItems + this.maxSlideItems + this.slideItems;
+  //   if (isMaxSilde && !this.isLast) {
+  //     currentSlide = this.dataSource.length - this.maxSlideItems;
+  //     this._btnBoolean(0, 1);
+  //   } else if (this.isLast && this.loop) {
+  //     preLast = true;
+  //     this._btnBoolean(1, 0);
+  //     const s = touchMove > this.slideItems;
+  //     const d = s ? touchMove : this.maxSlideItems;
+  //     currentSlide = this.currentSlideItems + this.slideItems + (d - this.slideItems);
+  //     if (s) {
+  //       itemSpeed = 200;
+  //     }
+  //   } else if (this.isLast) {
+  //     currentSlide = 0;
+  //     itemSpeed = 400;
+  //     this._btnBoolean(1, 0);
+  //   } else {
+  //     this._btnBoolean(0, 0);
+  //     if (touchMove > this.slideItems) {
+  //       currentSlide = this.currentSlideItems + this.slideItems + (touchMove - this.slideItems);
+  //       itemSpeed = 200;
+  //     } else {
+  //       currentSlide = this.currentSlideItems + this.slideItems;
+  //     }
+  //   }
+  //   this._carouselScrollTwo(Btn, currentSlide, itemSpeed, this.loop && preLast);
+  //   return { currentSlide, itemSpeed };
+  // }
 
   /** logic to scroll the carousel step 2 */
-  private _carouselScrollTwo(
-    Btn: number,
-    currentSlideItems: number,
-    itemSpeed: number,
-    resetAferAnimation = false
-  ): void {
-    if (this.dexVal !== 0) {
-      const val = Math.abs(this.touch.velocity);
-      let somt = Math.floor(
-        (this.dexVal / val / this.dexVal) * (this.deviceWidth - this.dexVal)
-      );
-      somt = somt > itemSpeed ? itemSpeed : somt;
-      itemSpeed = somt < 200 ? 200 : somt;
-      this.dexVal = 0;
-    }
+  // private _carouselScrollTwo(
+  //   Btn: number,
+  //   currentSlideItems: number,
+  //   itemSpeed: number,
+  //   resetAferAnimation = false
+  // ): void {
+  //   if (this.dexVal !== 0) {
+  //     const val = Math.abs(this.touch.velocity);
+  //     let somt = Math.floor((this.dexVal / val / this.dexVal) * (this.deviceWidth - this.dexVal));
+  //     somt = somt > itemSpeed ? itemSpeed : somt;
+  //     itemSpeed = somt < 200 ? 200 : somt;
+  //     this.dexVal = 0;
+  //   }
 
-    if (this._withAnim) {
-      this.carouselTransition = `${itemSpeed}ms ${this.inputs.easing}`;
-      this.inputs.animation &&
-        this._carouselAnimator(
-          Btn,
-          currentSlideItems + 1,
-          currentSlideItems + this.maxSlideItems,
-          itemSpeed,
-          Math.abs(this.currentSlideItems - currentSlideItems)
-        );
-    } else {
-      this.carouselTransition = '0ms cubic-bezier(0, 0, 0.2, 1)';
-    }
+  //   if (this._withAnim) {
+  //     this.carouselTransition = `${itemSpeed}ms ${this.inputs.easing}`;
+  //     this.inputs.animation &&
+  //       this._carouselAnimator(
+  //         Btn,
+  //         currentSlideItems + 1,
+  //         currentSlideItems + this.maxSlideItems,
+  //         itemSpeed,
+  //         Math.abs(this.currentSlideItems - currentSlideItems)
+  //       );
+  //   } else {
+  //     this.carouselTransition = '0ms cubic-bezier(0, 0, 0.2, 1)';
+  //   }
 
-    this.itemLength = this.dataSource.length;
-    this._transformStyle(currentSlideItems);
-    this.currentSlideItems = currentSlideItems;
-    this.onMove.emit(this);
-    this._carouselPointActiver();
-    this._carouselLoadTrigger();
-    this._withAnim = true;
-    this._resetAferAnimation = resetAferAnimation ? Btn : null;
-    // console.log('animation start', performance.now());
-  }
+  //   this.itemLength = this.dataSource.length;
+  //   this._transformStyle(currentSlideItems);
+  //   this.currentSlideItems = currentSlideItems;
+  //   this.onMove.emit(this);
+  //   this._carouselPointActiver();
+  //   this._carouselLoadTrigger();
+  //   this._withAnim = true;
+  //   this._resetAferAnimation = resetAferAnimation ? Btn : null;
+  //   // console.log('animation start', performance.now());
+  // }
 
-  animationCompleted() {
-    // console.log('animation end', performance.now());
-    if (typeof this._resetAferAnimation === 'number') {
-      this.moveTo(
-        this._resetAferAnimation ? 0 : this.pointNumbers.length - 1,
-        true
-      );
-    }
-  }
+  // animationCompleted() {
+  //   // console.log('animation end', performance.now());
+  //   if (typeof this._resetAferAnimation === 'number') {
+  //     this.moveTo(this._resetAferAnimation ? 0 : this.pointNumbers.length - 1, true);
+  //   }
+  // }
 
   /** boolean function for making isFirst and isLast */
-  private _btnBoolean(first: number, last: number) {
-    this.isFirst = !!first;
-    this.isLast = !!last;
-  }
+  // private _btnBoolean(first: number, last: number) {
+  //   this.isFirst = !!first;
+  //   this.isLast = !!last;
+  // }
 
-  private _transformString(items: number): string {
-    let collect = '';
-    collect += `translate3d(`;
+  // private _transformString(items: number): string {
+  //   let collect = '';
+  //   collect += `translate3d(`;
 
-    if (this.vertical.enabled) {
-      this.transform = this._carouselItemSize * items;
-      collect += `0, -${this.transform + this._extraLoopItemsWidth}px, 0`;
-    } else {
-      this.transform = this._carouselItemSize * items;
-      console.log(this._carouselItemSize, items);
-      const collectSt = this.transform + this._extraLoopItemsWidth;
-      const unit = this.type === 'fixed' ? 'px' : '%';
-      collect += `${this._addDirectionSym(collectSt)}${unit}, 0, 0`;
-    }
-    collect += `)`;
-    return collect;
-  }
+  //   if (this.vertical.enabled) {
+  //     this.transform = this._carouselItemSize * items;
+  //     collect += `0, -${this.transform + this._extraLoopItemsWidth}px, 0`;
+  //   } else {
+  //     this.transform = this._carouselItemSize * items;
+  //     console.log(this._carouselItemSize, items);
+  //     const collectSt = this.transform + this._extraLoopItemsWidth;
+  //     const unit = this.type === 'fixed' ? 'px' : '%';
+  //     collect += `${this._addDirectionSym(collectSt)}${unit}, 0, 0`;
+  //   }
+  //   collect += `)`;
+  //   return collect;
+  // }
 
   /** set the transform style to scroll the carousel  */
-  private _transformStyle(items: number): void {
-    let slideCss = '';
-    if (this.type === 'responsive') {
-      slideCss = `${this._transformString(items)}`;
-    } else {
-      this.transform = this._carouselItemSize * items;
-      let transVal = this.transform + this._extraLoopItemsWidth;
-      if (!this.loop) {
-        transVal =
-          this._maxSlideWidth > transVal ? transVal : this._maxSlideWidth;
-      }
-      slideCss = `translate3d(${this._addDirectionSym(transVal)}px, 0, 0)`;
-    }
-    this.transformCarousel(slideCss, this.carouselTransition);
-    // console.log(this.carouselTransform, this.carouselTransition);
-  }
+  // private _transformStyle(items: number): void {
+  //   let slideCss = '';
+  //   if (this.type === 'responsive') {
+  //     slideCss = `${this._transformString(items)}`;
+  //   } else {
+  //     this.transform = this._carouselItemSize * items;
+  //     let transVal = this.transform + this._extraLoopItemsWidth;
+  //     if (!this.loop) {
+  //       transVal = this._maxSlideWidth > transVal ? transVal : this._maxSlideWidth;
+  //     }
+  //     slideCss = `translate3d(${this._addDirectionSym(transVal)}px, 0, 0)`;
+  //   }
+  //   this.transformCarousel(slideCss, this.carouselTransition);
+  //   // console.log(this.carouselTransform, this.carouselTransition);
+  // }
 
-  private _addDirectionSym(val: number) {
-    return val > 0 ? `${this.directionSym}${val}` : val;
-  }
+  // private _addDirectionSym(val: number) {
+  //   return val > 0 ? `${this.directionSym}${val}` : val;
+  // }
 
   /** this will trigger the carousel to load the items */
-  private _carouselLoadTrigger(): void {
-    if (typeof this.inputs.load === 'number') {
-      this.dataSource.length - this.load <=
-        this.currentSlideItems + this.maxSlideItems &&
-        this.carouselLoad.emit(this.currentSlideItems);
-    }
-  }
+  // private _carouselLoadTrigger(): void {
+  //   if (typeof this.inputs.load === 'number') {
+  //     this.dataSource.length - this.load <= this.currentSlideItems + this.maxSlideItems &&
+  //       this.carouselLoad.emit(this.currentSlideItems);
+  //   }
+  // }
 
   /** generate Class for each carousel to set specific style */
-  private _generateID(): string {
-    let text = '';
-    const possible =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  // private _generateID(): string {
+  //   let text = '';
+  //   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-    for (let i = 0; i < 6; i++) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return `ngucarousel${text}`;
-  }
+  //   for (let i = 0; i < 6; i++) {
+  //     text += possible.charAt(Math.floor(Math.random() * possible.length));
+  //   }
+  //   return `ngucarousel${text}`;
+  // }
 
   /** handle the auto slide */
   private _carouselInterval(): void {
     const container = this.carouselMain1.nativeElement;
-    if (this.interval && this.loop) {
-      this.windowScrollSub = fromEvent(window, 'scroll')
-        .pipe(throttleTime(600))
-        .subscribe(() => this._onWindowScrolling());
+    if (this.caro.interval && this.caro.loop) {
+      console.log('asdfdsaf');
+      const windowScroll$ = fromEvent(window, 'scroll').pipe(
+        throttleTime(600),
+        map(e => this._onWindowScrolling())
+      );
+
+      // this.windowScrollSub = fromEvent(window, 'scroll')
+      //   .pipe(throttleTime(600))
+      //   .subscribe(() => this._onWindowScrolling());
       // this.listener4 = this._renderer.listen('window', 'scroll', () => {
       //   clearTimeout(this.onScrolling);
       //   this.onScrolling = setTimeout(() => {
@@ -873,25 +831,20 @@ export class NguCarousel<T = any> extends NguCarouselStore
       const interval$ = interval(this.inputs.interval.timing).pipe(mapTo(1));
 
       setTimeout(() => {
-        this.carouselInt = merge(
-          play$,
-          touchPlay$,
-          pause$,
-          touchPause$,
-          this._intervalController$
-        )
+        this.carouselInt = merge(play$, touchPlay$, pause$, touchPause$)
           .pipe(
             startWith(1),
             switchMap(val => {
               this.isHovered = !val;
+              console.log(val);
               this.cdr.markForCheck();
               return val ? interval$ : EMPTY;
             })
           )
           .subscribe(res => {
-            this.slide(1);
+            this.caro.slidess(1);
           });
-      }, this.interval.initialDelay);
+      }, this.caro.interval.initialDelay);
     }
   }
 
@@ -945,10 +898,10 @@ export class NguCarousel<T = any> extends NguCarouselStore
     this.cdr.markForCheck();
   }
 
-  /** Short form for setElementStyle */
-  private _setStyle(el: any, prop: any, val: any): void {
-    this._renderer.setStyle(el, prop, val);
-  }
+  // /** Short form for setElementStyle */
+  // private _setStyle(el: any, prop: any, val: any): void {
+  //   this._renderer.setStyle(el, prop, val);
+  // }
 
   /** For generating style tag */
   private _createStyleElem(datas?: string) {
@@ -957,7 +910,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
       const styleText = this._renderer.createText(datas);
       this._renderer.appendChild(styleItem, styleText);
     }
-    this._renderer.appendChild(this.carousel, styleItem);
+    this._renderer.appendChild(this._el.nativeElement, styleItem);
     return styleItem;
   }
 }

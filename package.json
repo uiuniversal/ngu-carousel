@@ -7,6 +7,9 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
+    "precommit": "run-s format:fix",
+    "format:fix": "pretty-quick --staged",
+    "format:all": "prettier --config ./.prettierrc --write \"projects/ngu-translator/src/{app,environments}/**/*{.ts,.js,.json,.css,.html,.scss}\"",
     "build-lib": "ng build --prod --project carousel",
     "run-lib": "npm run build-lib && ng serve",
     "e2e": "ng e2e"

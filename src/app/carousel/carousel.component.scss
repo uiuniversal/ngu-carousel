@@ -1,0 +1,11 @@
+.carousel-items {
+  display: flex;
+  position: relative;
+  width: 100%;
+  overflow-x: scroll;
+
+  .carousel-item {
+    height: 100px;
+    min-width: 100px;
+  }
+}

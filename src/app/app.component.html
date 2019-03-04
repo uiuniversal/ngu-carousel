@@ -38,33 +38,143 @@
 <!-- <ng-container *ngFor="let item of [1,2,3,4,5]"> -->
 <ngu-carousel #myCarousel [inputs]="carouselTileConfig" [dataSource]="imgags" *ngIf="hideShow">
   <div *nguCarouselDef="let item; let i = index; let ani = animate" class="carouselTile item">
-    <div class="tile" [style.background]="'url('+item+')'">
-      <h1>{{i + 1}}--{{item}}</h1>
+    <div class="tile" [style.background]="'url(' + item + ')'">
+      <h1>{{ i + 1 }}--{{ item }}</h1>
     </div>
   </div>
 
-  <button NguCarouselButton class="leftRs" (click)="myCarousel.slide(0)" [style.opacity]="myCarousel.isFirst ? 0.5:1">&lt;</button>
-  <button NguCarouselButton class="rightRs" (click)="myCarousel.slide(1)" [style.opacity]="myCarousel.isLast ? 0.5:1">&gt;</button>
+  <button
+    NguCarouselButton
+    class="leftRs"
+    (click)="myCarousel.slide(0)"
+    [style.opacity]="myCarousel.isFirst ? 0.5 : 1"
+    >&lt;</button
+  >
+  <button
+    NguCarouselButton
+    class="rightRs"
+    (click)="myCarousel.slide(1)"
+    [style.opacity]="myCarousel.isLast ? 0.5 : 1"
+    >&gt;</button
+  >
 
-  <!-- <ul class="myPoint" NguCarouselPoint>
-    <li *ngFor="let i of myCarousel.pointNumbers; let i = index" [class.active]="i==myCarousel.activePoint" (click)="myCarousel.moveTo(i)"></li>
-  </ul> -->
+  <ul class="myPoint" NguCarouselPoint>
+    <li
+      *ngFor="let i of myCarousel.pointNumbers; let i = index"
+      [class.active]="i == myCarousel.activePoint"
+      (click)="myCarousel.moveTo(i)"
+    ></li>
+  </ul>
   <!-- {{myCarousel.isHovered}} -->
 </ngu-carousel>
 <!-- </ng-container> -->
 <button (click)="hideShow = !hideShow">hideShow</button>
 <div>
-  <label for="">Size <input type="text" [(ngModel)]="carouselTileConfig.grid.size"></label>
+  <label for="">Size <input type="text" [(ngModel)]="carouselTileConfig.grid.size"/></label>
 </div>
 <div>
-  <label for="">offset <input type="text" [(ngModel)]="carouselTileConfig.grid.offset"></label>
+  <label for="">offset <input type="text" [(ngModel)]="carouselTileConfig.grid.offset"/></label>
 </div>
 <div>
-  <label for="">fixed <input type="radio" value="fixed" [(ngModel)]="carouselTileConfig.grid.type"></label>
-  <label for="">responsive <input type="radio" value="responsive" [(ngModel)]="carouselTileConfig.grid.type"></label>
+  <label for=""
+    >fixed <input type="radio" value="fixed" [(ngModel)]="carouselTileConfig.grid.type"
+  /></label>
+  <label for=""
+    >responsive <input type="radio" value="responsive" [(ngModel)]="carouselTileConfig.grid.type"
+  /></label>
 </div>
 
 <button (click)="changeGridConfig()">changeGridConfig</button>
 <button (click)="touch(0)">touch</button>
 <button (click)="touch(1)">touchEnable</button>
 <!-- {{ (carouselTileItems$ | async)?.length }} -->
+<p
+  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe repellendus odit, tempore
+  consectetur debitis! Quidem nulla ex libero molestias cum excepturi qui, commodi animi nam veniam
+  deleniti. Nisi, earum?</p
+>
+<p
+  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe repellendus odit, tempore
+  consectetur debitis! Quidem nulla ex libero molestias cum excepturi qui, commodi animi nam veniam
+  deleniti. Nisi, earum?</p
+>
+<p
+  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe repellendus odit, tempore
+  consectetur debitis! Quidem nulla ex libero molestias cum excepturi qui, commodi animi nam veniam
+  deleniti. Nisi, earum?</p
+>
+<p
+  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe repellendus odit, tempore
+  consectetur debitis! Quidem nulla ex libero molestias cum excepturi qui, commodi animi nam veniam
+  deleniti. Nisi, earum?</p
+>
+<p
+  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe repellendus odit, tempore
+  consectetur debitis! Quidem nulla ex libero molestias cum excepturi qui, commodi animi nam veniam
+  deleniti. Nisi, earum?</p
+>
+<p
+  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe repellendus odit, tempore
+  consectetur debitis! Quidem nulla ex libero molestias cum excepturi qui, commodi animi nam veniam
+  deleniti. Nisi, earum?</p
+>
+<p
+  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe repellendus odit, tempore
+  consectetur debitis! Quidem nulla ex libero molestias cum excepturi qui, commodi animi nam veniam
+  deleniti. Nisi, earum?</p
+>
+<p
+  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe repellendus odit, tempore
+  consectetur debitis! Quidem nulla ex libero molestias cum excepturi qui, commodi animi nam veniam
+  deleniti. Nisi, earum?</p
+>
+<p
+  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe repellendus odit, tempore
+  consectetur debitis! Quidem nulla ex libero molestias cum excepturi qui, commodi animi nam veniam
+  deleniti. Nisi, earum?</p
+>
+<p
+  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe repellendus odit, tempore
+  consectetur debitis! Quidem nulla ex libero molestias cum excepturi qui, commodi animi nam veniam
+  deleniti. Nisi, earum?</p
+>
+<p
+  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe repellendus odit, tempore
+  consectetur debitis! Quidem nulla ex libero molestias cum excepturi qui, commodi animi nam veniam
+  deleniti. Nisi, earum?</p
+>
+<p
+  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe repellendus odit, tempore
+  consectetur debitis! Quidem nulla ex libero molestias cum excepturi qui, commodi animi nam veniam
+  deleniti. Nisi, earum?</p
+>
+<p
+  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe repellendus odit, tempore
+  consectetur debitis! Quidem nulla ex libero molestias cum excepturi qui, commodi animi nam veniam
+  deleniti. Nisi, earum?</p
+>
+<p
+  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe repellendus odit, tempore
+  consectetur debitis! Quidem nulla ex libero molestias cum excepturi qui, commodi animi nam veniam
+  deleniti. Nisi, earum?</p
+>
+<p
+  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe repellendus odit, tempore
+  consectetur debitis! Quidem nulla ex libero molestias cum excepturi qui, commodi animi nam veniam
+  deleniti. Nisi, earum?</p
+>
+<p
+  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe repellendus odit, tempore
+  consectetur debitis! Quidem nulla ex libero molestias cum excepturi qui, commodi animi nam veniam
+  deleniti. Nisi, earum?</p
+>
+<p
+  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe repellendus odit, tempore
+  consectetur debitis! Quidem nulla ex libero molestias cum excepturi qui, commodi animi nam veniam
+  deleniti. Nisi, earum?</p
+>
+<p
+  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe repellendus odit, tempore
+  consectetur debitis! Quidem nulla ex libero molestias cum excepturi qui, commodi animi nam veniam
+  deleniti. Nisi, earum?</p
+>
