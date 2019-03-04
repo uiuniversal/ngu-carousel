@@ -35,7 +35,8 @@ import {
   Observable,
   of,
   Subject,
-  Subscription
+  Subscription,
+  fromEventPattern
 } from 'rxjs';
 import {
   mapTo,
@@ -77,9 +78,8 @@ export class NguCarousel<T = any> extends NguCarouselStore
   private _dataDiffer: IterableDiffer<{}>;
   styleid: string;
 
-  pointIndex: number;
+  // pointIndex: number;
   private _withAnim = true;
-  activePoint: number;
   isHovered = false;
   alternatives = false;
 
@@ -102,7 +102,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
   // private listener4: () => void;
 
   _extraLoopItemsWidth: number;
-  private _resetAferAnimation: any;
+  private _resetAfterAnimation: any;
   private _carouselItemSize: number;
   private _maxSlideWidth: number;
   itemWidthTest: number;
@@ -176,6 +176,8 @@ export class NguCarousel<T = any> extends NguCarouselStore
     this._trackByFn = fn;
   }
   private _trackByFn: TrackByFunction<T>;
+  points = new CarouselPoint(this);
+  activePoint = this.points.activePoint;
 
   constructor(
     private _el: ElementRef,
@@ -185,10 +187,10 @@ export class NguCarousel<T = any> extends NguCarouselStore
     public cdr: ChangeDetectorRef
   ) {
     super();
-    this.carouselPoi = new CarouselPoint(this);
-    this.carouselPoi.buttonHandler.subscribe(([first, last]) =>
+    this.points.buttonHandler.subscribe(([first, last]) =>
       this._btnBoolean(first, last)
     );
+    this.points.carouselPoints.subscribe(res => (this.pointNumbers = res));
   }
 
   ngOnInit() {
@@ -298,7 +300,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
       //   this.currentSlideItems,
       //   this.slideItems
       // );
-      if (this.activePoint === 0) {
+      if (this.points.activePoint === 0) {
         this.transformCarousel(this._transformString(0));
       }
     }
@@ -368,10 +370,12 @@ export class NguCarousel<T = any> extends NguCarouselStore
 
     if (isPlatformBrowser(this.platformId)) {
       this._carouselInterval();
-
-      this.windowResizeSub = fromEvent(window, 'resize')
-        .pipe(throttleTime(500))
-        .subscribe(event => this._onResizing(event));
+      fromEventPattern(
+        (handler: any) => this._renderer.listen('window', 'resize', handler),
+        (handler, token) => handler()
+      )
+        .pipe(debounceTime(500))
+        .subscribe(res => this._onResizing(res));
 
       this._onWindowScrolling();
     }
@@ -421,13 +425,10 @@ export class NguCarousel<T = any> extends NguCarouselStore
   }
 
   private _onResizing(event: any): void {
-    // clearTimeout(this.onResize);
-    // this.onResize = setTimeout(() => {
     if (this.deviceWidth !== event.target.outerWidth) {
       // this._setStyle(this.nguItemsContainer.nativeElement, 'transition', ``);
       this._storeCarouselData();
     }
-    // }, 500);
   }
 
   transformCarousel(transform: string, transition?: string) {
@@ -483,7 +484,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
       this._maxSlideWidth = this._carouselItemSize - width;
       // this.deviceType = 'all';
     }
-    console.log(this.itemWidthTest);
+    console.log(this.itemWidthTest, this.carouselOffsetWidth);
 
     this.slideItems = +(this.inputs.grid.slide < this.maxSlideItems
       ? this.inputs.grid.slide
@@ -506,7 +507,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
 
   /** Init carousel point */
   private _carouselPoint(): void {
-    this.carouselPoi._carouselPoint();
+    this.points._carouselPoint();
     // const Nos = this.dataSource.length - (this.maxSlideItems - this.slideItems);
     // this.pointIndex = Math.ceil(Nos / this.slideItems);
     // const pointers = [];
@@ -530,18 +531,18 @@ export class NguCarousel<T = any> extends NguCarouselStore
   }
 
   /** change the active point in carousel */
-  private _carouselPointActiver(): void {
-    const i = Math.ceil(this.currentSlideItems / this.slideItems);
-    this.activePoint = i;
-    this.cdr.markForCheck();
-  }
+  // private _carouselPointActiver(): void {
+  //   const i = Math.ceil(this.currentSlideItems / this.slideItems);
+  //   this.activePoint = i;
+  //   this.cdr.markForCheck();
+  // }
 
   /** this function is used to scoll the carousel when point is clicked */
-  public moveTo(slide: number, withOutAnimation?: boolean, force = false) {
+  public moveTo(slide: number, withoutAnimation?: boolean, force = false) {
     // slide = slide - 1;
-    withOutAnimation && (this._withAnim = false);
-    if ((this.activePoint !== slide || force) && slide < this.pointIndex) {
-      this._resetAferAnimation = null;
+    withoutAnimation && (this._withAnim = false);
+    if ((this.points.activePoint !== slide || force) && slide < this.points.pointIndex) {
+      this._resetAfterAnimation = null;
       let slideremains;
       const btns = this.currentSlideItems < slide ? 1 : 0;
 
@@ -550,7 +551,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
           this._btnBoolean(1, 0);
           slideremains = slide * this.slideItems;
           break;
-        case this.pointIndex - 1:
+        case this.points.pointIndex - 1:
           this._btnBoolean(0, 1);
           slideremains = this.dataSource.length - this.maxSlideItems;
           break;
@@ -633,7 +634,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
     // this._setStyle(this.nguItemsContainer.nativeElement, 'transform', '');
     // this.carouselTransform = '';
 
-    if (this.pointIndex === 1) {
+    if (this.points.pointIndex === 1) {
       console.log('lkj');
       return;
     }
@@ -766,18 +767,18 @@ export class NguCarousel<T = any> extends NguCarouselStore
     this._transformStyle(currentSlideItems);
     this.currentSlideItems = currentSlideItems;
     this.onMove.emit(this);
-    this._carouselPointActiver();
+    this.points.carouselPointActiver();
     this._carouselLoadTrigger();
     this._withAnim = true;
-    this._resetAferAnimation = resetAferAnimation ? Btn : null;
+    this._resetAfterAnimation = resetAferAnimation ? Btn : null;
     // console.log('animation start', performance.now());
   }
 
   animationCompleted() {
     // console.log('animation end', performance.now());
-    if (typeof this._resetAferAnimation === 'number') {
+    if (typeof this._resetAfterAnimation === 'number') {
       this.moveTo(
-        this._resetAferAnimation ? 0 : this.pointNumbers.length - 1,
+        this._resetAfterAnimation ? 0 : this.pointNumbers.length - 1,
         true
       );
     }
@@ -911,12 +912,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
     if (direction === 1) {
       for (let i = start - 1; i < end; i++) {
         val = val * 2;
-        const viewRef = viewContainer.get(i) as any;
-        if (viewRef) {
-          collectIndex.push(i);
-          const context = viewRef.context as any;
-          context.animate = { value: true, params: { distance: val } };
-        }
+        this.testanim(viewContainer, i, collectIndex, val);
       }
     } else {
       for (let i = end - 1; i >= start - 1; i--) {
@@ -935,6 +931,20 @@ export class NguCarousel<T = any> extends NguCarouselStore
     }, speed * 0.7);
   }
 
+  private testanim(
+    viewContainer: ViewContainerRef,
+    i: number,
+    collectIndex: any[],
+    val: number
+  ) {
+    const viewRef = viewContainer.get(i) as any;
+    if (viewRef) {
+      collectIndex.push(i);
+      const context = viewRef.context as any;
+      context.animate = { value: true, params: { distance: val } };
+    }
+  }
+
   private _removeAnimations(indexs: number[]) {
     const viewContainer = this._nodeOutlet.viewContainer;
     indexs.forEach(i => {
@@ -943,11 +953,6 @@ export class NguCarousel<T = any> extends NguCarouselStore
       context.animate = { value: false, params: { distance: 0 } };
     });
     this.cdr.markForCheck();
-  }
-
-  /** Short form for setElementStyle */
-  private _setStyle(el: any, prop: any, val: any): void {
-    this._renderer.setStyle(el, prop, val);
   }
 
   /** For generating style tag */
