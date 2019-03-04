@@ -6,10 +6,7 @@ import {
   ChangeDetectorRef,
   ViewChild
 } from '@angular/core';
-import {
-  NguCarouselConfig,
-  NguCarousel
-} from '../../projects/carousel/src/public_api';
+import { NguCarouselConfig, NguCarousel } from '../../projects/carousel/src/public_api';
 import { Observable, interval, of } from 'rxjs';
 import { startWith, switchMap, take, map } from 'rxjs/operators';
 import { slider } from './slide-animation';
@@ -73,9 +70,9 @@ export class AppComponent implements OnInit, AfterViewInit {
       hideOnSingleSlide: true
     },
     touch: true,
-    loop: false,
+    loop: true,
     load: 2,
-    // interval: { timing: 1000 },
+    interval: { timing: 1000 },
     // vertical: { enabled: true, height: 200 },
     velocity: 0,
     animation: 'lazy',
@@ -98,6 +95,13 @@ export class AppComponent implements OnInit, AfterViewInit {
         return this.shuffle(this.imgags);
       })
     );
+    // setTimeout(() => {
+    //   for (let i = 0; i < 20; i++) {
+    //     setTimeout(() => {
+    //       this.hideShow = !this.hideShow;
+    //     }, i * 100);
+    //   }
+    // }, 1000);
     // this.myCarousel.
     // this.carouselTileItems$ = interval(3000).pipe(
     //   startWith(-1),
@@ -134,9 +138,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     const len = this.carouselTiles[j].length;
     if (len <= 30) {
       for (let i = len; i < len + 100; i++) {
-        this.carouselTiles[j].push(
-          this.imgags[Math.floor(Math.random() * this.imgags.length)]
-        );
+        this.carouselTiles[j].push(this.imgags[Math.floor(Math.random() * this.imgags.length)]);
       }
     }
   }
@@ -146,9 +148,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     const len = carousel.length;
     if (len <= 30) {
       for (let i = len; i < len + 4; i++) {
-        carousel.push(
-          this.imgags[Math.floor(Math.random() * this.imgags.length)]
-        );
+        carousel.push(this.imgags[Math.floor(Math.random() * this.imgags.length)]);
       }
     }
   }

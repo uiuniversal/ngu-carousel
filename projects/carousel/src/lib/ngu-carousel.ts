@@ -6,7 +6,6 @@ export class NguCarouselStore {
   button?: NguButton;
   visibleItems?: ItemsControl;
   type: CarouselType = 'fixed';
-  token = '';
   maxSlideItems = 0;
   load = 0;
   deviceWidth = 0;
@@ -41,8 +40,7 @@ export class NguCarouselStore {
     this.touch.active = data.touch || false;
     this.RTL = data.RTL ? true : false;
     this.interval = data.interval || null;
-    this.velocity =
-      typeof data.velocity === 'number' ? data.velocity : this.velocity;
+    this.velocity = typeof data.velocity === 'number' ? data.velocity : this.velocity;
     this.carouselOffsetWidth = 100 - (data.grid.offset || 0);
 
     if (data.vertical && data.vertical.enabled) {
@@ -51,9 +49,7 @@ export class NguCarouselStore {
     }
     this.directionSym = this.RTL ? '' : '-';
     this.point =
-      data.point && typeof data.point.visible !== 'undefined'
-        ? data.point.visible
-        : true;
+      data.point && typeof data.point.visible !== 'undefined' ? data.point.visible : true;
   }
 }
 
