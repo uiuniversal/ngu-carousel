@@ -61,6 +61,7 @@ import {
 } from './ngu-carousel';
 import { slider } from './carousel-animation';
 import { CarouselPoint } from './carousel-point';
+import { generateID, rangeFor, isOnScreen } from './utils';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -110,6 +111,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
   windowResizeSub: Subscription;
   windowScrollSub: Subscription;
   dynamicElements = [];
+  intitialDelayTimeout: any;
 
   @Input('dataSource')
   get dataSource(): T[] {
@@ -336,12 +338,9 @@ export class NguCarousel<T = any> extends NguCarouselStore
   }
 
   ngAfterViewInit() {
-    // console.log('ngAfterViewInit');
     this.carousel = this._el.nativeElement;
     this.changeGridConfig();
     this._observeRenderChanges();
-
-    // this.carouselCssNode = this._createStyleElem();
 
     if (isPlatformBrowser(this.platformId)) {
       this._carouselInterval();
@@ -373,15 +372,15 @@ export class NguCarousel<T = any> extends NguCarouselStore
   }
 
   ngOnDestroy() {
-    // clearInterval(this.carouselInt);
     this.carouselInt && this.carouselInt.unsubscribe();
     this._dataSubscription.unsubscribe();
     this._intervalController$.complete();
     this.carouselLoad.complete();
     this.onMove.complete();
-    this.windowScrollSub.unsubscribe();
-    this.windowResizeSub.unsubscribe();
+    this.windowScrollSub && this.windowScrollSub.unsubscribe();
+    this.windowResizeSub && this.windowResizeSub.unsubscribe();
     this._removeElements();
+    clearTimeout(this.intitialDelayTimeout);
 
     /** remove listeners */
     rangeFor(1, 5, i => {
@@ -405,18 +404,8 @@ export class NguCarousel<T = any> extends NguCarouselStore
 
   /** this fn used to disable the interval when it is not on the viewport */
   private _onWindowScrolling(): void {
-    const top = this.carousel.offsetTop;
-    const scrollY = window.scrollY;
-    const heightt = window.innerHeight;
-    const carouselHeight = this.carousel.offsetHeight;
-    const isCarouselOnScreen =
-      top <= scrollY + heightt - carouselHeight / 4 && top + carouselHeight / 2 >= scrollY;
-
-    if (isCarouselOnScreen) {
-      this._intervalController$.next(1);
-    } else {
-      this._intervalController$.next(0);
-    }
+    const { offsetTop, offsetHeight } = this.carousel;
+    this._intervalController$.next(+isOnScreen(offsetTop, offsetHeight));
   }
 
   /** store data based on width of the screen for the carousel */
@@ -425,22 +414,21 @@ export class NguCarousel<T = any> extends NguCarouselStore
 
     this.carouselWidth = this.carouselMain1.nativeElement.offsetWidth;
     this.carouselOffsetWidth = this.nguItemsContainer.nativeElement.offsetWidth;
+    const grid = this.inputs.grid;
 
     if (this.type === 'responsive') {
-      const offset = this.inputs.grid.offset || 1;
-      this.maxSlideItems = this.inputs.grid.size;
-      this.itemWidth = this.carouselWidth - this.carouselWidth / offset / this.maxSlideItems;
+      const offset = grid.offset || 1;
+      this.maxSlideItems = grid.size;
+      this.itemWidth = (this.carouselWidth - this.carouselWidth / offset) / this.maxSlideItems;
       this.itemWidthTest = this.carouselWidth / this.maxSlideItems;
     } else {
-      this.maxSlideItems = Math.trunc(this.carouselWidth / this.inputs.grid.size);
-      this.itemWidth = this.inputs.grid.size;
+      this.maxSlideItems = Math.trunc(this.carouselWidth / grid.size);
+      this.itemWidth = grid.size;
       const width = this.carouselOffsetWidth - this._carouselItemSize * this.maxSlideItems;
       this._maxSlideWidth = this._carouselItemSize - width;
     }
 
-    this.slideItems = +(this.inputs.grid.slide < this.maxSlideItems
-      ? this.inputs.grid.slide
-      : this.maxSlideItems);
+    this.slideItems = +(grid.slide < this.maxSlideItems ? grid.slide : this.maxSlideItems);
     this.load = this.inputs.load >= this.slideItems ? this.inputs.load : this.slideItems;
     this.speed = this.inputs.speed && this.inputs.speed > -1 ? this.inputs.speed : 400;
     // console.log('device type', this.type);
@@ -458,34 +446,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
   /** Init carousel point */
   private _carouselPoint(): void {
     this.points._carouselPoint();
-    // const Nos = this.dataSource.length - (this.maxSlideItems - this.slideItems);
-    // this.pointIndex = Math.ceil(Nos / this.slideItems);
-    // const pointers = [];
-
-    // if (this.pointIndex > 1 || !this.inputs.point.hideOnSingleSlide) {
-    //   for (let i = 0; i < this.pointIndex; i++) {
-    //     pointers.push(i);
-    //   }
-    // }
-    // this.pointNumbers = pointers;
-    // this._carouselPointActiver();
-    // if (this.pointIndex <= 1) {
-    //   this._btnBoolean(1, 1);
-    // } else {
-    //   if (this.currentSlideItems === 0 && !this.loop) {
-    //     this._btnBoolean(1, 0);
-    //   } else {
-    //     this._btnBoolean(0, 0);
-    //   }
-    // }
   }
-
-  /** change the active point in carousel */
-  // private _carouselPointActiver(): void {
-  //   const i = Math.ceil(this.currentSlideItems / this.slideItems);
-  //   this.activePoint = i;
-  //   this.cdr.markForCheck();
-  // }
 
   /** this function is used to scoll the carousel when point is clicked */
   public moveTo(slide: number, withoutAnimation?: boolean, force = false) {
@@ -537,7 +498,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
     this.cdr.markForCheck();
   }
 
-  private getStyleStr(styleid, size, sym) {
+  private getStyleStr(styleid: string, size: number, sym: string) {
     return `${styleid} .item {flex: 0 0 ${size + sym}; max-width: ${size + sym};}`;
   }
 
@@ -561,8 +522,8 @@ export class NguCarousel<T = any> extends NguCarouselStore
     if (Btn === 0 && ((!this.loop && !this.isFirst) || this.loop)) {
       let preLast = false;
 
-      const currentSlideD = this.currentSlideItems - this.slideItems;
-      const MoveSlide = currentSlideD + this.slideItems;
+      const prevSlide = this.currentSlideItems - this.slideItems;
+      const MoveSlide = prevSlide;
       this._btnBoolean(0, 1);
       if (this.currentSlideItems === 0 && this.loop) {
         preLast = true;
@@ -571,8 +532,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
           currentSlide = this.currentSlideItems - touchMove;
           itemSpeed = 200;
         } else {
-          currentSlide =
-            this.currentSlideItems - this.slideItems - (this.maxSlideItems - this.slideItems);
+          currentSlide = prevSlide - (this.maxSlideItems - this.slideItems);
         }
       } else if (this.currentSlideItems === 0) {
         currentSlide = this.dataSource.length - this.maxSlideItems;
@@ -587,12 +547,13 @@ export class NguCarousel<T = any> extends NguCarouselStore
           currentSlide = this.currentSlideItems - touchMove;
           itemSpeed = 200;
         } else {
-          currentSlide = this.currentSlideItems - this.slideItems;
+          currentSlide = prevSlide;
         }
       }
       this._carouselScrollTwo(Btn, currentSlide, itemSpeed, this.loop && preLast);
     } else if (Btn === 1 && ((!this.loop && !this.isLast) || this.loop)) {
       let preLast = false;
+      const nextSlide = this.currentSlideItems + this.slideItems;
       const isMaxSilde =
         this.dataSource.length <= this.currentSlideItems + this.maxSlideItems + this.slideItems;
       if (isMaxSilde && !this.isLast) {
@@ -602,11 +563,10 @@ export class NguCarousel<T = any> extends NguCarouselStore
         preLast = true;
         this._btnBoolean(1, 0);
         if (touchMove > this.slideItems) {
-          currentSlide = this.currentSlideItems + this.slideItems + (touchMove - this.slideItems);
+          currentSlide = nextSlide + (touchMove - this.slideItems);
           itemSpeed = 200;
         } else {
-          currentSlide =
-            this.currentSlideItems + this.slideItems + (this.maxSlideItems - this.slideItems);
+          currentSlide = nextSlide + (this.maxSlideItems - this.slideItems);
         }
       } else if (this.isLast) {
         currentSlide = 0;
@@ -615,10 +575,10 @@ export class NguCarousel<T = any> extends NguCarouselStore
       } else {
         this._btnBoolean(0, 0);
         if (touchMove > this.slideItems) {
-          currentSlide = this.currentSlideItems + this.slideItems + (touchMove - this.slideItems);
+          currentSlide = nextSlide + (touchMove - this.slideItems);
           itemSpeed = 200;
         } else {
-          currentSlide = this.currentSlideItems + this.slideItems;
+          currentSlide = nextSlide;
         }
       }
       this._carouselScrollTwo(Btn, currentSlide, itemSpeed, this.loop && preLast);
@@ -740,7 +700,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
 
       const interval$ = interval(this.inputs.interval.timing).pipe(mapTo(1));
 
-      setTimeout(() => {
+      this.intitialDelayTimeout = setTimeout(() => {
         this.carouselInt = merge(play$, touchPlay$, pause$, touchPause$, this._intervalController$)
           .pipe(
             startWith(1),
@@ -829,27 +789,4 @@ export class NguCarousel<T = any> extends NguCarouselStore
       this._renderer.destroyNode(e);
     });
   }
-}
-
-/** generate Class for each carousel to set specific style */
-export function generateID(): string {
-  let text = '';
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-  for (let i = 0; i < 6; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return `ngucarousel${text}`;
-}
-
-export function rangeFor(
-  start: number,
-  end: number,
-  predicate: (i?: number, index?: number) => any
-) {
-  const length = Math.abs(start - end);
-  const isInc = start < end;
-  Array.from({ length }, (_, i) => (isInc ? start + i : start - i)).forEach((i, index) =>
-    predicate(i, index)
-  );
 }

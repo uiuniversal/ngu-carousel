@@ -1,3 +1,5 @@
+$carouselHeight: 70px;
+
 .bannerStyle div {
   background-color: #ccc;
   background-size: cover !important;
@@ -21,14 +23,14 @@
 }
 
 .tile {
-  min-height: 200px;
+  min-height: $carouselHeight;
   background-color: #ccc;
   background-size: cover !important;
 }
 
 .tile h1 {
   text-align: center;
-  line-height: 200px;
+  line-height: $carouselHeight;
   background: rgba(0, 0, 0, 0.32);
   color: white;
   font-size: 14px;
@@ -184,7 +186,7 @@ nav h1 {
 
     &.active {
       transform: translateY(-10px);
-      transition: .3s ease all;
+      transition: 0.3s ease all;
     }
   }
 }

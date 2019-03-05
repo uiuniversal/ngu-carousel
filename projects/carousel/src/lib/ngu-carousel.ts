@@ -1,3 +1,14 @@
+export class Touch {
+  active?: boolean;
+  swipe: string;
+  velocity: number;
+}
+
+export class Vertical {
+  enabled = false;
+  height: number;
+  // numHeight?: number;
+}
 export class NguCarouselStore {
   touch = new Touch();
   vertical = new Vertical();
@@ -64,21 +75,9 @@ export class ItemsControl {
   end: number;
 }
 
-export class Vertical {
-  enabled = false;
-  height: number;
-  // numHeight?: number;
-}
-
 export class NguButton {
   visibility?: ButtonVisible;
   elastic?: number;
-}
-
-export class Touch {
-  active?: boolean;
-  swipe: string;
-  velocity: number;
 }
 
 export class Transfrom {

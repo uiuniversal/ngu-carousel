@@ -35,42 +35,42 @@
     </ul>
   </ngu-carousel>
 </ng-container> -->
-<!-- <ng-container *ngFor="let item of [1,2,3,4,5]"> -->
-<ngu-carousel #myCarousel [inputs]="carouselTileConfig" [dataSource]="imgags" *ngIf="hideShow">
-  <div *nguCarouselDef="let item; let i = index; let ani = animate" class="carouselTile item">
-    <div class="tile" [style.background]="'url(' + item + ')'">
-      <h1>{{ i + 1 }}--{{ item }}</h1>
+<ng-container *ngFor="let item of [1, 2, 3, 4, 5]">
+  <ngu-carousel #myCarousel [inputs]="carouselTileConfig" [dataSource]="imgags" *ngIf="hideShow">
+    <div *nguCarouselDef="let item; let i = index; let ani = animate" class="carouselTile item">
+      <div class="tile" [style.background]="'url(' + item + ')'">
+        <h1>{{ i + 1 }}--{{ item }}</h1>
+      </div>
     </div>
-  </div>
 
-  <button
-    NguCarouselButton
-    class="leftRs"
-    (click)="myCarousel.slide(0)"
-    [style.opacity]="myCarousel.isFirst ? 0.5 : 1"
-  >
-    &lt;
-  </button>
-  <button
-    NguCarouselButton
-    class="rightRs"
-    (click)="myCarousel.slide(1)"
-    [style.opacity]="myCarousel.isLast ? 0.5 : 1"
-  >
-    &gt;
-  </button>
+    <button
+      NguCarouselButton
+      class="leftRs"
+      (click)="myCarousel.slide(0)"
+      [style.opacity]="myCarousel.isFirst ? 0.5 : 1"
+    >
+      &lt;
+    </button>
+    <button
+      NguCarouselButton
+      class="rightRs"
+      (click)="myCarousel.slide(1)"
+      [style.opacity]="myCarousel.isLast ? 0.5 : 1"
+    >
+      &gt;
+    </button>
 
-  <ul class="myPoint" NguCarouselPoint>
-    <li
-      *ngFor="let i of (myCarousel.points.carouselPoints | async); let i = index"
-      [class.active]="i == myCarousel.points.activePoint"
-      (click)="myCarousel.moveTo(i)"
-    ></li>
-  </ul>
+    <ul class="myPoint" NguCarouselPoint>
+      <li
+        *ngFor="let i of (myCarousel.points.carouselPoints | async); let i = index"
+        [class.active]="i == myCarousel.points.activePoint"
+        (click)="myCarousel.moveTo(i)"
+      ></li>
+    </ul>
 
-  <!-- {{myCarousel.isHovered}} -->
-</ngu-carousel>
-<!-- </ng-container> -->
+    <!-- {{myCarousel.isHovered}} -->
+  </ngu-carousel>
+</ng-container>
 <button (click)="hideShow = !hideShow">hideShow</button>
 
 <div>

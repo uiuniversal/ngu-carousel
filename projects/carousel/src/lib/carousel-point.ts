@@ -1,21 +1,17 @@
 import { NguCarousel } from './ngu-carousel.component';
 import { Subject, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
-
-export function createRange(length: number, step = 0) {
-  return Array.from({ length }, (_, i) => i + step);
-}
+import { createRange } from './utils';
 
 export class CarouselPoint {
   buttonHandler = new Subject<[number, number]>();
-
-  // pointNumbers = new BehaviorSubject([]);
 
   private _carouselPointsSouce = new BehaviorSubject([]);
   carouselPoints = this._carouselPointsSouce.asObservable();
 
   pointIndex: number;
+
   hideOnSingleSlide: boolean;
+
   activePoint = 0;
 
   constructor(private c: NguCarousel) {}

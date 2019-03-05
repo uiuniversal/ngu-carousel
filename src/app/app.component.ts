@@ -23,16 +23,20 @@ export class AppComponent implements OnInit, AfterViewInit {
   myCarousel: NguCarousel<any>;
 
   hideShow = true;
-  imgags = [
-    'assets/bg.jpg',
-    'assets/car.png',
-    'assets/bg.jpg',
-    'assets/canberra.jpg',
-    'assets/car.png',
-    'assets/holi.jpg',
-    'assets/canberra.jpg',
-    'assets/holi.jpg'
-  ];
+  imgags = Array(50)
+    .fill('')
+    .map(() =>
+      randoms([
+        'assets/bg.jpg',
+        'assets/car.png',
+        'assets/bg.jpg',
+        'assets/canberra.jpg',
+        'assets/car.png',
+        'assets/holi.jpg',
+        'assets/canberra.jpg',
+        'assets/holi.jpg'
+      ])
+    );
   dataCounts = [1, 2, 3, 4, 5, 6, 7, 8];
   public carouselTileItems: Array<any> = [0, 1, 2, 3, 4, 5];
   public carouselTiles = {
@@ -63,7 +67,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public carouselTileItems$: Observable<string[]>;
   public carouselTileConfig: NguCarouselConfig = {
-    grid: { size: 3, offset: 0, type: 'responsive', slide: 2 },
+    grid: { size: 8, offset: 0, type: 'responsive', slide: 2 },
     speed: 500,
     point: {
       visible: true,
@@ -72,7 +76,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     touch: true,
     loop: true,
     load: 2,
-    interval: { timing: 1000 },
+    // interval: { timing: 1000 },
     // vertical: { enabled: true, height: 200 },
     velocity: 0,
     animation: 'lazy',
@@ -96,10 +100,10 @@ export class AppComponent implements OnInit, AfterViewInit {
       })
     );
     // setTimeout(() => {
-    //   for (let i = 0; i < 20; i++) {
+    //   for (let i = 0; i < 50; i++) {
     //     setTimeout(() => {
     //       this.hideShow = !this.hideShow;
-    //     }, i * 100);
+    //     }, i * 50);
     //   }
     // }, 1000);
     // this.myCarousel.
@@ -176,4 +180,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   touch(arr) {
     this.myCarousel[arr ? 'enableTouch' : 'disableTouch']();
   }
+}
+
+function randoms(myArray) {
+  return myArray[Math.floor(Math.random() * myArray.length)];
 }
