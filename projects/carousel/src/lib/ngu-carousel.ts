@@ -1,6 +1,6 @@
 export class Touch {
   active?: boolean;
-  swipe: string;
+  // swipe: string;
   velocity: number;
 }
 

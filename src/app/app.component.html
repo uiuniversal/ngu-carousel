@@ -35,11 +35,14 @@
     </ul>
   </ngu-carousel>
 </ng-container> -->
-<ng-container *ngFor="let item of [1, 2, 3, 4, 5]">
+<ng-container *ngFor="let item of [1]">
   <ngu-carousel #myCarousel [inputs]="carouselTileConfig" [dataSource]="imgags" *ngIf="hideShow">
     <div *nguCarouselDef="let item; let i = index; let ani = animate" class="carouselTile item">
-      <div class="tile" [style.background]="'url(' + item + ')'">
-        <h1>{{ i + 1 }}--{{ item }}</h1>
+      <div class="tile myBanner">
+        <div class="banner-img" [style.background]="'url(' + item + ')'">
+          <!-- <h1>{{ i + 1 }}--{{ item }}</h1> -->
+        </div>
+        <div class="banner-text">{{ i + 1 }}</div>
       </div>
     </div>
 

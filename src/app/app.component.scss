@@ -1,4 +1,4 @@
-$carouselHeight: 70px;
+$carouselHeight: 200px;
 
 .bannerStyle div {
   background-color: #ccc;
@@ -24,8 +24,25 @@ $carouselHeight: 70px;
 
 .tile {
   min-height: $carouselHeight;
-  background-color: #ccc;
+  // background-color: #ccc;
   background-size: cover !important;
+}
+
+.myBanner {
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  overflow: hidden;
+  .banner-img {
+    flex: 1;
+    background-size: cover !important;
+  }
+  .banner-text {
+    padding: 4px 15px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 900;
+  }
 }
 
 .tile h1 {
@@ -192,7 +209,7 @@ nav h1 {
 }
 
 .carouselTile {
-  padding: 10px;
+  padding: 5px;
   box-sizing: border-box;
 
   .tile {

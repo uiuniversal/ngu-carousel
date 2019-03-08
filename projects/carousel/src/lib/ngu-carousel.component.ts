@@ -269,6 +269,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
       const rightItems = this.inputs.grid.offset ? slideItems + 1 : slideItems;
 
       rangeFor(0, rightItems, i => {
+        // rightContainer.insert(this._nodeOutlet.viewContainer.get(i));
         this._createNodeItem(data, rightContainer, i, true);
       });
 
@@ -283,6 +284,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
 
       if (this.points.activePoint === 0) {
         this.transformCarousel(this._transformString(0));
+        console.log('asdfsdafsdafasd', this.transform);
       }
     }
     this._carouselPoint();
@@ -395,10 +397,12 @@ export class NguCarousel<T = any> extends NguCarouselStore
     }
   }
 
-  transformCarousel(transform: string, transition?: string) {
-    this.alternatives = !this.alternatives;
-    this.carouselTransition = transition || '0ms';
-    this.carouselTransform = transform;
+  transformCarousel(transform: string, transition = '') {
+    console.log('asdfsdafsdafsda');
+    // this.alternatives = !this.alternatives;
+    // this.carouselTransition = transition || '0ms';
+    // this.carouselTransform = transform;
+    this.setTransform(transform, transition);
     // this.cdr.detectChanges();
   }
 
@@ -587,6 +591,12 @@ export class NguCarousel<T = any> extends NguCarouselStore
     }
   }
 
+  setTransform(transform: string, transition = '') {
+    const cssBox = this.nguItemsContainer.nativeElement.style;
+    cssBox.transition = transition;
+    cssBox.transform = transform;
+  }
+
   /** logic to scroll the carousel step 2 */
   private _carouselScrollTwo(
     Btn: number,
@@ -643,14 +653,14 @@ export class NguCarousel<T = any> extends NguCarouselStore
     collect += `translate3d(`;
 
     if (this.vertical.enabled) {
-      this.transform = this._carouselItemSize * items;
-      collect += `0, -${this.transform + this._extraLoopItemsWidth}px, 0`;
+      this.transform = this._carouselItemSize * items + this._extraLoopItemsWidth;
+      collect += `0, -${this.transform}px, 0`;
     } else {
-      this.transform = this._carouselItemSize * items;
+      const transform = this._carouselItemSize * items;
 
-      const collectSt = this.transform + this._extraLoopItemsWidth;
+      this.transform = transform + this._extraLoopItemsWidth;
       const unit = this.type === 'fixed' ? 'px' : '%';
-      collect += `${this._addDirectionSym(collectSt)}${unit}, 0, 0`;
+      collect += `${this._addDirectionSym(this.transform)}${unit}, 0, 0`;
     }
     collect += `)`;
     return collect;
