@@ -11,22 +11,24 @@ import { CommonModule } from '@angular/common';
 import { NguCarousel } from './carousel';
 import { NguCarouselTouch } from './touch';
 import { NguCarouselButton } from './button';
+import { CarouselItems } from './items';
 
 @NgModule({
   imports: [CommonModule],
-  exports: [
+  declarations: [
     NguCarousel,
+    NguCarouselTouch,
     NguCarouselPointDirective,
     NguCarouselItemDirective,
     NguCarouselButton,
     NguCarouselDefDirective,
     NguCarouselOutlet,
     NguCarouselOutletLeft,
-    NguCarouselOutletRight
+    NguCarouselOutletRight,
+    CarouselItems
   ],
-  declarations: [
+  exports: [
     NguCarousel,
-    NguCarouselTouch,
     NguCarouselPointDirective,
     NguCarouselItemDirective,
     NguCarouselButton,

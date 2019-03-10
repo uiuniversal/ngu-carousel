@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, fromEventPattern } from 'rxjs';
 
 export type hammerEvent =
   | 'panstart'
@@ -17,12 +17,10 @@ export class RxHammer {
   }
 
   event(ev: hammerEvent): Observable<HammerInput> {
-    return new Observable(observer => {
-      this.hammertime.on(ev, s => observer.next(s));
-      return {
-        unsubscribe: () => this.hammertime.off(ev)
-      };
-    });
+    return fromEventPattern<HammerInput>(
+      handler => this.hammertime.on(ev, s => handler(s)),
+      () => this.hammertime.off(ev)
+    );
   }
 
   get(recogniser: string) {

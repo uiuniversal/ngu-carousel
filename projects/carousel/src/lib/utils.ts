@@ -9,10 +9,10 @@ export function generateID(): string {
   return `ngucarousel${text}`;
 }
 
-export function rangeFor(
+export function rangeFor<T = any>(
   start: number,
   end: number,
-  predicate: (i?: number, index?: number) => any
+  predicate: (i?: number, index?: number) => T
 ) {
   const length = Math.abs(start - end);
   const isInc = start < end;
@@ -21,7 +21,7 @@ export function rangeFor(
   );
 }
 
-export function createRange(length: number, step = 0) {
+export function createRange(length: number, step = 0): number[] {
   return Array.from({ length }, (_, i) => i + step);
 }
 
