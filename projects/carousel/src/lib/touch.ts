@@ -1,5 +1,5 @@
 import { Directive, ElementRef, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
-import { NguCarousel } from './ngu-carousel.component';
+import { NguCarousel } from './carousel';
 import { isPlatformBrowser } from '@angular/common';
 import { Subject, Observable, merge, Subscription } from 'rxjs';
 import { tap, filter, takeUntil } from 'rxjs/operators';

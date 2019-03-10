@@ -3,14 +3,14 @@ import {
   NguCarouselItemDirective,
   NguCarouselDefDirective,
   NguCarouselOutlet,
-  NguCarouselButton,
   NguCarouselOutletLeft,
   NguCarouselOutletRight
-} from './ngu-carousel.directive';
+} from './carousel.directive';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NguCarousel } from './ngu-carousel.component';
-import { NguCarouselTouch } from './carousel-touch';
+import { NguCarousel } from './carousel';
+import { NguCarouselTouch } from './touch';
+import { NguCarouselButton } from './button';
 
 @NgModule({
   imports: [CommonModule],

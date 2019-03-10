@@ -1,4 +1,4 @@
-import { NguCarousel } from './ngu-carousel.component';
+import { NguCarousel } from './carousel';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { createRange } from './utils';
 

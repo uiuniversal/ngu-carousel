@@ -23,9 +23,7 @@ import {
   Renderer2,
   TrackByFunction,
   ViewChild,
-  ViewContainerRef,
-  EmbeddedViewRef,
-  HostBinding
+  ViewContainerRef
 } from '@angular/core';
 import {
   EMPTY,
@@ -38,36 +36,28 @@ import {
   Subscription,
   fromEventPattern
 } from 'rxjs';
-import {
-  mapTo,
-  startWith,
-  switchMap,
-  takeUntil,
-  debounceTime,
-  throttleTime,
-  tap
-} from 'rxjs/operators';
+import { mapTo, startWith, switchMap, takeUntil, debounceTime, throttleTime } from 'rxjs/operators';
 import {
   NguCarouselDefDirective,
   NguCarouselOutlet,
   NguCarouselOutletLeft,
   NguCarouselOutletRight
-} from './ngu-carousel.directive';
+} from './carousel.directive';
 import {
   NguCarouselConfig,
   NguCarouselOutletContext,
   NguCarouselStore,
   ItemConfig
-} from './ngu-carousel';
-import { slider } from './carousel-animation';
-import { CarouselPoint } from './carousel-point';
+} from './interface';
+import { slider } from './animation';
+import { CarouselPoint } from './point';
 import { generateID, rangeFor, isOnScreen } from './utils';
 
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'ngu-carousel',
-  templateUrl: 'ngu-carousel.component.html',
-  styleUrls: ['ngu-carousel.component.scss'],
+  templateUrl: 'carousel.html',
+  styleUrls: ['carousel.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [slider]
 })
