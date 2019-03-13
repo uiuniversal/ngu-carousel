@@ -5,10 +5,12 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { NguCarouselModule } from '../../projects/carousel/src/public_api';
+import { NextComponent } from './next/next.component';
+import { CurrentComponent } from './current/current.component';
 // import { NguCarouselModule } from 'carousel';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, NextComponent, CurrentComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

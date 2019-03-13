@@ -95,6 +95,7 @@ export class CarouselItems<T> implements AfterViewInit, AfterContentInit {
 
   extraItemsContainer(data: T[]) {
     // this._extraLoopItemsWidth = 0;
+    console.log(this.carousel.loop);
     if (this.carousel.loop) {
       const leftContainer = this._nodeOutletLeft.viewContainer;
       const rightContainer = this._nodeOutletRight.viewContainer;
@@ -116,9 +117,9 @@ export class CarouselItems<T> implements AfterViewInit, AfterContentInit {
       });
 
       this.carousel.calculateExtraItem();
-
+      console.log(this.carousel.points.activePoint);
       if (this.carousel.points.activePoint === 0) {
-        // this.setTransform(this._transformString(0));
+        this.setTransform(this.carousel._transformString(0));
       }
     }
     // this._carouselPoint();
@@ -171,6 +172,7 @@ export class CarouselItems<T> implements AfterViewInit, AfterContentInit {
   }
 
   setTransform(transform: string, transition = '') {
+    console.log(transform);
     this.el.nativeElement.style.transition = transition;
     this.el.nativeElement.style.transform = transform;
   }

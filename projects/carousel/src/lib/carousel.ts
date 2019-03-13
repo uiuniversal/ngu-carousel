@@ -4,7 +4,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ContentChildren,
+  ContentChildren as ContentChild,
   DoCheck,
   ElementRef,
   EventEmitter,
@@ -74,12 +74,12 @@ export class NguCarousel<T = any> extends NguCarouselStore
   isHovered = false;
   alternatives = false;
 
-  @Input() private inputs: NguCarouselConfig;
+  @Input() inputs: NguCarouselConfig;
   @Output('carouselLoad') private carouselLoad = new EventEmitter();
 
   // tslint:disable-next-line:no-output-on-prefix
   @Output('onMove') private onMove = new EventEmitter<NguCarousel<T>>();
-  private _arrayChanges: IterableChanges<{}>;
+  _arrayChanges: IterableChanges<{}>;
   carouselInt: Subscription;
 
   // @HostBinding('class.ngurtl')
@@ -115,7 +115,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
 
   private _defaultNodeDef: NguCarouselDefDirective<T> | null;
 
-  @ContentChildren(NguCarouselDefDirective)
+  @ContentChild(NguCarouselDefDirective)
   private _defDirec: QueryList<NguCarouselDefDirective<T>>;
 
   @ViewChild(NguCarouselOutlet)
@@ -131,7 +131,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
   private carouselMain1: ElementRef;
 
   @ViewChild('nguItemsContainer', { read: ElementRef })
-  private nguItemsContainer: ElementRef;
+  nguItemsContainer: ElementRef;
 
   // @ViewChild('touchContainer', { read: ElementRef })
   // private touchContainer: ElementRef;
@@ -496,7 +496,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
     return `${styleid} .item {flex: 0 0 ${size + sym}; max-width: ${size + sym};}`;
   }
 
-  private calculateExtraItem() {
+  calculateExtraItem() {
     const offset = this.inputs.grid.offset;
     this._extraLoopItemsWidth =
       this._carouselItemSize * (this.maxSlideItems + (offset ? 1 : 0)) - offset + offset / 2;
@@ -638,9 +638,8 @@ export class NguCarousel<T = any> extends NguCarouselStore
     this.isLast = !!last;
   }
 
-  private _transformString(items: number): string {
+  _transformString(items: number): string {
     let collect = '';
-    collect += `translate3d(`;
 
     if (this.vertical.enabled) {
       this.transform = this._carouselItemSize * items + this._extraLoopItemsWidth;
@@ -652,8 +651,8 @@ export class NguCarousel<T = any> extends NguCarouselStore
       const unit = this.type === 'fixed' ? 'px' : '%';
       collect += `${this._addDirectionSym(this.transform)}${unit}, 0, 0`;
     }
-    collect += `)`;
-    return collect;
+
+    return `translate3d(${collect})`;
   }
 
   /** set the transform style to scroll the carousel  */
