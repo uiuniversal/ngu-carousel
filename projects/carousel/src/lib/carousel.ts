@@ -4,7 +4,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ContentChildren as ContentChild,
+  ContentChild,
   DoCheck,
   ElementRef,
   EventEmitter,
@@ -116,7 +116,7 @@ export class NguCarousel<T = any> extends NguCarouselStore
   private _defaultNodeDef: NguCarouselDefDirective<T> | null;
 
   @ContentChild(NguCarouselDefDirective)
-  private _defDirec: QueryList<NguCarouselDefDirective<T>>;
+  private _defDirec: NguCarouselDefDirective<T>;
 
   @ViewChild(NguCarouselOutlet)
   private _nodeOutlet: NguCarouselOutlet;
@@ -287,7 +287,8 @@ export class NguCarousel<T = any> extends NguCarouselStore
     tempItem = false,
     insertIndex?: number
   ) {
-    const node = this._getNodeDef(data[currentIndex], currentIndex);
+    // const node = this._getNodeDef(data[currentIndex], currentIndex);
+    const node = this._defDirec;
     const context = new NguCarouselOutletContext<T>(data[currentIndex]);
     context.index = currentIndex;
     const indexx =
@@ -318,16 +319,16 @@ export class NguCarousel<T = any> extends NguCarouselStore
     });
   }
 
-  private _getNodeDef(data: T, i: number): NguCarouselDefDirective<T> {
-    if (this._defDirec.length === 1) {
-      return this._defDirec.first;
-    }
+  // private _getNodeDef(data: T, i: number): NguCarouselDefDirective<T> {
+  //   if (this._defDirec.length === 1) {
+  //     return this._defDirec.first;
+  //   }
 
-    const nodeDef =
-      this._defDirec.find(def => def.when && def.when(i, data)) || this._defaultNodeDef;
+  //   const nodeDef =
+  //     this._defDirec.find(def => def.when && def.when(i, data)) || this._defaultNodeDef;
 
-    return nodeDef;
-  }
+  //   return nodeDef;
+  // }
 
   ngAfterViewInit() {
     this.carousel = this._el.nativeElement;

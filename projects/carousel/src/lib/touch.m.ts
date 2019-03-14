@@ -57,7 +57,7 @@ export class NguCarouselTouchM implements OnDestroy {
 
     const panEnd$ = hammertime1.event('panend').pipe(
       tap(e => {
-        this.touchTransform = e.deltaX;
+        this.touchTransform += e.deltaX;
         // if (Math.abs(e.velocity) >= this.c.velocity) {
         //   this.c.touch.velocity = e.velocity;
         //   const direction = this.touchDirection === 'panright' ? 0 : 1;

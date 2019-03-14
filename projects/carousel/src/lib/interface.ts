@@ -22,7 +22,7 @@ export class NguCarouselStore {
   deviceWidth = 0;
   carouselWidth = 0;
   itemWidth = 0;
-  slideItems = 0;
+  slideItems = 1;
   itemWidthPer = 0;
   itemLength = 0;
   currentSlideItems = 0;
