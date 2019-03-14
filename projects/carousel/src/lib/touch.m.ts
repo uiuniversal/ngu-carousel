@@ -14,8 +14,6 @@ export class NguCarouselTouchM implements OnDestroy {
 
   touchDirection = '';
 
-  touchTransform = 0;
-
   maxTouchTransform = 0;
 
   isActive = false;
@@ -57,7 +55,7 @@ export class NguCarouselTouchM implements OnDestroy {
 
     const panEnd$ = hammertime1.event('panend').pipe(
       tap(e => {
-        this.touchTransform += e.deltaX;
+        this.carousel.transform += e.deltaX;
         // if (Math.abs(e.velocity) >= this.c.velocity) {
         //   this.c.touch.velocity = e.velocity;
         //   const direction = this.touchDirection === 'panright' ? 0 : 1;
@@ -86,8 +84,24 @@ export class NguCarouselTouchM implements OnDestroy {
         takeUntil(this.destroyed)
       )
       .subscribe(ev => {
-        this.carousel.setTransform(`translate3d(${ev.deltaX + this.touchTransform}px, 0, 0`);
+        const dexValPer = this.convertToPer(ev.deltaX);
+        let x = ev.deltaX + this.carousel.transform;
+        const max = (15 + this.carousel.size) * this.carousel.itemWidth;
+        const leftTransform = this.carousel.itemWidth * this.carousel.size;
+        const xAbs = Math.abs(x);
+        if (xAbs > max) {
+          x = -leftTransform;
+          this.carousel.transform = x - ev.deltaX;
+        } else if (xAbs < this.carousel.itemWidth) {
+          x = -this.carousel.itemWidth * (this.carousel.itemLength + 1);
+          this.carousel.transform = x - ev.deltaX;
+        }
+        this.carousel.setTransform(`translate3d(${x}px, 0, 0`);
       });
+  }
+
+  convertToPer(val: number) {
+    return (Math.abs(val) / this.carousel.containerWidth) * 100;
   }
 
   ngOnDestroy() {
