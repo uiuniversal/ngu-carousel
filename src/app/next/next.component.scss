@@ -1,3 +1,5 @@
+$carouselHeight: 200px;
+
 .item-style {
   height: 80px;
   background: green;
@@ -7,4 +9,31 @@
   align-items: center;
   justify-content: center;
   color: white;
+}
+
+.tile {
+  min-height: $carouselHeight;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+.myBanner {
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  overflow: hidden;
+  .banner-img {
+    flex: 1;
+    background-size: cover !important;
+  }
+  .banner-text {
+    padding: 4px 15px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 900;
+  }
+}
+
+.item {
+  padding: 5px;
+  box-sizing: border-box;
 }

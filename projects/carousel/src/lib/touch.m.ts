@@ -1,7 +1,6 @@
 import { Directive, ElementRef, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
-import { NguCarousel } from './carousel';
 import { isPlatformBrowser } from '@angular/common';
-import { Subject, Observable, merge, Subscription } from 'rxjs';
+import { Subject, merge, Subscription } from 'rxjs';
 import { tap, filter, takeUntil } from 'rxjs/operators';
 import { RxHammer } from './hammer';
 import { NguCarouselM } from './carousel.m';
@@ -38,31 +37,19 @@ export class NguCarouselTouchM implements OnDestroy {
 
     const panStart$ = hammertime1.event('panstart').pipe(
       tap(() => {
-        // this.touchTransform = this.c.transform;
-        // this.c.dexVal = 0;
-        // this.maxTouchTransform = this.c.itemWidthTest * this.c.dataSource.length;
-        // this.setMaxTouch();
+        this.carousel.transform = -this.xTransform();
       })
     );
 
-    const panInput$ = hammertime1.event('hammer.input').pipe(
-      tap(ev => {
-        // allow nested touch events to no propagate, this may have other side affects but works for now.
-        // TODO: It is probably better to check the source element of the event and only apply the handle to the correct carousel
-        ev.srcEvent.stopPropagation();
-      })
-    );
+    const panInput$ = hammertime1
+      .event('hammer.input')
+      .pipe(tap(ev => ev.srcEvent.stopPropagation()));
 
     const panEnd$ = hammertime1.event('panend').pipe(
       tap(e => {
-        this.carousel.transform += e.deltaX;
-        // if (Math.abs(e.velocity) >= this.c.velocity) {
-        //   this.c.touch.velocity = e.velocity;
-        //   const direction = this.touchDirection === 'panright' ? 0 : 1;
-        //   this.c.slide(this.c.RTL ? +!direction : direction);
-        // } else {
-        //   this.resetTouch();
-        // }
+        const x = Math.abs(this.xTransform()) / this.carousel.itemWidth;
+        const trans = -Math.round(x) * this.carousel.itemWidth;
+        this.carousel.setTransform(`translate3d(${trans}px, 0, 0`, '.3s ease');
       })
     );
 
@@ -76,28 +63,28 @@ export class NguCarouselTouchM implements OnDestroy {
 
     panleft$
       .pipe(
-        filter(e => {
-          // vertical touch events seem to cause to panstart event with an odd delta
-          // and a center of {x:0,y:0} so this will ignore them
-          return !(e.center.x === 0);
-        }),
+        filter(e => !(e.center.x === 0)),
         takeUntil(this.destroyed)
       )
       .subscribe(ev => {
-        const dexValPer = this.convertToPer(ev.deltaX);
+        // const dexValPer = this.convertToPer(ev.deltaX);
         let x = ev.deltaX + this.carousel.transform;
         const max = (15 + this.carousel.size) * this.carousel.itemWidth;
         const leftTransform = this.carousel.itemWidth * this.carousel.size;
         const xAbs = Math.abs(x);
-        if (xAbs > max) {
+        if (xAbs >= max) {
           x = -leftTransform;
           this.carousel.transform = x - ev.deltaX;
-        } else if (xAbs < this.carousel.itemWidth) {
+        } else if (xAbs <= this.carousel.itemWidth) {
           x = -this.carousel.itemWidth * (this.carousel.itemLength + 1);
           this.carousel.transform = x - ev.deltaX;
         }
         this.carousel.setTransform(`translate3d(${x}px, 0, 0`);
       });
+  }
+
+  private xTransform() {
+    return getXValue(this.carousel.transformDiv.nativeElement.style.transform).x;
   }
 
   convertToPer(val: number) {
@@ -110,18 +97,29 @@ export class NguCarouselTouchM implements OnDestroy {
   }
 }
 
-function eventType(name: string) {
-  const d = {
-    panup: 'panleft',
-    pandown: 'panright',
-    panleft: 'panleft',
-    panright: 'panright'
-  };
-  return d[name];
+function getXValue(transform: string) {
+  const t = transform.replace(/.*\(|\)| /g, '').split(',');
+  const x = +t[0].match(/[0-9]+/)[0];
+  const y = +t[1].match(/[0-9]+/)[0];
+  const z = +t[2].match(/[0-9]+/)[0];
+  return { x, y, z };
 }
 
-function getTransform(x: number, y: number, type: string, sym: string) {
-  const xx = sym + x.toFixed(2) + type;
-  const yy = sym + y.toFixed(2) + type;
-  return `translate3d(${xx}, ${yy}, 0)`;
+function whichTransitionEvent(el: HTMLDivElement): string {
+  let t: string | number;
+
+  const transitions = {
+    transition: 'transitionend',
+    OTransition: 'oTransitionEnd',
+    MozTransition: 'transitionend',
+    WebkitTransition: 'webkitTransitionEnd'
+  };
+
+  for (t in transitions) {
+    if (el.style[t] !== undefined) {
+      return transitions[t];
+    }
+  }
 }
+
+// var transitionEvent = whichTransitionEvent();

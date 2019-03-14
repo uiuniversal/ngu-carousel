@@ -41,23 +41,17 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
 
   token = generateID();
 
-  @ViewChild('toucher')
-  private touchContainer: ElementRef<HTMLDivElement>;
+  @ViewChild('toucher') private touchContainer: ElementRef<HTMLDivElement>;
 
-  @ContentChild(NguCarouselDefDirective)
-  private _defDirec: NguCarouselDefDirective<T>;
+  @ContentChild(NguCarouselDefDirective) private _defDirec: NguCarouselDefDirective<T>;
 
-  @ViewChild('transformDiv')
-  private transformDiv: ElementRef<HTMLDivElement>;
+  @ViewChild('transformDiv') transformDiv: ElementRef<HTMLDivElement>;
 
-  @ViewChild(NguCarouselOutlet)
-  private _nodeOutlet: NguCarouselOutlet;
+  @ViewChild(NguCarouselOutlet) private _nodeOutlet: NguCarouselOutlet;
 
-  @ViewChild(NguCarouselOutletLeft)
-  private _nodeOutletLeft: NguCarouselOutlet;
+  @ViewChild(NguCarouselOutletLeft) private _nodeOutletLeft: NguCarouselOutlet;
 
-  @ViewChild(NguCarouselOutletRight)
-  private _nodeOutletRight: NguCarouselOutlet;
+  @ViewChild(NguCarouselOutletRight) private _nodeOutletRight: NguCarouselOutlet;
 
   @Input() inputs: NguCarouselConfig;
 
