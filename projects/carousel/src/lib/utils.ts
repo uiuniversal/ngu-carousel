@@ -34,3 +34,28 @@ export function isOnScreen(top: number, height: number) {
 
   return isElemOnScreen;
 }
+
+export function getXValue(transform: string) {
+  const t = transform.replace(/.*\(|\)| /g, '').split(',');
+  const x = +t[0].match(/[0-9]+/)[0];
+  const y = +t[1].match(/[0-9]+/)[0];
+  const z = +t[2].match(/[0-9]+/)[0];
+  return { x, y, z };
+}
+
+export function whichTransitionEvent(el: HTMLDivElement): string {
+  let t: string | number;
+
+  const transitions = {
+    transition: 'transitionend',
+    OTransition: 'oTransitionEnd',
+    MozTransition: 'transitionend',
+    WebkitTransition: 'webkitTransitionEnd'
+  };
+
+  for (t in transitions) {
+    if (el.style[t] !== undefined) {
+      return transitions[t];
+    }
+  }
+}

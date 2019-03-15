@@ -163,3 +163,5 @@ export class NguCarouselOutletContext<T> {
     this.$implicit = data;
   }
 }
+
+export type slideType = 'next' | 'prev' | number;

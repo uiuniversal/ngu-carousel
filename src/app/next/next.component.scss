@@ -21,6 +21,7 @@ $carouselHeight: 200px;
   flex-direction: column;
   border-radius: 4px;
   overflow: hidden;
+  background: white;
   .banner-img {
     flex: 1;
     background-size: cover !important;
@@ -36,4 +37,30 @@ $carouselHeight: 200px;
 .item {
   padding: 5px;
   box-sizing: border-box;
+}
+
+.leftRs {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  height: 50px;
+  box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, 0.3);
+  border-radius: 999px;
+  left: 0;
+  border-width: 0;
+}
+
+.rightRs {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  height: 50px;
+  box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, 0.3);
+  border-radius: 999px;
+  right: 0;
+  border-width: 0;
 }

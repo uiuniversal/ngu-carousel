@@ -1,9 +1,10 @@
 <ngu-carousel-m [dataSource]="items">
   <div *nguCarouselDef="let item" class="item">
-    <!-- <div class="item-style">{{ item }}</div> -->
     <div class="tile myBanner">
       <div class="banner-img" [style.background]="'#4DC7A0'"></div>
       <div class="banner-text">{{ item }}</div>
     </div>
   </div>
+  <button NguCarouselButton="prev" class="leftRs">prev</button>
+  <button NguCarouselButton="next" class="rightRs">next</button>
 </ngu-carousel-m>

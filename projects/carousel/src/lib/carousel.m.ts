@@ -15,7 +15,9 @@ import {
   IterableChanges,
   IterableChangeRecord,
   ViewContainerRef,
-  ElementRef
+  ElementRef,
+  ContentChildren,
+  QueryList
 } from '@angular/core';
 import {
   NguCarouselDefDirective,
@@ -23,10 +25,11 @@ import {
   NguCarouselOutletLeft,
   NguCarouselOutletRight
 } from './carousel.directive';
-import { Subject, Observable } from 'rxjs';
-import { NguCarouselConfig, NguCarouselOutletContext } from './interface';
-import { rangeFor, generateID } from './utils';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, Observable, merge, fromEvent } from 'rxjs';
+import { NguCarouselConfig, NguCarouselOutletContext, slideType } from './interface';
+import { rangeFor, generateID, getXValue, whichTransitionEvent } from './utils';
+import { takeUntil, startWith, switchMap, switchMapTo } from 'rxjs/operators';
+import { NguCarouselButton } from './button';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -37,7 +40,10 @@ import { takeUntil } from 'rxjs/operators';
 // tslint:disable-next-line:component-class-suffix
 export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, AfterContentInit {
   _dataSource: any;
-  size = 6;
+  slideItem = 5;
+  slideItemAct = 5;
+  size = 4;
+  transitionStr = 'all .3s ease 0s';
 
   token = generateID();
 
@@ -52,6 +58,8 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
   @ViewChild(NguCarouselOutletLeft) private _nodeOutletLeft: NguCarouselOutlet;
 
   @ViewChild(NguCarouselOutletRight) private _nodeOutletRight: NguCarouselOutlet;
+
+  @ContentChildren(NguCarouselButton) private carouselBtn: QueryList<NguCarouselButton>;
 
   @Input() inputs: NguCarouselConfig;
 
@@ -112,10 +120,42 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
 
   ngAfterContentInit() {
     this.initCarousel();
+    this.carouselBtn.changes
+      .pipe(
+        startWith(1),
+        switchMapTo(merge(...this.carouselBtn.map(e => e.click()))),
+        takeUntil(this.destroyed$)
+      )
+      .subscribe(e => this.slide(e));
     this.dataSource.pipe(takeUntil(this.destroyed$)).subscribe(res => {
       this._arrayChanges = this._dataDiffer.diff(res);
       this.renderNodeChanges(res);
     });
+    this.transEnd()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(() => {
+        let x = this.xTransform();
+        const lastItems = 0;
+        const max = (this.itemLength + this.slideItem) * this.itemWidth;
+        const leftTransform = this.itemWidth * (this.slideItemAct + this.remainingSlideItem());
+        const xAbs = Math.abs(x);
+        console.log(x);
+        if (xAbs >= max) {
+          x = -leftTransform;
+          this.transform = x;
+          this.setTransform(`translate3d(${x}px, 0, 0`, '');
+        } else if (xAbs <= this.itemWidth) {
+          x = -this.itemWidth * (this.itemLength + 1);
+          this.transform = x;
+          this.setTransform(`translate3d(${x}px, 0, 0`, '');
+        }
+      });
+  }
+
+  private remainingSlideItem() {
+    const maxSlideItem = this.size - (this.itemLength % this.size);
+    const maxSlideItem1 = maxSlideItem % maxSlideItem ? 0 : maxSlideItem;
+    return maxSlideItem1;
   }
 
   ngAfterViewInit() {}
@@ -130,10 +170,32 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
     this.setStyle();
   }
 
+  slide(type: slideType) {
+    const x = Math.round(Math.abs(this.xTransform()) / this.itemWidth);
+    if (type === 'next') {
+      const d = this.itemWidth * (x + this.size);
+      this.setTransform(`translate3d(-${d}px, 0, 0)`, this.transitionStr);
+    } else if (type === 'prev') {
+      const d = this.itemWidth * (x - this.size);
+      this.setTransform(`translate3d(-${d}px, 0, 0)`, this.transitionStr);
+    }
+  }
+
+  transEnd() {
+    return fromEvent<TransitionEvent>(
+      this.transformDiv.nativeElement,
+      whichTransitionEvent(this.transformDiv.nativeElement)
+    );
+  }
+
+  xTransform() {
+    return getXValue(this.transformDiv.nativeElement.style.transform).x;
+  }
+
   private setStyle() {
     this.containerWidth = this.touchContainer.nativeElement.offsetWidth;
     const styleid = `.${this.token} > .ngu-carousel-container > .ngu-carousel-transform > .item `;
-    this.itemWidth = +(this.containerWidth / (this.size - 1)).toFixed(2);
+    this.itemWidth = +(this.containerWidth / this.size).toFixed(2);
     const syles = styleid + `{flex: 0 0 ${this.itemWidth}px; max-width: ${this.itemWidth}px}`;
     this._createStyleElem(syles);
   }
@@ -143,7 +205,8 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
     const rightContainer = this._nodeOutletRight.viewContainer;
     leftContainer.clear();
     rightContainer.clear();
-    const slideItems = this.size;
+    this.slideItemAct = this.slideItem + this.remainingSlideItem();
+    const slideItems = this.slideItemAct;
     const rightItems = slideItems;
 
     rangeFor(0, rightItems, i => {
@@ -178,7 +241,7 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
     );
     updateItemIndexContext(this._nodeOutlet.viewContainer);
     this.extraItemsContainer(data);
-    this.transform = -this.itemWidth * this.size;
+    this.transform = -this.itemWidth * this.slideItemAct;
     this.setTransform(`translate3d(${this.transform}px, 0, 0)`);
   }
 
