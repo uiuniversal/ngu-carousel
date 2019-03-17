@@ -17,7 +17,8 @@ import {
   ViewContainerRef,
   ElementRef,
   ContentChildren,
-  QueryList
+  QueryList,
+  EmbeddedViewRef
 } from '@angular/core';
 import {
   NguCarouselDefDirective,
@@ -27,8 +28,8 @@ import {
 } from './carousel.directive';
 import { Subject, Observable, merge, fromEvent } from 'rxjs';
 import { NguCarouselConfig, NguCarouselOutletContext, slideType } from './interface';
-import { rangeFor, generateID, getXValue, whichTransitionEvent } from './utils';
-import { takeUntil, startWith, switchMap, switchMapTo } from 'rxjs/operators';
+import { rangeFor, getXValue, whichTransitionEvent } from './utils';
+import { takeUntil, startWith, delay, switchMapTo } from 'rxjs/operators';
 import { NguCarouselButton } from './button';
 
 @Component({
@@ -43,9 +44,7 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
   slideItem = 5;
   slideItemAct = 5;
   size = 4;
-  transitionStr = 'all .3s ease 0s';
-
-  token = generateID();
+  transitionStr = 'all .7s ease 0s';
 
   @ViewChild('toucher') private touchContainer: ElementRef<HTMLDivElement>;
 
@@ -65,7 +64,6 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
 
   private _dataDiffer: IterableDiffer<{}>;
   _arrayChanges: IterableChanges<{}>;
-  dynamicElements = [];
 
   itemWidth = 0;
   itemLength = 15;
@@ -104,13 +102,7 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
 
   transform = 0;
 
-  constructor(
-    private _el: ElementRef,
-    private _renderer: Renderer2,
-    private _differs: IterableDiffers
-  ) {
-    this._renderer.addClass(this._el.nativeElement, this.token);
-  }
+  constructor(private _renderer: Renderer2, private _differs: IterableDiffers) {}
 
   ngOnInit() {
     this._dataDiffer = this._differs.find([]).create((_i: number, item: any) => {
@@ -132,22 +124,27 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
       this.renderNodeChanges(res);
     });
     this.transEnd()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(
+        delay(10),
+        takeUntil(this.destroyed$)
+      )
       .subscribe(() => {
         let x = this.xTransform();
-        const lastItems = 0;
-        const max = (this.itemLength + this.slideItem) * this.itemWidth;
-        const leftTransform = this.itemWidth * (this.slideItemAct + this.remainingSlideItem());
+        const lastItems = (this.itemLength + 2 * this.slideItemAct) * this.itemWidth;
+        const lastItmess = Math.round((lastItems - x) / this.itemWidth);
+        const remainingItems = lastItmess;
+        // const max = (this.itemLength + this.slideItem) * this.itemWidth;
         const xAbs = Math.abs(x);
-        console.log(x);
-        if (xAbs >= max) {
-          x = -leftTransform;
+        // console.log(x, this.slideItemAct % remainingItems, this.remainingSlideItem());
+        // if (xAbs >= max) {
+        if (this.slideItemAct >= remainingItems) {
+          x = -this.itemWidth * (this.slideItemAct + Math.abs(this.slideItemAct - remainingItems));
           this.transform = x;
-          this.setTransform(`translate3d(${x}px, 0, 0`, '');
+          this.setTransform({ x: x + 'px' });
         } else if (xAbs <= this.itemWidth) {
           x = -this.itemWidth * (this.itemLength + 1);
           this.transform = x;
-          this.setTransform(`translate3d(${x}px, 0, 0`, '');
+          this.setTransform({ x: x + 'px' });
         }
       });
   }
@@ -155,7 +152,7 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
   private remainingSlideItem() {
     const maxSlideItem = this.size - (this.itemLength % this.size);
     const maxSlideItem1 = maxSlideItem % maxSlideItem ? 0 : maxSlideItem;
-    return maxSlideItem1;
+    return maxSlideItem1 + this.size - 1;
   }
 
   ngAfterViewInit() {}
@@ -163,7 +160,6 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
   ngOnDestroy() {
     this.destroyed$.next();
     this.destroyed$.complete();
-    this._removeElements();
   }
 
   initCarousel() {
@@ -174,56 +170,49 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
     const x = Math.round(Math.abs(this.xTransform()) / this.itemWidth);
     if (type === 'next') {
       const d = this.itemWidth * (x + this.size);
-      this.setTransform(`translate3d(-${d}px, 0, 0)`, this.transitionStr);
+      this.setTransform({ x: `-${d}px`, transition: this.transitionStr });
     } else if (type === 'prev') {
       const d = this.itemWidth * (x - this.size);
-      this.setTransform(`translate3d(-${d}px, 0, 0)`, this.transitionStr);
+      this.setTransform({ x: `-${d}px`, transition: this.transitionStr });
     }
   }
 
   transEnd() {
     return fromEvent<TransitionEvent>(
-      this.transformDiv.nativeElement,
-      whichTransitionEvent(this.transformDiv.nativeElement)
+      this.getTransformDiv,
+      whichTransitionEvent(this.getTransformDiv)
     );
   }
 
   xTransform() {
-    return getXValue(this.transformDiv.nativeElement.style.transform).x;
+    return getXValue(this.getTransformDiv.style.transform).x;
   }
 
   private setStyle() {
     this.containerWidth = this.touchContainer.nativeElement.offsetWidth;
-    const styleid = `.${this.token} > .ngu-carousel-container > .ngu-carousel-transform > .item `;
     this.itemWidth = +(this.containerWidth / this.size).toFixed(2);
-    const syles = styleid + `{flex: 0 0 ${this.itemWidth}px; max-width: ${this.itemWidth}px}`;
-    this._createStyleElem(syles);
   }
 
-  private extraItemsContainer(data: T[]) {
-    const leftContainer = this._nodeOutletLeft.viewContainer;
-    const rightContainer = this._nodeOutletRight.viewContainer;
-    leftContainer.clear();
-    rightContainer.clear();
-    this.slideItemAct = this.slideItem + this.remainingSlideItem();
-    const slideItems = this.slideItemAct;
-    const rightItems = slideItems;
-
-    rangeFor(0, rightItems, i => {
-      this._createNodeItem(data, rightContainer, i, true);
-    });
-
-    const leftItems = slideItems;
-    const lenght = data.length;
-
-    rangeFor(lenght - leftItems, lenght, (val, i) => {
-      this._createNodeItem(data, leftContainer, val, false, i);
-    });
+  getWidth() {
+    this.containerWidth = this.touchContainer.nativeElement.offsetWidth;
+    return (this.itemWidth = +(this.containerWidth / this.size).toFixed(2));
   }
 
-  setTransform(transform: string, transition = '') {
-    this.transformDiv.nativeElement.style.transform = transform;
-    this.transformDiv.nativeElement.style.transition = transition;
+  setTransform({ x = null, y = null, transition = '' }) {
+    this.getTransformDiv.style.transform = translate3d(x || 0, y || 0);
+    this.getTransformDiv.style.transition = transition;
+  }
+
+  get getTransformDiv() {
+    return this.transformDiv.nativeElement;
+  }
+
+  setSize(viewContainer: ViewContainerRef, index: number) {
+    const view = viewContainer.get(index) as EmbeddedViewRef<any>;
+    const mainEl = view.rootNodes[0] as HTMLDivElement;
+    mainEl.style.flex = `0 0 ${this.itemWidth}px`;
+    mainEl.style.maxWidth = `${this.itemWidth}px`;
+    return mainEl;
   }
 
   private renderNodeChanges(data: T[], viewContainer = this._nodeOutlet.viewContainer) {
@@ -239,46 +228,58 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
         }
       }
     );
-    updateItemIndexContext(this._nodeOutlet.viewContainer);
+    this.updateItemIndexContext(this._nodeOutlet.viewContainer);
     this.extraItemsContainer(data);
     this.transform = -this.itemWidth * this.slideItemAct;
-    this.setTransform(`translate3d(${this.transform}px, 0, 0)`);
+    this.setTransform({ x: this.transform + 'px' });
+  }
+
+  private extraItemsContainer(data: T[]) {
+    const leftContainer = this._nodeOutletLeft.viewContainer;
+    const rightContainer = this._nodeOutletRight.viewContainer;
+    leftContainer.clear();
+    rightContainer.clear();
+    this.slideItemAct = this.slideItem + this.remainingSlideItem();
+    const slideItems = this.slideItemAct;
+    const rightItems = slideItems;
+
+    rangeFor(0, rightItems, i => {
+      this._createNodeItem(data, rightContainer, i, i);
+    });
+
+    const leftItems = slideItems;
+    const lenght = data.length;
+
+    rangeFor(lenght - leftItems, lenght, (val, i) => {
+      this._createNodeItem(data, leftContainer, val, i);
+    });
   }
 
   private _createNodeItem(
     data: T[],
     viewContainer: ViewContainerRef,
     currentIndex: number,
-    tempItem = false,
     insertIndex?: number
   ) {
     const node = this._defDirec;
     const context = new NguCarouselOutletContext<T>(data[currentIndex]);
     context.index = currentIndex;
-    const indexx =
-      !tempItem && typeof insertIndex !== 'number'
-        ? currentIndex
-        : typeof insertIndex === 'number'
-        ? insertIndex
-        : null;
-    return viewContainer.createEmbeddedView(node.template, context, indexx);
+    const indexx = setNumber(insertIndex, currentIndex);
+    viewContainer.createEmbeddedView(node.template, context, indexx);
+    this.setSize(viewContainer, indexx);
   }
 
-  private _createStyleElem(datas?: string, tag = 'style') {
-    const styleItem = this._renderer.createElement(tag);
-    if (datas) {
-      const styleText = this._renderer.createText(datas);
-      this._renderer.appendChild(styleItem, styleText);
-    }
-    this._renderer.appendChild(this._el.nativeElement, styleItem);
-    this.dynamicElements.push(styleItem);
-    return styleItem;
-  }
-
-  private _removeElements() {
-    this.dynamicElements.forEach(e => {
-      this._renderer.removeChild(this._el.nativeElement, e);
-      this._renderer.destroyNode(e);
+  updateItemIndexContext(viewContainer: ViewContainerRef) {
+    const count = viewContainer.length;
+    rangeFor(0, count, renderIndex => {
+      const viewRef = viewContainer.get(renderIndex) as any;
+      const context = viewRef.context as any;
+      context.count = count;
+      context.first = renderIndex === 0;
+      context.last = renderIndex === count - 1;
+      context.even = renderIndex % 2 === 0;
+      context.odd = !context.even;
+      context.index = renderIndex;
     });
   }
 }
@@ -287,24 +288,18 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
 //
 //
 //
+// External functions
 //
 //
 //
 //
 //
 //
-//
-//
-function updateItemIndexContext(viewContainer: ViewContainerRef) {
-  const count = viewContainer.length;
-  rangeFor(0, count, renderIndex => {
-    const viewRef = viewContainer.get(renderIndex) as any;
-    const context = viewRef.context as any;
-    context.count = count;
-    context.first = renderIndex === 0;
-    context.last = renderIndex === count - 1;
-    context.even = renderIndex % 2 === 0;
-    context.odd = !context.even;
-    context.index = renderIndex;
-  });
+
+function translate3d(x: string | number, y: string | number = 0) {
+  return `translate3d(${x}, ${y}, 0)`;
+}
+
+function setNumber(...args: number[]) {
+  return args.find(num => typeof num === 'number');
 }

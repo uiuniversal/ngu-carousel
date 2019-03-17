@@ -4,7 +4,6 @@ import {
   Inject,
   PLATFORM_ID,
   OnDestroy,
-  Renderer2,
   AfterViewInit
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
@@ -31,7 +30,6 @@ export class NguCarouselTouchM implements OnDestroy, AfterViewInit {
   constructor(
     private carousel: NguCarouselM,
     private el: ElementRef<HTMLDivElement>,
-    private renderer: Renderer2,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     // this.isActive = this.c.touch.active;
@@ -56,9 +54,9 @@ export class NguCarouselTouchM implements OnDestroy, AfterViewInit {
 
     const panEnd$ = hammertime1.event('panend').pipe(
       tap(e => {
-        const x = Math.round(Math.abs(this.carousel.xTransform()) / this.carousel.itemWidth);
-        const trans = -x * this.carousel.itemWidth;
-        this.carousel.setTransform(`translate3d(${trans}px, 0, 0`, '.3s ease');
+        // const x = Math.round(Math.abs(this.carousel.xTransform()) / this.carousel.itemWidth);
+        // const trans = -x * this.carousel.itemWidth;
+        // this.carousel.setTransform(`translate3d(${trans}px, 0, 0`, '.3s ease');
       })
     );
 
@@ -88,7 +86,7 @@ export class NguCarouselTouchM implements OnDestroy, AfterViewInit {
           x = -this.carousel.itemWidth * (this.carousel.itemLength + 1);
           this.carousel.transform = x - ev.deltaX;
         }
-        this.carousel.setTransform(`translate3d(${x}px, 0, 0`, '');
+        this.carousel.setTransform({ x: x + 'px' });
       });
   }
 
@@ -103,5 +101,3 @@ export class NguCarouselTouchM implements OnDestroy, AfterViewInit {
     this.destroyed.complete();
   }
 }
-
-// var transitionEvent = whichTransitionEvent();
