@@ -1,8 +1,10 @@
-<div #toucher class="ngu-carousel-container" carouselTouchM>
-  <div #transformDiv class="ngu-carousel-transform">
-    <ng-container nguCarouselOutletLeft></ng-container>
-    <ng-container nguCarouselOutlet></ng-container>
-    <ng-container nguCarouselOutletRight></ng-container>
+<div #hoverContainer>
+  <div #toucher class="ngu-carousel-container" carouselTouchM>
+    <div #transformDiv class="ngu-carousel-transform">
+      <ng-container nguCarouselOutletLeft></ng-container>
+      <ng-container nguCarouselOutlet></ng-container>
+      <ng-container nguCarouselOutletRight></ng-container>
+    </div>
   </div>
+  <ng-content select="[NguCarouselButton]"></ng-content>
 </div>
-<ng-content select="[NguCarouselButton]"></ng-content>
