@@ -21,15 +21,17 @@ import {
 } from '@angular/core';
 import {
   NguCarouselDefDirective,
-  NguCarouselOutlet,
   NguCarouselOutletLeft,
-  NguCarouselOutletRight
+  NguCarouselOutletRight,
+  NguCarouselPointDefDirective,
+  NguCarouselPointOutlet
 } from './carousel.directive';
 import { Subject, Observable, merge, fromEvent, interval, EMPTY } from 'rxjs';
 import { NguCarouselConfig, NguCarouselOutletContext, slideType } from './interface';
 import { rangeFor, getXValue, whichTransitionEvent } from './utils';
 import { takeUntil, startWith, delay, switchMapTo, mapTo, switchMap } from 'rxjs/operators';
 import { NguCarouselButton } from './button';
+import { NguCarouselOutletM } from './point.m';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -45,15 +47,21 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
 
   @ViewChild('hoverContainer') private hoverContainer: ElementRef<HTMLDivElement>;
 
-  @ContentChild(NguCarouselDefDirective) private _defDirec: NguCarouselDefDirective<T>;
+  @ContentChild(NguCarouselDefDirective)
+  private _defDirec: NguCarouselDefDirective<T>;
+
+  @ContentChild(NguCarouselPointDefDirective)
+  private _defPointDirec: NguCarouselPointDefDirective<T>;
 
   @ViewChild('transformDiv') transformDiv: ElementRef<HTMLDivElement>;
 
-  @ViewChild(NguCarouselOutlet) private _nodeOutlet: NguCarouselOutlet;
+  @ViewChild(NguCarouselOutletM) private _nodeOutlet: NguCarouselOutletM;
 
-  @ViewChild(NguCarouselOutletLeft) private _nodeOutletLeft: NguCarouselOutlet;
+  @ViewChild(NguCarouselOutletLeft) private _nodeOutletLeft: NguCarouselOutletLeft;
 
-  @ViewChild(NguCarouselOutletRight) private _nodeOutletRight: NguCarouselOutlet;
+  @ViewChild(NguCarouselOutletRight) private _nodeOutletRight: NguCarouselOutletRight;
+
+  @ViewChild(NguCarouselPointOutlet) private _nodePointOutlet: NguCarouselPointOutlet;
 
   @ContentChildren(NguCarouselButton) private carouselBtn: QueryList<NguCarouselButton>;
 
@@ -68,7 +76,7 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
   slideItem = 5;
   slideItemAct = 5;
   maxSlideSize = 4;
-  slideSize = 1;
+  slideSize = 2;
   transitionStr = 'all .7s ease 0s';
 
   @Input('dataSource')
@@ -126,10 +134,12 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
     this.dataSource.pipe(takeUntil(this.destroyed$)).subscribe(res => {
       this._arrayChanges = this._dataDiffer.diff(res);
       this.itemLength = res.length;
+
+      this.createPoints();
       this.renderNodeChanges(res);
     });
 
-    this.intervalSet();
+    // this.setInterval();
 
     this.transEnd()
       .pipe(
@@ -153,9 +163,46 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
           this.transform = -this.itemWidth * items;
           this.setTransform({ x: this.transform + 'px' });
         }
+        const setActive = Math.round((xItems - this.slideItemAct) / this.slideSize);
+        this.setActive(setActive);
+
+        console.log(setActive);
       });
   }
 
+  private createPoints() {
+    const point = Math.ceil(this.itemLength / this.slideSize);
+    rangeFor(0, point, i => {
+      this.createView(
+        this._nodePointOutlet.viewContainer,
+        { active: false },
+        i,
+        this._defPointDirec
+      );
+    });
+    this.setActive(2);
+    merge(
+      ...this.pointFor((i, _, viewContainer) => viewContainer.get(i).rootNodes[0]).map((e, i) =>
+        fromEvent(e, 'click').pipe(mapTo(i))
+      )
+    ).subscribe(i => this.slide(i));
+  }
+
+  setActive(index: number) {
+    this.pointFor((i, _, viewContainer) => {
+      this.getContext(i, viewContainer).$implicit['active'] = i === index;
+    });
+  }
+
+  pointFor(predicate) {
+    const viewContainer = this._nodePointOutlet.viewContainer;
+    return rangeFor(0, viewContainer.length, (val, i) => predicate(val, i, viewContainer));
+  }
+
+  createView(viewContainer, data, index, node) {
+    const context = { $implicit: data, index };
+    viewContainer.createEmbeddedView(node.template, context, index);
+  }
   calcPoints() {}
 
   ngAfterViewInit() {}
@@ -167,9 +214,10 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
 
   initCarousel() {
     this.setStyle();
+    // console.log(this._nodePointOutlet, this._defPointDirec);
   }
 
-  intervalSet() {
+  setInterval() {
     const play$ = fromEvent(this.hoverContainer.nativeElement, 'mouseleave').pipe(mapTo(1));
     const pause$ = fromEvent(this.hoverContainer.nativeElement, 'mouseenter').pipe(mapTo(0));
 
@@ -194,6 +242,9 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
       this.setTransform({ x: d + 'px', transition: this.transitionStr });
     } else if (type === 'prev') {
       const d = -this.itemWidth * (x - this.slideSize);
+      this.setTransform({ x: d + 'px', transition: this.transitionStr });
+    } else if (typeof type === 'number') {
+      const d = -this.itemWidth * (type * this.slideSize + this.slideItemAct);
       this.setTransform({ x: d + 'px', transition: this.transitionStr });
     }
   }
@@ -280,16 +331,17 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
     viewContainer: ViewContainerRef,
     currentIndex: number,
     insertIndex?: number,
-    isClone = false
+    isClone = false,
+    setSize = true,
+    node = this._defDirec
   ) {
-    const node = this._defDirec;
     const context = isClone
       ? this.getContext(currentIndex)
       : new NguCarouselOutletContext<T>(data[currentIndex]);
     context.index = currentIndex;
     const indexx = setNumber(insertIndex, currentIndex);
     viewContainer.createEmbeddedView(node.template, context, indexx);
-    this.setSize(viewContainer, indexx);
+    setSize && this.setSize(viewContainer, indexx);
   }
 
   private remainingSlideItem() {
@@ -298,10 +350,11 @@ export class NguCarouselM<T = any> implements OnInit, OnDestroy, AfterViewInit, 
     return maxSlideItem1 + this.maxSlideSize - 1;
   }
 
-  getContext(index: number): NguCarouselOutletContext<T> {
-    return (this._nodeOutlet.viewContainer.get(index) as EmbeddedViewRef<
-      NguCarouselOutletContext<T>
-    >).context;
+  getContext(
+    index: number,
+    viewContainer = this._nodeOutlet.viewContainer
+  ): NguCarouselOutletContext<T> {
+    return (<EmbeddedViewRef<NguCarouselOutletContext<T>>>viewContainer.get(index)).context;
   }
 
   updateItemIndexContext(viewContainer: ViewContainerRef) {

@@ -16,7 +16,7 @@ export function rangeFor<T = any>(
 ) {
   const length = Math.abs(start - end);
   const isInc = start < end;
-  Array.from({ length }, (_, i) => (isInc ? start + i : start - i)).forEach((i, index) =>
+  return Array.from({ length }, (_, i) => (isInc ? start + i : start - i)).map((i, index) =>
     predicate(i, index)
   );
 }

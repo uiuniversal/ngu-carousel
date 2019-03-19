@@ -1,10 +1,12 @@
-<ngu-carousel-m [dataSource]="items">
+<ngu-carousel-m [dataSource]="items" *ngIf="showMe">
   <div *nguCarouselDef="let item" class="item">
-    <div class="tile myBanner">
-      <div class="banner-img" [style.background]="'#4DC7A0'"></div>
-      <div class="banner-text">{{ item }}</div>
-    </div>
+    <div class="tile">{{ item }}</div>
   </div>
   <button NguCarouselButton="prev" class="leftRs">prev</button>
   <button NguCarouselButton="next" class="rightRs">next</button>
+  <div *nguCarouselPointDef="let point; let i = index" class="points" [class.active]="point.active">
+    {{ i + 1 }}
+  </div>
 </ngu-carousel-m>
+
+<button (click)="showMe = !showMe">showMe --> {{ showMe }}</button>

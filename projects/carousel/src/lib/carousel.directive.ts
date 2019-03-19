@@ -12,7 +12,21 @@ export class NguCarouselItemDirective {}
 @Directive({
   selector: '[NguCarouselPoint]'
 })
-export class NguCarouselPointDirective {}
+export class NguCarouselPointDirective {
+  constructor(public viewContainer: ViewContainerRef, private el: ElementRef) {}
+}
+
+/**
+ * This Directive is used as a carousel Def selector
+ */
+@Directive({
+  selector: '[nguCarouselPointDef]'
+})
+export class NguCarouselPointDefDirective<T> {
+  when: (index: number, nodeData: T) => boolean;
+
+  constructor(public template: TemplateRef<any>) {}
+}
 
 /**
  * This Directive is used as a carousel Def selector
@@ -53,5 +67,15 @@ export class NguCarouselOutletLeft {
   selector: '[nguCarouselOutletRight]'
 })
 export class NguCarouselOutletRight {
+  constructor(public viewContainer: ViewContainerRef) {}
+}
+
+/**
+ * This Directive is used as a ViewContainerRef for extra right items for loop
+ */
+@Directive({
+  selector: '[nguCarouselPointOutlet]'
+})
+export class NguCarouselPointOutlet {
   constructor(public viewContainer: ViewContainerRef) {}
 }

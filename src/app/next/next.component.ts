@@ -13,6 +13,8 @@ export class NextComponent implements OnInit {
       .map((_, i) => i + 1)
   );
 
+  showMe = true;
+
   constructor() {}
 
   ngOnInit() {}
