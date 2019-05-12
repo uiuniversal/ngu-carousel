@@ -4,11 +4,12 @@ import {
   Inject,
   PLATFORM_ID,
   OnDestroy,
-  AfterViewInit
+  AfterViewInit,
+  NgZone
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Subject, merge, Subscription } from 'rxjs';
-import { tap, filter, takeUntil } from 'rxjs/operators';
+import { Subject, merge, Subscription, BehaviorSubject, EMPTY } from 'rxjs';
+import { tap, filter, takeUntil, switchMap } from 'rxjs/operators';
 import { RxHammer } from './hammer';
 import { NguCarouselM } from './carousel.m';
 
@@ -16,23 +17,25 @@ import { NguCarouselM } from './carousel.m';
   selector: '[carouselTouchM]'
 })
 export class NguCarouselTouchM implements OnDestroy, AfterViewInit {
-  destroyed = new Subject();
+  private destroyed = new Subject();
 
-  touchDirection = '';
+  private touchDirection = '';
 
-  maxTouchTransform = 0;
+  private maxTouchTransform = 0;
 
-  isActive = false;
+  private isActive = false;
 
-  mergSub: Subscription;
-  panSub: Subscription;
+  // private mergSub: Subscription;
+  // private panSub: Subscription;
 
   constructor(
     private carousel: NguCarouselM,
     private el: ElementRef<HTMLDivElement>,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private ngZone: NgZone
   ) {
     // this.isActive = this.c.touch.active;
+    // this.ngZone.runOutsideAngular(() => this._touch());
     this._touch();
   }
 
@@ -53,23 +56,22 @@ export class NguCarouselTouchM implements OnDestroy, AfterViewInit {
       .pipe(tap(ev => ev.srcEvent.stopPropagation()));
 
     const panEnd$ = hammertime1.event('panend').pipe(
-      tap(e => {
-        // const x = Math.round(Math.abs(this.carousel.xTransform()) / this.carousel.itemWidth);
-        // const trans = -x * this.carousel.itemWidth;
-        // this.carousel.setTransform(`translate3d(${trans}px, 0, 0`, '.3s ease');
+      tap(() => {
+        const x = Math.round(Math.abs(this.carousel.xTransform()) / this.carousel.itemWidth);
+        const trans = -x * this.carousel.itemWidth;
+        this.carousel.setTransform({ x: trans + 'px', transition: '.3s ease' });
       })
     );
 
-    merge(panStart$, panEnd$, panInput$)
-      .pipe(takeUntil(this.destroyed))
-      .subscribe(res => {});
+    const initiator$ = merge(panStart$, panEnd$, panInput$).pipe(filter(() => false));
 
     const panup$ = merge(hammertime1.event('panup'), hammertime1.event('pandown'));
 
     const panleft$ = merge(hammertime1.event('panleft'), hammertime1.event('panright'));
 
-    panleft$
+    this.carousel.toggleTouch
       .pipe(
+        switchMap(enable => (enable ? merge(initiator$, panleft$) : EMPTY)),
         filter(e => !(e.center.x === 0)),
         takeUntil(this.destroyed)
       )

@@ -1,3 +1,7 @@
+import { Observable, fromEvent, interval, merge, EMPTY } from 'rxjs';
+
+import { mapTo, startWith, switchMap } from 'rxjs/operators';
+
 export class Touch {
   active?: boolean;
   // swipe: string;

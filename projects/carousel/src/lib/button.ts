@@ -1,6 +1,6 @@
-import { Directive, Input, OnInit, ElementRef } from '@angular/core';
+import { Directive, Input, ElementRef } from '@angular/core';
 import { fromEvent } from 'rxjs';
-import { mapTo } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { slideType } from './interface';
 
 /**
@@ -8,18 +8,12 @@ import { slideType } from './interface';
  * This directive replaces the Prev and Next buttons
  */
 @Directive({
-  selector: '[NguCarouselButton]'
+  selector: '[nguCarouselButton]'
 })
-export class NguCarouselButton implements OnInit {
-  @Input() NguCarouselButton: slideType;
+export class NguCarouselButton {
+  @Input() nguCarouselButton: slideType;
+
+  click$ = fromEvent(this.el.nativeElement, 'click').pipe(map(() => this.nguCarouselButton));
 
   constructor(public el: ElementRef<HTMLButtonElement>) {}
-
-  click() {
-    return fromEvent<MouseEvent>(this.el.nativeElement, 'click').pipe(
-      mapTo(this.NguCarouselButton)
-    );
-  }
-
-  ngOnInit() {}
 }

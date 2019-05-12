@@ -1,12 +1,19 @@
-<ngu-carousel-m [dataSource]="items" *ngIf="showMe">
-  <div *nguCarouselDef="let item" class="item">
-    <div class="tile">{{ item }}</div>
-  </div>
-  <button NguCarouselButton="prev" class="leftRs">prev</button>
-  <button NguCarouselButton="next" class="rightRs">next</button>
-  <div *nguCarouselPointDef="let point; let i = index" class="points" [class.active]="point.active">
-    {{ i + 1 }}
-  </div>
-</ngu-carousel-m>
+<ng-container *ngIf="showMe">
+  <ngu-carousel-m #myCarousel [options]="carouselTileConfig" [dataSource]="items">
+    <div *nguCarouselDef="let item" class="item">
+      <div class="tile">{{ item }}</div>
+    </div>
+    <button nguCarouselButton="prev" class="leftRs">prev</button>
+    <button nguCarouselButton="next" class="rightRs">next</button>
+    <ng-container *nguCarouselPointDef="let point; let i = index">
+      <div class="points" [class.active]="point.active" [nguCarouselButton]="i"> {{ i + 1 }} </div>
+    </ng-container>
+  </ngu-carousel-m>
+</ng-container>
 
 <button (click)="showMe = !showMe">showMe --> {{ showMe }}</button>
+<app-carousel-form
+  (toggleTouch)="touch($event)"
+  (toggleInterval)="interval($event)"
+></app-carousel-form>
+<!-- {{ test() }} -->

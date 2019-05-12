@@ -1,0 +1,47 @@
+<form [formGroup]="form">
+  <div formGroupName="grid">
+    <div>
+      <label>
+        Size:
+        <input type="text" formControlName="size" />
+      </label>
+    </div>
+
+    <div>
+      <label>
+        Offset:
+        <input type="text" formControlName="offset" />
+      </label>
+    </div>
+
+    <div>
+      <label>
+        Type:
+        <input type="text" formControlName="type" />
+      </label>
+    </div>
+
+    <div>
+      <label>
+        Slide:
+        <input type="text" formControlName="slide" />
+      </label>
+    </div>
+  </div>
+
+  <div>
+    <label>
+      Touch:
+      <input type="checkbox" formControlName="touch" />
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Interval:
+      <input type="checkbox" formControlName="interval" />
+    </label>
+  </div>
+</form>
+
+{{ form.value | json }}
