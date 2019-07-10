@@ -5,10 +5,10 @@ import {
   AfterViewInit,
   ChangeDetectorRef
 } from '@angular/core';
-import { NguCarouselConfig } from 'carousel';
 import { Observable, interval, of } from 'rxjs';
 import { startWith, switchMap, take, map } from 'rxjs/operators';
 import { slider } from './slide-animation';
+import { NguCarouselConfig } from './carousel';
 
 @Component({
   selector: 'app-root',
