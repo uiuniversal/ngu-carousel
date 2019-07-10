@@ -111,7 +111,7 @@ export class NguCarousel<T> extends NguCarouselStore
   /** The setter is used to catch the button if the button has ngIf
    * issue id #91
    */
-  @ContentChild(NguCarouselNextDirective, { static: true }) read!: ElementRef
+  @ContentChild(NguCarouselNextDirective, { read: ElementRef, static: true })
   set nextBtn(btn: ElementRef) {
     this.listener2 && this.listener2();
     if (btn) {
@@ -124,7 +124,7 @@ export class NguCarousel<T> extends NguCarouselStore
   /** The setter is used to catch the button if the button has ngIf
    * issue id #91
    */
-  @ContentChild(NguCarouselPrevDirective, /* TODO: add static flag */ { read: ElementRef })
+  @ContentChild(NguCarouselPrevDirective, { read: ElementRef, static: true })
   set prevBtn(btn: ElementRef) {
     this.listener1 && this.listener1();
     if (btn) {
