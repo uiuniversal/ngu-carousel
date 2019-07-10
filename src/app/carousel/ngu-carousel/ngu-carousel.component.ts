@@ -105,13 +105,13 @@ export class NguCarousel<T> extends NguCarouselStore
   @ContentChildren(NguCarouselDefDirective)
   private _defDirec: QueryList<NguCarouselDefDirective<any>>;
 
-  @ViewChild(NguCarouselOutlet)
+  @ViewChild(NguCarouselOutlet, { static: true })
   _nodeOutlet: NguCarouselOutlet;
 
   /** The setter is used to catch the button if the button has ngIf
    * issue id #91
    */
-  @ContentChild(NguCarouselNextDirective, { read: ElementRef })
+  @ContentChild(NguCarouselNextDirective, { static: true }) read!: ElementRef;
   set nextBtn(btn: ElementRef) {
     this.listener2 && this.listener2();
     if (btn) {
@@ -124,7 +124,7 @@ export class NguCarousel<T> extends NguCarouselStore
   /** The setter is used to catch the button if the button has ngIf
    * issue id #91
    */
-  @ContentChild(NguCarouselPrevDirective, { read: ElementRef })
+  @ContentChild(NguCarouselPrevDirective, /* TODO: add static flag */ { read: ElementRef })
   set prevBtn(btn: ElementRef) {
     this.listener1 && this.listener1();
     if (btn) {
@@ -134,13 +134,13 @@ export class NguCarousel<T> extends NguCarouselStore
     }
   }
 
-  @ViewChild('ngucarousel', { read: ElementRef })
+  @ViewChild('ngucarousel', { read: ElementRef, static: true })
   private carouselMain1: ElementRef;
 
-  @ViewChild('nguItemsContainer', { read: ElementRef })
+  @ViewChild('nguItemsContainer', { read: ElementRef, static: true })
   private nguItemsContainer: ElementRef;
 
-  @ViewChild('touchContainer', { read: ElementRef })
+  @ViewChild('touchContainer', { read: ElementRef, static: true })
   private touchContainer: ElementRef;
 
   private _intervalController$ = new Subject<number>();
