@@ -1,0 +1,29 @@
+{
+  "name": "@ngu/carousel",
+  "version": "1.5.3",
+  "license": "MIT",
+  "description": "Angular Universal carousel",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sheikalthaf/ngu-carousel.git"
+  },
+  "homepage": "https://ngu-carousel.firebaseapp.com",
+  "peerDependencies": {
+    "@angular/common": "^8.0.0",
+    "@angular/core": "^8.0.0",
+    "hammerjs": "^2.0.8"
+  },
+  "main": "bundles/ngu-carousel.umd.js",
+  "module": "fesm5/ngu-carousel.js",
+  "es2015": "fesm2015/ngu-carousel.js",
+  "esm5": "esm5/ngu-carousel.js",
+  "esm2015": "esm2015/ngu-carousel.js",
+  "fesm5": "fesm5/ngu-carousel.js",
+  "fesm2015": "fesm2015/ngu-carousel.js",
+  "typings": "ngu-carousel.d.ts",
+  "metadata": "ngu-carousel.metadata.json",
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^1.9.0"
+  }
+}
