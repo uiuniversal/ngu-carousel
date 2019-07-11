@@ -72,7 +72,7 @@ export class NguCarousel<T> extends NguCarouselStore
   isHovered = false;
 
   @Input('inputs')
-  private inputs: NguCarouselConfig;
+  public inputs: NguCarouselConfig;
   @Output('carouselLoad')
   private carouselLoad = new EventEmitter();
 
