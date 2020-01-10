@@ -1,13 +1,7 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  AfterViewInit,
-  ChangeDetectorRef
-} from '@angular/core';
-import { NguCarouselConfig } from 'carousel';
-import { Observable, interval, of } from 'rxjs';
-import { startWith, switchMap, take, map } from 'rxjs/operators';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { NguCarouselConfig } from '@ngu/carousel/ngu-carousel/ngu-carousel';
+import { interval, Observable } from 'rxjs';
+import { map, startWith, take } from 'rxjs/operators';
 import { slider } from './slide-animation';
 
 @Component({

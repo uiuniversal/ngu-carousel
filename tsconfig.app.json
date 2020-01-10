@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/app",
+    "types": ["hammerjs"],
+    "paths": {
+      "@ngu/carousel/*": ["projects/ngu-carousel/src/lib/*"],
+      "@ngu/carousel": ["projects/ngu-carousel/src/lib"]
+    }
+  },
+  "files": [
+    "src/main.ts",
+    "src/polyfills.ts"
+  ],
+  "include": [
+    "src/**/*.d.ts"
+  ]
+}
