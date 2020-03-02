@@ -406,7 +406,7 @@ export class NguCarousel<T> extends NguCarouselStore
           this._touchHandling('panright', ev);
         });
       }
-      hammertime.on('panend', (ev: any) => {
+      hammertime.on('panend pancancel', (ev: any) => {
         if (Math.abs(ev.velocity) >= this.velocity) {
           this.touch.velocity = ev.velocity;
           let direc = 0;
