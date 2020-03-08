@@ -11,7 +11,9 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2015",
-    "types": [],
+    "types": [
+      "hammerjs"
+    ],
     "typeRoots": [
       "node_modules/@types"
     ],

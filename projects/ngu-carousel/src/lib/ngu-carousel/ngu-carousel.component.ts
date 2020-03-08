@@ -1,4 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
+import { HammerGestureConfig } from '@angular/platform-browser';
+import * as Hammer from 'hammerjs';
 import {
   AfterContentInit,
   AfterViewInit,
