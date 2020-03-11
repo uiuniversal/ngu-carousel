@@ -37,7 +37,7 @@
 </ng-container> -->
 <!-- <ng-container *ngFor="let item of [1,2,3,4,5]"> -->
 <ngu-carousel #myCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItems$ | async">
-  <ngu-tile *nguCarouselDef="let item; let i = index; let ani = animate" [@slider]="ani">
+  <ngu-tile *nguCarouselDef="let item; index as i; let ani = animate" [@slider]="ani">
     <div class="tile" [style.background]="'url('+item+')'">
       <h1>{{i + 1}}</h1>
     </div>
@@ -47,7 +47,7 @@
   <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast ? 0.5:1">&gt;</button>
 
   <ul class="myPoint" NguCarouselPoint>
-    <li *ngFor="let i of myCarousel.pointNumbers; let i = index" [class.active]="i==myCarousel.activePoint" (click)="myCarousel.moveTo(i)"></li>
+    <li *ngFor="let i of myCarousel.pointNumbers" [class.active]="i==myCarousel.activePoint" (click)="myCarousel.moveTo(i)"></li>
   </ul>
 </ngu-carousel>
 <!-- </ng-container> -->
