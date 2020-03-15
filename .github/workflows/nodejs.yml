@@ -33,7 +33,5 @@ jobs:
         run: |
           npm run build:lib
           npm run build:app
-      - name: Test
-        run: npm run test
         env:
           CI: true
