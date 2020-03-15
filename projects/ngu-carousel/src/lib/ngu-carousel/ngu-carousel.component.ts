@@ -184,7 +184,7 @@ export class NguCarousel<T> extends NguCarouselStore
     private _el: ElementRef,
     private _renderer: Renderer2,
     private _differs: IterableDiffers,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(PLATFORM_ID) private platformId: object,
     private cdr: ChangeDetectorRef
   ) {
     super();
