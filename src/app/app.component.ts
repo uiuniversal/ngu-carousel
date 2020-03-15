@@ -5,7 +5,7 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { NguCarouselConfig } from '@ngu/carousel/ngu-carousel/ngu-carousel';
+import { NguCarouselConfig } from '@ngu/carousel';
 import { interval, Observable } from 'rxjs';
 import { map, startWith, take } from 'rxjs/operators';
 import { slider } from './slide-animation';

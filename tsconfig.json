@@ -11,20 +11,11 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2015",
-    "types": [
-      "hammerjs"
-    ],
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2018",
-      "dom"
-    ],
+    "types": ["hammerjs", "jasmine"],
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2018", "dom"],
     "paths": {
-      "ngu-carousel": [
-        "dist/ngu-carousel"
-      ]
+      "@ngu/carousel": ["projects/ngu-carousel/src/public-api"]
     }
   },
   "angularCompilerOptions": {
