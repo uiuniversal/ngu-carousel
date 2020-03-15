@@ -112,7 +112,7 @@
       "projectType": "library",
       "root": "projects/ngu-carousel",
       "sourceRoot": "projects/ngu-carousel/src",
-      "prefix": "lib",
+      "prefix": "ngu",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
