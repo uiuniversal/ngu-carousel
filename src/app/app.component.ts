@@ -108,9 +108,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   shuffle(array) {
-    let currentIndex = array.length,
-      temporaryValue,
-      randomIndex;
+    let currentIndex = array.length;
+    let temporaryValue;
+    let randomIndex;
 
     // While there remain elements to shuffle...
     while (0 !== currentIndex) {

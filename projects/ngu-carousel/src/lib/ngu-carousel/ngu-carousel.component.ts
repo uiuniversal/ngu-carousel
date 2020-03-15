@@ -29,7 +29,7 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { empty, fromEvent, interval, merge, Observable, of, Subject, Subscription } from 'rxjs';
+import { fromEvent, interval, merge, Observable, of, Subject, Subscription, EMPTY } from 'rxjs';
 import { mapTo, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import {
   NguCarouselDefDirective,
@@ -60,14 +60,11 @@ export class NguCarousel<T> extends NguCarouselStore
   activePoint: number;
   isHovered = false;
 
-  @Input('inputs')
-  private inputs: NguCarouselConfig;
-  @Output('carouselLoad')
-  private carouselLoad = new EventEmitter();
+  @Input() private inputs: NguCarouselConfig;
+  @Output() private carouselLoad = new EventEmitter();
 
   // tslint:disable-next-line:no-output-on-prefix
-  @Output('onMove')
-  private onMove = new EventEmitter<NguCarousel<T>>();
+  @Output() private onMove = new EventEmitter<NguCarousel<T>>();
   // isFirstss = 0;
   arrayChanges: IterableChanges<{}>;
   carouselInt: Subscription;
@@ -152,13 +149,7 @@ export class NguCarousel<T> extends NguCarouselStore
     return this._trackByFn;
   }
   set trackBy(fn: TrackByFunction<T>) {
-    if (
-      isDevMode() &&
-      fn != null &&
-      typeof fn !== 'function' &&
-      <any>console &&
-      <any>console.warn
-    ) {
+    if (isDevMode() && fn != null && typeof fn !== 'function' && console && console.warn) {
       console.warn(`trackBy must be a function, but received ${JSON.stringify(fn)}.`);
     }
     this._trackByFn = fn;
@@ -169,7 +160,7 @@ export class NguCarousel<T> extends NguCarouselStore
     private _el: ElementRef,
     private _renderer: Renderer2,
     private _differs: IterableDiffers,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(PLATFORM_ID) private platformId: object,
     private cdr: ChangeDetectorRef
   ) {
     super();
@@ -396,7 +387,7 @@ export class NguCarousel<T> extends NguCarouselStore
           this._setStyle(this.nguItemsContainer.nativeElement, 'transform', '');
         }
       });
-      hammertime.on('hammer.input', function(ev) {
+      hammertime.on('hammer.input', ev => {
         // allow nested touch events to no propagate, this may have other side affects but works for now.
         // TODO: It is probably better to check the source element of the event and only apply the handle to the correct carousel
         ev.srcEvent.stopPropagation();
@@ -576,38 +567,38 @@ export class NguCarousel<T> extends NguCarouselStore
 
     let itemStyle = '';
     if (this.vertical.enabled) {
-      const itemWidth_xs = `${this.styleid} > .item {height: ${this.vertical.height /
+      const itemWidthXS = `${this.styleid} > .item {height: ${this.vertical.height /
         +this.inputs.grid.xs}px}`;
-      const itemWidth_sm = `${this.styleid} > .item {height: ${this.vertical.height /
+      const itemWidthSM = `${this.styleid} > .item {height: ${this.vertical.height /
         +this.inputs.grid.sm}px}`;
-      const itemWidth_md = `${this.styleid} > .item {height: ${this.vertical.height /
+      const itemWidthMD = `${this.styleid} > .item {height: ${this.vertical.height /
         +this.inputs.grid.md}px}`;
-      const itemWidth_lg = `${this.styleid} > .item {height: ${this.vertical.height /
+      const itemWidthLG = `${this.styleid} > .item {height: ${this.vertical.height /
         +this.inputs.grid.lg}px}`;
 
-      itemStyle = `@media (max-width:767px){${itemWidth_xs}}
-                    @media (min-width:768px){${itemWidth_sm}}
-                    @media (min-width:992px){${itemWidth_md}}
-                    @media (min-width:1200px){${itemWidth_lg}}`;
+      itemStyle = `@media (max-width:767px){${itemWidthXS}}
+                    @media (min-width:768px){${itemWidthSM}}
+                    @media (min-width:992px){${itemWidthMD}}
+                    @media (min-width:1200px){${itemWidthLG}}`;
     } else if (this.type === 'responsive') {
-      const itemWidth_xs =
+      const itemWidthXS =
         this.inputs.type === 'mobile'
           ? `${this.styleid} .item {flex: 0 0 ${95 / +this.inputs.grid.xs}%; width: ${95 /
               +this.inputs.grid.xs}%;}`
           : `${this.styleid} .item {flex: 0 0 ${100 / +this.inputs.grid.xs}%; width: ${100 /
               +this.inputs.grid.xs}%;}`;
 
-      const itemWidth_sm = `${this.styleid} > .item {flex: 0 0 ${100 /
+      const itemWidthSM = `${this.styleid} > .item {flex: 0 0 ${100 /
         +this.inputs.grid.sm}%; width: ${100 / +this.inputs.grid.sm}%}`;
-      const itemWidth_md = `${this.styleid} > .item {flex: 0 0 ${100 /
+      const itemWidthMD = `${this.styleid} > .item {flex: 0 0 ${100 /
         +this.inputs.grid.md}%; width: ${100 / +this.inputs.grid.md}%}`;
-      const itemWidth_lg = `${this.styleid} > .item {flex: 0 0 ${100 /
+      const itemWidthLG = `${this.styleid} > .item {flex: 0 0 ${100 /
         +this.inputs.grid.lg}%; width: ${100 / +this.inputs.grid.lg}%}`;
 
-      itemStyle = `@media (max-width:767px){${itemWidth_xs}}
-                    @media (min-width:768px){${itemWidth_sm}}
-                    @media (min-width:992px){${itemWidth_md}}
-                    @media (min-width:1200px){${itemWidth_lg}}`;
+      itemStyle = `@media (max-width:767px){${itemWidthXS}}
+                    @media (min-width:768px){${itemWidthSM}}
+                    @media (min-width:992px){${itemWidthMD}}
+                    @media (min-width:1200px){${itemWidthLG}}`;
     } else {
       itemStyle = `${this.styleid} .item {flex: 0 0 ${this.inputs.grid.all}px; width: ${this.inputs.grid.all}px;}`;
     }
@@ -631,8 +622,8 @@ export class NguCarousel<T> extends NguCarouselStore
   /** logic to scroll the carousel step 1 */
   private _carouselScrollOne(Btn: number): void {
     let itemSpeed = this.speed;
-    let translateXval,
-      currentSlide = 0;
+    let translateXval = 0;
+    let currentSlide = 0;
     const touchMove = Math.ceil(this.dexVal / this.itemWidth);
     this._setStyle(this.nguItemsContainer.nativeElement, 'transform', '');
 
@@ -809,7 +800,7 @@ export class NguCarousel<T> extends NguCarouselStore
             switchMap(val => {
               this.isHovered = !val;
               this.cdr.markForCheck();
-              return val ? interval$ : empty();
+              return val ? interval$ : EMPTY;
             })
           )
           .subscribe(res => {
