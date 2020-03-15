@@ -15,7 +15,7 @@
     "typeRoots": ["node_modules/@types"],
     "lib": ["es2018", "dom"],
     "paths": {
-      "@ngu/carousel": ["projects/ngu-carousel/src/public-api"]
+      "@ngu/carousel": ["dist/ngu-carousel"]
     }
   },
   "angularCompilerOptions": {

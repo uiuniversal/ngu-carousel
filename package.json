@@ -9,7 +9,7 @@
     "lint": "ng lint",
     "format:check": "prettier --config ./.prettierrc --list-different \"{projects,src}/**/*{.ts,.js,.json,.html}\"",
     "format:all": "prettier --config ./.prettierrc --write \"{projects,src}/**/*{.ts,.js,.json,.html}\"",
-    "build:lib": "ng build --prod --project ngu-carousel",
+    "build:lib": "ng build --project @ngu/carousel",
     "build:app": "ng build --prod",
     "run-lib": "npm run build:lib && ng serve",
     "e2e": "ng e2e"
