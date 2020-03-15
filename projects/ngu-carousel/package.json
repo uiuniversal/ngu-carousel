@@ -1,9 +1,8 @@
 {
-  "name": "ngu-carousel",
+  "name": "@ngu/carousel",
   "version": "2.0.0",
   "peerDependencies": {
-    "@angular/common": "^9.0.0-rc.8",
-    "@angular/core": "^9.0.0-rc.8",
-    "tslib": "^1.10.0"
+    "@angular/common": "^9.0.5",
+    "@angular/core": "^9.0.5"
   }
 }
