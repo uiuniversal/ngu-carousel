@@ -1,4 +1,10 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit
+} from '@angular/core';
 import { NguCarouselConfig } from '@ngu/carousel/ngu-carousel/ngu-carousel';
 import { interval, Observable } from 'rxjs';
 import { map, startWith, take } from 'rxjs/operators';
@@ -12,12 +18,7 @@ import { slider } from './slide-animation';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  imgags = [
-    'assets/bg.jpg',
-    'assets/car.png',
-    'assets/canberra.jpg',
-    'assets/holi.jpg'
-  ];
+  imgags = ['assets/bg.jpg', 'assets/car.png', 'assets/canberra.jpg', 'assets/holi.jpg'];
   public carouselTileItems: Array<any> = [0, 1, 2, 3, 4, 5];
   public carouselTiles = {
     0: [],
@@ -101,9 +102,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     const len = this.carouselTiles[j].length;
     if (len <= 30) {
       for (let i = len; i < len + 100; i++) {
-        this.carouselTiles[j].push(
-          this.imgags[Math.floor(Math.random() * this.imgags.length)]
-        );
+        this.carouselTiles[j].push(this.imgags[Math.floor(Math.random() * this.imgags.length)]);
       }
     }
   }
