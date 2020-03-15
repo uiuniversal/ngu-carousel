@@ -15,7 +15,10 @@ export { NguItemComponent } from './lib/ngu-item/ngu-item.component';
 export { NguTileComponent } from './lib/ngu-tile/ngu-tile.component';
 
 export {
-  NguCarouselDefDirective, NguCarouselPointDirective,
-  NguCarouselItemDirective, NguCarouselNextDirective, NguCarouselPrevDirective,
+  NguCarouselDefDirective,
+  NguCarouselPointDirective,
+  NguCarouselItemDirective,
+  NguCarouselNextDirective,
+  NguCarouselPrevDirective,
   NguCarouselOutlet
 } from './lib/ngu-carousel.directive';
