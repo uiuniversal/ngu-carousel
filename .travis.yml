@@ -20,5 +20,5 @@ cache:
     - node_modules
 
 script:
-  - ng build --prod --project ngu-carousel
+  - ng build --project ngu-carousel
   - ng build --prod
