@@ -58,13 +58,7 @@ export class Touch {
 }
 
 export class Transfrom {
-  constructor(
-    public xs = 0,
-    public sm = 0,
-    public md = 0,
-    public lg = 0,
-    public all = 0
-  ) {}
+  constructor(public xs = 0, public sm = 0, public md = 0, public lg = 0, public all = 0) {}
 }
 
 export class NguCarouselConfig {
