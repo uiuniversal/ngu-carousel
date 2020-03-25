@@ -1,6 +1,6 @@
 # ngu-carousel
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Angular Universal carousel
@@ -705,6 +705,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/codeveins"><img src="https://avatars0.githubusercontent.com/u/47743769?v=4" width="100px;" alt=""/><br /><sub><b>Code Veins</b></sub></a><br /><a href="https://github.com/sheikalthaf/ngu-carousel/commits?author=codeveins" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/mczachurski"><img src="https://avatars0.githubusercontent.com/u/6191974?v=4" width="100px;" alt=""/><br /><sub><b>Marcin Czachurski</b></sub></a><br /><a href="https://github.com/sheikalthaf/ngu-carousel/commits?author=mczachurski" title="Code">💻</a></td>
     <td align="center"><a href="https://www.linkedin.com/in/alexander-buiko-16715282/"><img src="https://avatars2.githubusercontent.com/u/4117678?v=4" width="100px;" alt=""/><br /><sub><b>Alexander Buiko</b></sub></a><br /><a href="https://github.com/sheikalthaf/ngu-carousel/commits?author=reed665" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/gimox"><img src="https://avatars3.githubusercontent.com/u/2871248?v=4" width="100px;" alt=""/><br /><sub><b>Giorgio Modoni</b></sub></a><br /><a href="https://github.com/sheikalthaf/ngu-carousel/commits?author=gimox" title="Code">💻</a></td>
   </tr>
 </table>
 
