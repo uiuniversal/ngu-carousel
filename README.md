@@ -1,6 +1,6 @@
 # ngu-carousel
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Angular Universal carousel
@@ -708,6 +708,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://fkse.io"><img src="https://avatars2.githubusercontent.com/u/1880828?v=4" width="100px;" alt=""/><br /><sub><b>Frido Koch</b></sub></a><br /><a href="https://github.com/sheikalthaf/ngu-carousel/commits?author=fridolin-koch" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/gimox"><img src="https://avatars3.githubusercontent.com/u/2871248?v=4" width="100px;" alt=""/><br /><sub><b>Giorgio Modoni</b></sub></a><br /><a href="https://github.com/sheikalthaf/ngu-carousel/commits?author=gimox" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/faran312"><img src="https://avatars1.githubusercontent.com/u/27755518?v=4" width="100px;" alt=""/><br /><sub><b>faran312</b></sub></a><br /><a href="https://github.com/sheikalthaf/ngu-carousel/commits?author=faran312" title="Code">💻</a></td>
+    <td align="center"><a href="https://www.stockopedia.com/"><img src="https://avatars1.githubusercontent.com/u/412672?v=4" width="100px;" alt=""/><br /><sub><b>Euan Goddard</b></sub></a><br /><a href="https://github.com/sheikalthaf/ngu-carousel/commits?author=euangoddard" title="Code">💻</a></td>
   </tr>
 </table>
 
