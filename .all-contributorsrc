@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "codeveins",
+      "name": "Code Veins",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/47743769?v=4",
+      "profile": "https://github.com/codeveins",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "ngu-carousel",
+  "projectOwner": "sheikalthaf",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
