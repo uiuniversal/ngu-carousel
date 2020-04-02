@@ -1,4 +1,5 @@
 # ngu-carousel
+[![npm version](https://badge.fury.io/js/%40ngu%2Fcarousel.svg)](https://badge.fury.io/js/%40ngu%2Fcarousel)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
@@ -7,9 +8,6 @@ Angular Universal carousel
 
 `Note: This carousel doesn't include any css. go and customize css for buttons, items except ngucarousel and ngucarousel-inner`
 
-## changelog [![npm version](https://badge.fury.io/js/%40ngu%2Fcarousel.svg)](https://badge.fury.io/js/%40ngu%2Fcarousel)
-
-for ChangeLog go to [CHANGELOG.md](https://github.com/sheikalthaf/ngu-carousel/blob/master/CHANGELOG.md)
 
 ## Demo
 
@@ -19,11 +17,27 @@ Demo available [Here](https://ngu-carousel.firebaseapp.com)
 
 ## Installation
 
-`npm install @ngu/carousel --save`
 
-Include CarouselModule in your app module:
+| Angular Version  | ngu-carousel Version |
+| ------------- | ------------- |
+| Angular >= 9  | `npm i --save @ngu/carousel@latest`  |
+| Angular < 9  | `npm i --save @ngu/carousel@1.5.5`  |
 
-```javascript
+### Optional Dependencies
+
+#### hammer.js
+
+Now ngu-carousel supports touch with the help of hammerjs. 
+You can import it in the `main.ts` file like this
+
+`npm install hammerjs --save`
+
+
+## Usage
+
+1. Include CarouselModule in your app module:
+
+```typescript
 import { NguCarouselModule } from '@ngu/carousel';
 
 @NgModule({
@@ -32,17 +46,7 @@ import { NguCarouselModule } from '@ngu/carousel';
 export class AppModule {}
 ```
 
-Now ngu-carousel supports touch with the help of hammerjs
-
-`npm install hammerjs --save`
-
-Import hammerjs in `main.ts` file
-
-```javascript
-import 'hammerjs';
-```
-
-Then use in your component:
+2. Then use in your component:
 
 ```javascript
 import { Component, OnInit } from '@angular/core';
