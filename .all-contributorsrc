@@ -76,6 +76,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "tiagomsmagalhaes",
+      "name": "Tiago Magalhães",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/5302040?v=4",
+      "profile": "http://tiagomagalha.es",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
