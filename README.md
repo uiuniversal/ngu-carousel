@@ -1,7 +1,7 @@
 # ngu-carousel
 [![npm version](https://badge.fury.io/js/%40ngu%2Fcarousel.svg)](https://badge.fury.io/js/%40ngu%2Fcarousel)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Angular Universal carousel
@@ -716,6 +716,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   </tr>
   <tr>
     <td align="center"><a href="https://www.santoshyadav.dev"><img src="https://avatars3.githubusercontent.com/u/11923975?v=4" width="100px;" alt=""/><br /><sub><b>Santosh Yadav</b></sub></a><br /><a href="https://github.com/sheikalthaf/ngu-carousel/commits?author=santoshyadav198613" title="Code">💻</a></td>
+    <td align="center"><a href="http://tiagomagalha.es"><img src="https://avatars1.githubusercontent.com/u/5302040?v=4" width="100px;" alt=""/><br /><sub><b>Tiago Magalhães</b></sub></a><br /><a href="https://github.com/sheikalthaf/ngu-carousel/commits?author=tiagomsmagalhaes" title="Documentation">📖</a></td>
   </tr>
 </table>
 
