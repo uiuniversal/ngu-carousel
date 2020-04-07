@@ -4,10 +4,6 @@ Angular Universal carousel
 
 `Note: This carousel doesn't include any css. go and customize css for buttons, items except ngucarousel and ngucarousel-inner`
 
-## changelog [![npm version](https://badge.fury.io/js/%40ngu%2Fcarousel.svg)](https://badge.fury.io/js/%40ngu%2Fcarousel)
-
-for ChangeLog go to [CHANGELOG.md](https://github.com/sheikalthaf/ngu-carousel/blob/master/CHANGELOG.md)
-
 ## Demo
 
 Demo available in Stackblitz [Here](https://stackblitz.com/edit/ngu-carousel-ng6)
@@ -232,17 +228,14 @@ export type Animate = 'lazy';
 
 ```html
 <ul class="ngucarouselPoint">
-    <li *ngFor="let i of pointNumbers; let i = index" [class.active]="i==pointers"></li>
+  <li *ngFor="let i of pointNumbers; let i = index" [class.active]="i==pointers"></li>
 </ul>
 ```
 
 This is HTML I'm using in the carousel. Add your own css according to this elements in `pointStyles`. check below guide for more details.
 
 ```html
-<ngu-carousel
-      [inputs]="carouselBanner"
-      (onMove)="onmoveFn($event)"
-      (carouselLoad)="loadItemsFn()">
+<ngu-carousel [inputs]="carouselBanner" (onMove)="onmoveFn($event)" (carouselLoad)="loadItemsFn()">
 </ngu-carousel>
 ```
 
