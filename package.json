@@ -1,6 +1,6 @@
 {
   "name": "ngu-carousel-example",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -9,7 +9,7 @@
     "lint": "ng lint",
     "format:check": "prettier --config ./.prettierrc --list-different \"{projects,src}/**/*{.ts,.js,.json,.html}\"",
     "format:all": "prettier --config ./.prettierrc --write \"{projects,src}/**/*{.ts,.js,.json,.html}\"",
-    "build:lib": "ng build @ngu/carousel",
+    "build:lib": "ng build @ngu/carousel --prod",
     "build:app": "ng build --prod",
     "run-lib": "npm run build:lib && ng serve -o",
     "e2e": "ng e2e"
