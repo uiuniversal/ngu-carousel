@@ -47,8 +47,8 @@ import { NguCarouselConfig, NguCarouselOutletContext, NguCarouselStore } from '.
   styleUrls: ['ngu-carousel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-// tslint:disable-next-line:component-class-suffix
 // @dynamic
+// tslint:disable-next-line:component-class-suffix
 export class NguCarousel<T> extends NguCarouselStore
   implements OnInit, AfterContentInit, AfterViewInit, OnDestroy, DoCheck {
   _dataSubscription: Subscription;
