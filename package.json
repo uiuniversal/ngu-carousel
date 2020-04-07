@@ -1,6 +1,11 @@
 {
   "name": "ngu-carousel-example",
   "version": "2.0.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sheikalthaf/ngu-carousel.git"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -53,5 +58,13 @@
     "ts-node": "8.3.0",
     "tslint": "6.1.1",
     "typescript": "3.6.4"
-  }
+  },
+  "keywords": [
+    "angular",
+    "carousel",
+    "universal",
+    "angular universal",
+    "universal carousel",
+    "ngu carousel"
+  ]
 }
