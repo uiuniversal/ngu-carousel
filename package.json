@@ -1,6 +1,11 @@
 {
   "name": "ngu-carousel-example",
-  "version": "2.0.0",
+  "version": "2.0.2",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sheikalthaf/ngu-carousel.git"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -9,7 +14,7 @@
     "lint": "ng lint",
     "format:check": "prettier --config ./.prettierrc --list-different \"{projects,src}/**/*{.ts,.js,.json,.html}\"",
     "format:all": "prettier --config ./.prettierrc --write \"{projects,src}/**/*{.ts,.js,.json,.html}\"",
-    "build:lib": "ng build @ngu/carousel",
+    "build:lib": "ng build @ngu/carousel --prod",
     "build:app": "ng build --prod",
     "run-lib": "npm run build:lib && ng serve -o",
     "e2e": "ng e2e"
@@ -53,5 +58,13 @@
     "ts-node": "8.3.0",
     "tslint": "6.1.1",
     "typescript": "3.6.4"
-  }
+  },
+  "keywords": [
+    "angular",
+    "carousel",
+    "universal",
+    "angular universal",
+    "universal carousel",
+    "ngu carousel"
+  ]
 }

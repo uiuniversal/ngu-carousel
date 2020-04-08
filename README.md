@@ -1,13 +1,18 @@
 # ngu-carousel
+
+[![npm downloads](https://img.shields.io/npm/dt/@ngu/carousel?label=npm%20downloads)](https://www.npmjs.com/package/@ngu/carousel)
+
 [![npm version](https://badge.fury.io/js/%40ngu%2Fcarousel.svg)](https://badge.fury.io/js/%40ngu%2Fcarousel)
+
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Angular Universal carousel
 
 `Note: This carousel doesn't include any css. go and customize css for buttons, items except ngucarousel and ngucarousel-inner`
-
 
 ## Demo
 
@@ -17,21 +22,19 @@ Demo available [Here](https://ngu-carousel.firebaseapp.com)
 
 ## Installation
 
-
-| Angular Version  | ngu-carousel Version |
-| ------------- | ------------- |
-| Angular >= 9  | `npm i --save @ngu/carousel@latest`  |
-| Angular < 9  | `npm i --save @ngu/carousel@1.5.5`  |
+| Angular Version | ngu-carousel Version                |
+| --------------- | ----------------------------------- |
+| Angular >= 9    | `npm i --save @ngu/carousel@latest` |
+| Angular < 9     | `npm i --save @ngu/carousel@1.5.5`  |
 
 ### Optional Dependencies
 
 #### hammer.js
 
-Now ngu-carousel supports touch with the help of hammerjs. 
+Now ngu-carousel supports touch with the help of hammerjs.
 You can import it in the `main.ts` file like this
 
 `npm install hammerjs --save`
-
 
 ## Usage
 
@@ -239,17 +242,14 @@ export type Animate = 'lazy';
 
 ```html
 <ul class="ngucarouselPoint">
-    <li *ngFor="let i of pointNumbers; let i = index" [class.active]="i==pointers"></li>
+  <li *ngFor="let i of pointNumbers; let i = index" [class.active]="i==pointers"></li>
 </ul>
 ```
 
 This is HTML I'm using in the carousel. Add your own css according to this elements in `pointStyles`. check below guide for more details.
 
 ```html
-<ngu-carousel
-      [inputs]="carouselBanner"
-      (onMove)="onmoveFn($event)"
-      (carouselLoad)="loadItemsFn()">
+<ngu-carousel [inputs]="carouselBanner" (onMove)="onmoveFn($event)" (carouselLoad)="loadItemsFn()">
 </ngu-carousel>
 ```
 
@@ -722,6 +722,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

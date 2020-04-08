@@ -39,6 +39,7 @@ import {
 } from './../ngu-carousel.directive';
 import { NguCarouselConfig, NguCarouselOutletContext, NguCarouselStore } from './ngu-carousel';
 
+// @dynamic
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'ngu-carousel',
@@ -46,6 +47,7 @@ import { NguCarouselConfig, NguCarouselOutletContext, NguCarouselStore } from '.
   styleUrls: ['ngu-carousel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+// @dynamic
 // tslint:disable-next-line:component-class-suffix
 export class NguCarousel<T> extends NguCarouselStore
   implements OnInit, AfterContentInit, AfterViewInit, OnDestroy, DoCheck {
@@ -408,8 +410,8 @@ export class NguCarousel<T> extends NguCarouselStore
     valt =
       this.type === 'responsive'
         ? (Math.abs(ev - this.dexVal) /
-            (this.vertical.enabled ? this.vertical.height : this.carouselWidth)) *
-          100
+          (this.vertical.enabled ? this.vertical.height : this.carouselWidth)) *
+        100
         : valt;
     this.dexVal = ev;
     this.touch.swipe = e;
@@ -463,10 +465,10 @@ export class NguCarousel<T> extends NguCarouselStore
         this.deviceWidth >= 1200
           ? 'lg'
           : this.deviceWidth >= 992
-          ? 'md'
-          : this.deviceWidth >= 768
-          ? 'sm'
-          : 'xs';
+            ? 'md'
+            : this.deviceWidth >= 768
+              ? 'sm'
+              : 'xs';
 
       this.items = this.inputs.grid[this.deviceType];
       this.itemWidth = this.carouselWidth / this.items;
@@ -584,9 +586,9 @@ export class NguCarousel<T> extends NguCarouselStore
       const itemWidthXS =
         this.inputs.type === 'mobile'
           ? `${this.styleid} .item {flex: 0 0 ${95 / +this.inputs.grid.xs}%; width: ${95 /
-              +this.inputs.grid.xs}%;}`
+          +this.inputs.grid.xs}%;}`
           : `${this.styleid} .item {flex: 0 0 ${100 / +this.inputs.grid.xs}%; width: ${100 /
-              +this.inputs.grid.xs}%;}`;
+          +this.inputs.grid.xs}%;}`;
 
       const itemWidthSM = `${this.styleid} > .item {flex: 0 0 ${100 /
         +this.inputs.grid.sm}%; width: ${100 / +this.inputs.grid.sm}%}`;
