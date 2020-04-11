@@ -1,6 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { HammerGestureConfig } from '@angular/platform-browser';
-import * as Hammer from 'hammerjs';
+
 import {
   AfterContentInit,
   AfterViewInit,
@@ -29,7 +28,7 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { fromEvent, interval, merge, Observable, of, Subject, Subscription, EMPTY } from 'rxjs';
+import { EMPTY, fromEvent, interval, merge, Observable, of, Subject, Subscription } from 'rxjs';
 import { mapTo, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import {
   NguCarouselDefDirective,
@@ -41,7 +40,6 @@ import { NguCarouselConfig, NguCarouselOutletContext, NguCarouselStore } from '.
 
 // @dynamic
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'ngu-carousel',
   templateUrl: 'ngu-carousel.component.html',
   styleUrls: ['ngu-carousel.component.scss'],
@@ -82,8 +80,6 @@ export class NguCarousel<T> extends NguCarouselStore
   }
   set dataSource(data: any) {
     if (data) {
-      // console.log(data, this.dataSource);
-      // this.isFirstss++;
       this._switchDataSource(data);
     }
   }
@@ -177,7 +173,6 @@ export class NguCarousel<T> extends NguCarouselStore
   ngDoCheck() {
     this.arrayChanges = this._dataDiffer.diff(this.dataSource);
     if (this.arrayChanges && this._defDirec) {
-      // console.log('Changes detected!');
       this._observeRenderChanges();
     }
   }
@@ -216,7 +211,6 @@ export class NguCarousel<T> extends NguCarouselStore
 
     this.arrayChanges.forEachOperation(
       (item: IterableChangeRecord<any>, adjustedPreviousIndex: number, currentIndex: number) => {
-        // const node = this._defDirec.find(items => item.item);
         const node = this._getNodeDef(data[currentIndex], currentIndex);
 
         if (item.previousIndex == null) {
@@ -236,7 +230,6 @@ export class NguCarousel<T> extends NguCarouselStore
     if (this.carousel) {
       this._storeCarouselData();
     }
-    // console.log(this.dataSource);
   }
 
   /**
@@ -258,7 +251,6 @@ export class NguCarousel<T> extends NguCarouselStore
   }
 
   private _getNodeDef(data: any, i: number): NguCarouselDefDirective<any> {
-    // console.log(this._defDirec);
     if (this._defDirec.length === 1) {
       return this._defDirec.first;
     }
@@ -274,8 +266,6 @@ export class NguCarousel<T> extends NguCarouselStore
     this._inputValidation();
 
     this.carouselCssNode = this._createStyleElem();
-
-    // this._buttonControl();
 
     if (isPlatformBrowser(this.platformId)) {
       this._carouselInterval();
@@ -318,7 +308,6 @@ export class NguCarousel<T> extends NguCarouselStore
   }
 
   ngOnDestroy() {
-    // clearInterval(this.carouselInt);
     this.carouselInt && this.carouselInt.unsubscribe();
     this._intervalController$.unsubscribe();
     this.carouselLoad.complete();
@@ -345,54 +334,56 @@ export class NguCarousel<T> extends NguCarouselStore
   /** Get Touch input */
   private _touch(): void {
     if (this.inputs.touch) {
-      const hammertime = new Hammer(this.touchContainer.nativeElement);
-      hammertime.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL });
+      import('hammerjs').then(() => {
+        const hammertime = new Hammer(this.touchContainer.nativeElement);
+        hammertime.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL });
 
-      hammertime.on('panstart', (ev: any) => {
-        this.carouselWidth = this.nguItemsContainer.nativeElement.offsetWidth;
-        this.touchTransform = this.transform[this.deviceType];
-        this.dexVal = 0;
-        this._setStyle(this.nguItemsContainer.nativeElement, 'transition', '');
-      });
-      if (this.vertical.enabled) {
-        hammertime.on('panup', (ev: any) => {
-          this._touchHandling('panleft', ev);
-        });
-        hammertime.on('pandown', (ev: any) => {
-          this._touchHandling('panright', ev);
-        });
-      } else {
-        hammertime.on('panleft', (ev: any) => {
-          this._touchHandling('panleft', ev);
-        });
-        hammertime.on('panright', (ev: any) => {
-          this._touchHandling('panright', ev);
-        });
-      }
-      hammertime.on('panend pancancel', (ev: any) => {
-        if (Math.abs(ev.velocity) >= this.velocity) {
-          this.touch.velocity = ev.velocity;
-          let direc = 0;
-          if (!this.RTL) {
-            direc = this.touch.swipe === 'panright' ? 0 : 1;
-          } else {
-            direc = this.touch.swipe === 'panright' ? 1 : 0;
-          }
-          this._carouselScrollOne(direc);
-        } else {
+        hammertime.on('panstart', (ev: any) => {
+          this.carouselWidth = this.nguItemsContainer.nativeElement.offsetWidth;
+          this.touchTransform = this.transform[this.deviceType];
           this.dexVal = 0;
-          this._setStyle(
-            this.nguItemsContainer.nativeElement,
-            'transition',
-            'transform 324ms cubic-bezier(0, 0, 0.2, 1)'
-          );
-          this._setStyle(this.nguItemsContainer.nativeElement, 'transform', '');
+          this._setStyle(this.nguItemsContainer.nativeElement, 'transition', '');
+        });
+        if (this.vertical.enabled) {
+          hammertime.on('panup', (ev: any) => {
+            this._touchHandling('panleft', ev);
+          });
+          hammertime.on('pandown', (ev: any) => {
+            this._touchHandling('panright', ev);
+          });
+        } else {
+          hammertime.on('panleft', (ev: any) => {
+            this._touchHandling('panleft', ev);
+          });
+          hammertime.on('panright', (ev: any) => {
+            this._touchHandling('panright', ev);
+          });
         }
-      });
-      hammertime.on('hammer.input', ev => {
-        // allow nested touch events to no propagate, this may have other side affects but works for now.
-        // TODO: It is probably better to check the source element of the event and only apply the handle to the correct carousel
-        ev.srcEvent.stopPropagation();
+        hammertime.on('panend pancancel', (ev: any) => {
+          if (Math.abs(ev.velocity) >= this.velocity) {
+            this.touch.velocity = ev.velocity;
+            let direc = 0;
+            if (!this.RTL) {
+              direc = this.touch.swipe === 'panright' ? 0 : 1;
+            } else {
+              direc = this.touch.swipe === 'panright' ? 1 : 0;
+            }
+            this._carouselScrollOne(direc);
+          } else {
+            this.dexVal = 0;
+            this._setStyle(
+              this.nguItemsContainer.nativeElement,
+              'transition',
+              'transform 324ms cubic-bezier(0, 0, 0.2, 1)'
+            );
+            this._setStyle(this.nguItemsContainer.nativeElement, 'transform', '');
+          }
+        });
+        hammertime.on('hammer.input', ev => {
+          // allow nested touch events to no propagate, this may have other side affects but works for now.
+          // TODO: It is probably better to check the source element of the event and only apply the handle to the correct carousel
+          ev.srcEvent.stopPropagation();
+        });
       });
     }
   }
@@ -494,8 +485,6 @@ export class NguCarousel<T> extends NguCarouselStore
 
   /** Init carousel point */
   private _carouselPoint(): void {
-    // debugger;
-    // if (this.userData.point.visible === true) {
     const Nos = this.dataSource.length - (this.items - this.slideItems);
     this.pointIndex = Math.ceil(Nos / this.slideItems);
     const pointers = [];
@@ -506,7 +495,7 @@ export class NguCarousel<T> extends NguCarouselStore
       }
     }
     this.pointNumbers = pointers;
-    // console.log(this.pointNumbers);
+
     this._carouselPointActiver();
     if (this.pointIndex <= 1) {
       this._btnBoolean(1, 1);
@@ -517,14 +506,12 @@ export class NguCarousel<T> extends NguCarouselStore
         this._btnBoolean(0, 0);
       }
     }
-    // }
   }
 
   /** change the active point in carousel */
   private _carouselPointActiver(): void {
     const i = Math.ceil(this.currentSlide / this.slideItems);
     this.activePoint = i;
-    // console.log(this.data);
     this.cdr.markForCheck();
   }
 
@@ -632,7 +619,6 @@ export class NguCarousel<T> extends NguCarouselStore
     if (this.pointIndex === 1) {
       return;
     } else if (Btn === 0 && ((!this.loop && !this.isFirst) || this.loop)) {
-      const slide = this.slideItems * this.pointIndex;
 
       const currentSlideD = this.currentSlide - this.slideItems;
       const MoveSlide = currentSlideD + this.slideItems;
@@ -676,8 +662,6 @@ export class NguCarousel<T> extends NguCarouselStore
       }
       this._carouselScrollTwo(Btn, currentSlide, itemSpeed);
     }
-
-    // cubic-bezier(0.15, 1.04, 0.54, 1.13)
   }
 
   /** logic to scroll the carousel step 2 */
@@ -708,7 +692,7 @@ export class NguCarousel<T> extends NguCarouselStore
     } else {
       this._setStyle(this.nguItemsContainer.nativeElement, 'transition', ``);
     }
-    // console.log(this.dataSource);
+
     this.itemLength = this.dataSource.length;
     this._transformStyle(currentSlide);
     this.currentSlide = currentSlide;
@@ -716,9 +700,6 @@ export class NguCarousel<T> extends NguCarouselStore
     this._carouselPointActiver();
     this._carouselLoadTrigger();
     this.withAnim = true;
-    // if (currentSlide === 12) {
-    //   this._switchDataSource(this.dataSource);
-    // }
   }
 
   /** boolean function for making isFirst and isLast */

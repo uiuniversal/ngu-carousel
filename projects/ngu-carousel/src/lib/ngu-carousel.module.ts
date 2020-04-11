@@ -1,20 +1,19 @@
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import {
-  NguCarouselPointDirective,
+  HammerModule,
+  HAMMER_GESTURE_CONFIG
+} from '@angular/platform-browser';
+import {
+  NguCarouselDefDirective,
   NguCarouselItemDirective,
   NguCarouselNextDirective,
-  NguCarouselPrevDirective,
-  NguCarouselDefDirective,
-  NguCarouselOutlet
+  NguCarouselOutlet,
+  NguCarouselPointDirective,
+  NguCarouselPrevDirective
 } from './ngu-carousel.directive';
-import { NguItemComponent } from './ngu-item/ngu-item.component';
-import {
-  HammerGestureConfig,
-  HAMMER_GESTURE_CONFIG,
-  HammerModule
-} from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { NguCarousel } from './ngu-carousel/ngu-carousel.component';
+import { NguItemComponent } from './ngu-item/ngu-item.component';
 import { NguTileComponent } from './ngu-tile/ngu-tile.component';
 
 @NgModule({
