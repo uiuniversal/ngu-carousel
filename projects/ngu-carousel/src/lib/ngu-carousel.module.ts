@@ -17,7 +17,7 @@ import { NguItemComponent } from './ngu-item/ngu-item.component';
 import { NguTileComponent } from './ngu-tile/ngu-tile.component';
 
 @NgModule({
-  imports: [CommonModule, HammerModule],
+  imports: [CommonModule],
   exports: [
     NguCarousel,
     NguItemComponent,
@@ -41,4 +41,4 @@ import { NguTileComponent } from './ngu-tile/ngu-tile.component';
     NguCarouselOutlet
   ]
 })
-export class NguCarouselModule {}
+export class NguCarouselModule { }
