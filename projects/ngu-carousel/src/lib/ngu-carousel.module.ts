@@ -1,10 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
-  HammerModule,
-  HAMMER_GESTURE_CONFIG
-} from '@angular/platform-browser';
-import {
   NguCarouselDefDirective,
   NguCarouselItemDirective,
   NguCarouselNextDirective,
