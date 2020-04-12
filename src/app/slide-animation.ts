@@ -1,6 +1,6 @@
 import {
-  AnimationTriggerMetadata,
   animate,
+  AnimationTriggerMetadata,
   state,
   style,
   transition,
