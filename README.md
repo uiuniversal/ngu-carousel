@@ -32,9 +32,16 @@ Demo available [Here](https://ngu-carousel.firebaseapp.com)
 #### hammer.js
 
 Now ngu-carousel supports touch with the help of hammerjs.
-You can import it in the `main.ts` file like this
+You can install and import it in the `main.ts` file like this
 
-`npm install hammerjs --save`
+```
+npm install hammerjs --save
+```
+
+```typescript
+// main.ts
+import 'hammerjs';
+```
 
 ## Usage
 
