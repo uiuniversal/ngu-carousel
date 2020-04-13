@@ -4,7 +4,7 @@
 name: Node.js CI
 
 on:
-  push:
+  pull_request:
     branches: [master]
 
 jobs:
@@ -29,12 +29,5 @@ jobs:
         run: |
           npm run build:lib
           npm run build:app
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         env:
           CI: true

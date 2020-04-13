@@ -1,10 +1,10 @@
 {
   "name": "ngu-carousel-example",
-  "version": "2.0.3",
+  "version": "0.0.0-semantically-released",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sheikalthaf/ngu-carousel.git"
+    "url": "https://github.com/uiuniversal/ngu-carousel.git"
   },
   "scripts": {
     "ng": "ng",
@@ -17,7 +17,8 @@
     "build:lib": "ng build @ngu/carousel --prod",
     "build:app": "ng build --prod",
     "run-lib": "npm run build:lib && ng serve -o",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "semantic-release": "semantic-release"
   },
   "private": true,
   "dependencies": {
@@ -55,6 +56,7 @@
     "ng-packagr": "9.1.0",
     "prettier": "1.19.1",
     "protractor": "5.4.2",
+    "semantic-release": "^17.0.4",
     "ts-node": "8.8.2",
     "tslint": "6.1.1",
     "typescript": "3.8.3"

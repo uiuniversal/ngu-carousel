@@ -1,6 +1,6 @@
 {
   "name": "@ngu/carousel",
-  "version": "2.0.3",
+  "version": "0.0.0-semantically-released",
   "peerDependencies": {
     "@angular/common": "^9.0.5",
     "@angular/core": "^9.0.5"
@@ -8,7 +8,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sheikalthaf/ngu-carousel.git"
+    "url": "https://github.com/uiuniversal/ngu-carousel.git"
   },
   "keywords": [
     "angular",
