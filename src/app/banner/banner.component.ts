@@ -1,23 +1,20 @@
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnInit
+  Component, OnInit, AfterViewInit,
+  ChangeDetectionStrategy, ChangeDetectorRef
 } from '@angular/core';
 import { NguCarouselConfig } from '@ngu/carousel';
 import { interval, Observable } from 'rxjs';
 import { map, startWith, take } from 'rxjs/operators';
-import { slider } from './slide-animation';
+import { slider } from '../slide-animation';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  selector: 'app-banner',
+  templateUrl: './banner.component.html',
+  styleUrls: ['./banner.component.scss'],
   animations: [slider],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class BannerComponent implements OnInit, AfterViewInit {
   imgags = ['assets/bg.jpg', 'assets/car.png', 'assets/canberra.jpg', 'assets/holi.jpg'];
   public carouselTileItems: Array<any> = [0, 1, 2, 3, 4, 5];
   public carouselTiles = {
@@ -41,6 +38,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     },
     load: 2,
     velocity: 0,
+    custom: 'banner',
     loop: true,
     touch: true,
     animation: 'lazy',
@@ -115,4 +113,5 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     return array;
   }
+
 }

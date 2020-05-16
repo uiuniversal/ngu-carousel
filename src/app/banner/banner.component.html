@@ -1,12 +1,8 @@
-<nav>
-  <h1>Ngu-Carosuel</h1>
-</nav>
-
 <h2>Banner</h2>
 
 <ngu-carousel #myCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItems$ | async">
   <ngu-tile *nguCarouselDef="let item; index as i; let ani = animate" [@slider]="ani">
-    <div class="tile" [style.background]="'url(' + item + ')'">
+    <div class="banner" [style.background]="'url(' + item + ')'">
       <h1>{{ i + 1 }}</h1>
     </div>
   </ngu-tile>
@@ -26,5 +22,3 @@
 <!-- </ng-container> -->
 
 {{ (carouselTileItems$ | async)?.length }}
-
-<router-outlet></router-outlet>
