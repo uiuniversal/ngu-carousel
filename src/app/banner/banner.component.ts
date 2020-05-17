@@ -1,5 +1,5 @@
 import {
-  ChangeDetectionStrategy, OnInit
+  ChangeDetectionStrategy, Component, OnInit
 } from '@angular/core';
 import { NguCarouselConfig } from '@ngu/carousel';
 import { interval, Observable } from 'rxjs';

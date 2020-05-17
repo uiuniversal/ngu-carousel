@@ -16,7 +16,7 @@
     "format:all": "prettier --config ./.prettierrc --write \"{projects,src}/**/*{.ts,.js,.json,.html}\"",
     "build:lib": "ng build @ngu/carousel --prod",
     "build:app": "ng build --prod",
-    "deploy:app": "ng build @ngu/carousel && npm run buil --prod",
+    "deploy:app": "ng build @ngu/carousel && npm run build --prod",
     "run-lib": "npm run build:lib && ng serve -o",
     "e2e": "ng e2e"
   },
