@@ -1,3 +1,4 @@
+<h2>Banner</h2>
 <ngu-carousel [inputs]="carouselBanner" [dataSource]="carouselTileItems$ | async" (onMove)="onmoveFn($event)">
 
   <ngu-item *nguCarouselDef="let item; index as i; let ani = animate" [@slider]="ani">
