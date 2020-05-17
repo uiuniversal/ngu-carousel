@@ -10,6 +10,10 @@ const routes: Routes = [
   {
     path: 'tile',
     loadChildren: () => import('./tile/tile.module').then(m => m.TileModule)
+  },
+  {
+    path: 'banner-vertical',
+    loadChildren: () => import('./banner-vertical/banner-vertical.module').then(m => m.BannerVerticalModule)
   }];
 
 @NgModule({
