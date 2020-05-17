@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { NguCarouselModule } from '@ngu/carousel';
 
 import { BannerVerticalRoutingModule } from './banner-vertical-routing.module';
