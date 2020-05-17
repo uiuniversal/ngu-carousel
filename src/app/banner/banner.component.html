@@ -1,24 +1,11 @@
-<h2>Banner</h2>
+<ngu-carousel [inputs]="carouselBanner" [dataSource]="carouselTileItems$ | async" (onMove)="onmoveFn($event)">
 
-<ngu-carousel #myCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItems$ | async">
-  <ngu-tile *nguCarouselDef="let item; index as i; let ani = animate" [@slider]="ani">
-    <div class="banner" [style.background]="'url(' + item + ')'">
+  <ngu-item *nguCarouselDef="let item; index as i; let ani = animate" [@slider]="ani">
+    <div class="bannerStyle" [style.background]="'url(' + item + ')'">
       <h1>{{ i + 1 }}</h1>
     </div>
-  </ngu-tile>
+  </ngu-item>
 
-  <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst ? 0.5 : 1">
-    &lt;
-  </button>
-  <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast ? 0.5 : 1">
-    &gt;
-  </button>
-
-  <ul class="myPoint" NguCarouselPoint>
-    <li *ngFor="let i of myCarousel.pointNumbers" [class.active]="i == myCarousel.activePoint"
-      (click)="myCarousel.moveTo(i)"></li>
-  </ul>
+  <button NguCarouselPrev class='leftRs'>&lt;</button>
+  <button NguCarouselNext class='rightRs'>&gt;</button>
 </ngu-carousel>
-<!-- </ng-container> -->
-
-{{ (carouselTileItems$ | async)?.length }}
