@@ -1,0 +1,12 @@
+<h2>Banner</h2>
+<ngu-carousel [inputs]="carouselBanner" [dataSource]="carouselTileItems$ | async" (onMove)="onmoveFn($event)">
+
+  <ngu-item *nguCarouselDef="let item; index as i; let ani = animate" [@slider]="ani">
+    <div class="bannerStyle" [style.background]="'url(' + item + ')'">
+      <h1>{{ i + 1 }}</h1>
+    </div>
+  </ngu-item>
+
+  <button NguCarouselPrev class='leftRs'>&lt;</button>
+  <button NguCarouselNext class='rightRs'>&gt;</button>
+</ngu-carousel>

@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnInit
@@ -8,16 +7,14 @@ import {
 import { NguCarouselConfig } from '@ngu/carousel';
 import { interval, Observable } from 'rxjs';
 import { map, startWith, take } from 'rxjs/operators';
-import { slider } from './slide-animation';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  animations: [slider],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-tile',
+  templateUrl: './tile.component.html',
+  styleUrls: ['./tile.component.scss']
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class TileComponent implements OnInit, AfterViewInit {
+
   images = ['assets/bg.jpg', 'assets/car.png', 'assets/canberra.jpg', 'assets/holi.jpg'];
 
   public carouselTileItems$: Observable<number[]>;
@@ -55,5 +52,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.cdr.detectChanges();
   }
+
 
 }
