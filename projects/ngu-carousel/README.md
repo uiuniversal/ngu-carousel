@@ -25,8 +25,6 @@ export class AppModule {}
 
 Now ngu-carousel supports touch with the help of hammerjs
 
-`npm install hammerjs --save`
-
 Import hammerjs in `main.ts` file
 
 ```javascript
