@@ -5,7 +5,9 @@
 [![npm version](https://badge.fury.io/js/%40ngu%2Fcarousel.svg)](https://badge.fury.io/js/%40ngu%2Fcarousel)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Angular Universal carousel
@@ -16,7 +18,7 @@ Angular Universal carousel
 
 Demo available in Stackblitz [Here](https://stackblitz.com/edit/ngu-carousel-ng6)
 
-Demo available [Here](https://ngu-carousel.firebaseapp.com)
+Demo available [Here](https://ngu-carousel.netlify.app)
 
 ## Installation
 
@@ -273,58 +275,55 @@ import { NguCarousel, NguCarouselStore } from '@ngu/carousel';
 @Component({
   selector: 'app-carousel',
   template: `
-    <ngu-carousel
-      [inputs]="carouselBanner"
-      (onMove)="onmoveFn($event)">
+    <ngu-carousel [inputs]="carouselBanner" (onMove)="onmoveFn($event)">
+      <ngu-item NguCarouselItem class="bannerStyle">
+        <h1>1</h1>
+      </ngu-item>
 
-          <ngu-item NguCarouselItem class="bannerStyle">
-              <h1>1</h1>
-          </ngu-item>
+      <ngu-item NguCarouselItem class="bannerStyle">
+        <h1>2</h1>
+      </ngu-item>
 
-          <ngu-item NguCarouselItem class="bannerStyle">
-              <h1>2</h1>
-          </ngu-item>
+      <ngu-item NguCarouselItem class="bannerStyle">
+        <h1>3</h1>
+      </ngu-item>
 
-          <ngu-item NguCarouselItem class="bannerStyle">
-              <h1>3</h1>
-          </ngu-item>
-
-          <button NguCarouselPrev class='leftRs'>&lt;</button>
-          <button NguCarouselNext class='rightRs'>&gt;</button>
+      <button NguCarouselPrev class="leftRs">&lt;</button>
+      <button NguCarouselNext class="rightRs">&gt;</button>
     </ngu-carousel>
   `,
   styles: [
     `
-    .bannerStyle h1 {
+      .bannerStyle h1 {
         background-color: #ccc;
         min-height: 300px;
         text-align: center;
         line-height: 300px;
-    }
-    .leftRs {
+      }
+      .leftRs {
         position: absolute;
         margin: auto;
         top: 0;
         bottom: 0;
         width: 50px;
         height: 50px;
-        box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, .3);
+        box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, 0.3);
         border-radius: 999px;
         left: 0;
-    }
+      }
 
-    .rightRs {
+      .rightRs {
         position: absolute;
         margin: auto;
         top: 0;
         bottom: 0;
         width: 50px;
         height: 50px;
-        box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, .3);
+        box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, 0.3);
         border-radius: 999px;
         right: 0;
-    }
-  `
+      }
+    `
   ]
 })
 export class Sample implements OnInit {
@@ -728,6 +727,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
