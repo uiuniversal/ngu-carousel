@@ -2,8 +2,8 @@
   "name": "@ngu/carousel",
   "version": "2.1.0",
   "peerDependencies": {
-    "@angular/common": "^9.0.5",
-    "@angular/core": "^9.0.5"
+    "@angular/common": "^9.0.5 || ^10.0.0",
+    "@angular/core": "^9.0.5 || ^10.0.0"
   },
   "license": "MIT",
   "repository": {
