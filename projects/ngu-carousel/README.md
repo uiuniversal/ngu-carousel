@@ -10,6 +10,14 @@ Demo available [Here](https://ngu-carousel.netlify.app/)
 
 ## Installation
 
+| Angular Version | ngu-carousel Version                |
+| --------------- | ----------------------------------- |
+| Angular >= 10   | `npm i --save @ngu/carousel@latest` |
+| Angular = 9     | `npm i --save @ngu/carousel@2.1.0`  |
+| Angular < 9     | `npm i --save @ngu/carousel@1.5.5`  |
+
+## Installation
+
 `npm install @ngu/carousel --save`
 
 Include CarouselModule in your app module:
