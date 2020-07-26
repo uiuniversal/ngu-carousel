@@ -735,7 +735,7 @@ export class NguCarousel<T> extends NguCarouselStore
       this.transform.all = this.inputs.grid.all * slide;
       slideCss = `${this.styleid} { transform: translate3d(${this.directionSym}${this.transform.all}px, 0, 0);`;
     }
-    this.carouselCssNode.innerHTML = slideCss;
+    this.carouselCssNode.textContent = slideCss;
   }
 
   /** this will trigger the carousel to load the items */
