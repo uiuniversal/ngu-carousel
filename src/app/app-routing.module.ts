@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { GettingStartedComponent } from './getting-started/getting-started.component';
 
 
 const routes: Routes = [
@@ -14,6 +15,10 @@ const routes: Routes = [
   {
     path: 'banner-vertical',
     loadChildren: () => import('./banner-vertical/banner-vertical.module').then(m => m.BannerVerticalModule)
+  },
+  {
+    path: 'getting-started',
+    component: GettingStartedComponent
   },
   {
     path: '',

@@ -6,9 +6,7 @@ Angular Universal carousel
 
 ## Demo
 
-Demo available in Stackblitz [Here](https://stackblitz.com/edit/ngu-carousel-ng6)
-
-Demo available [Here](https://ngu-carousel.firebaseapp.com)
+Demo available [Here](https://ngu-carousel.netlify.app/)
 
 ## Installation
 
@@ -26,8 +24,6 @@ export class AppModule {}
 ```
 
 Now ngu-carousel supports touch with the help of hammerjs
-
-`npm install hammerjs --save`
 
 Import hammerjs in `main.ts` file
 
@@ -254,58 +250,55 @@ import { NguCarousel, NguCarouselStore } from '@ngu/carousel';
 @Component({
   selector: 'app-carousel',
   template: `
-    <ngu-carousel
-      [inputs]="carouselBanner"
-      (onMove)="onmoveFn($event)">
+    <ngu-carousel [inputs]="carouselBanner" (onMove)="onmoveFn($event)">
+      <ngu-item NguCarouselItem class="bannerStyle">
+        <h1>1</h1>
+      </ngu-item>
 
-          <ngu-item NguCarouselItem class="bannerStyle">
-              <h1>1</h1>
-          </ngu-item>
+      <ngu-item NguCarouselItem class="bannerStyle">
+        <h1>2</h1>
+      </ngu-item>
 
-          <ngu-item NguCarouselItem class="bannerStyle">
-              <h1>2</h1>
-          </ngu-item>
+      <ngu-item NguCarouselItem class="bannerStyle">
+        <h1>3</h1>
+      </ngu-item>
 
-          <ngu-item NguCarouselItem class="bannerStyle">
-              <h1>3</h1>
-          </ngu-item>
-
-          <button NguCarouselPrev class='leftRs'>&lt;</button>
-          <button NguCarouselNext class='rightRs'>&gt;</button>
+      <button NguCarouselPrev class="leftRs">&lt;</button>
+      <button NguCarouselNext class="rightRs">&gt;</button>
     </ngu-carousel>
   `,
   styles: [
     `
-    .bannerStyle h1 {
+      .bannerStyle h1 {
         background-color: #ccc;
         min-height: 300px;
         text-align: center;
         line-height: 300px;
-    }
-    .leftRs {
+      }
+      .leftRs {
         position: absolute;
         margin: auto;
         top: 0;
         bottom: 0;
         width: 50px;
         height: 50px;
-        box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, .3);
+        box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, 0.3);
         border-radius: 999px;
         left: 0;
-    }
+      }
 
-    .rightRs {
+      .rightRs {
         position: absolute;
         margin: auto;
         top: 0;
         bottom: 0;
         width: 50px;
         height: 50px;
-        box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, .3);
+        box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, 0.3);
         border-radius: 999px;
         right: 0;
-    }
-  `
+      }
+    `
   ]
 })
 export class Sample implements OnInit {
@@ -343,84 +336,81 @@ import { NguCarousel, NguCarouselConfig } from '@ngu/carousel';
 @Component({
   selector: 'app-carousel',
   template: `
-    <ngu-carousel
-      [inputs]="carouselBanner"
-      (onMove)="onmoveFn($event)">
+    <ngu-carousel [inputs]="carouselBanner" (onMove)="onmoveFn($event)">
+      <ngu-item NguCarouselItem class="bannerStyle">
+        <h1>1</h1>
+      </ngu-item>
 
-          <ngu-item NguCarouselItem class="bannerStyle">
-              <h1>1</h1>
-          </ngu-item>
+      <ngu-item NguCarouselItem class="bannerStyle">
+        <h1>2</h1>
+      </ngu-item>
 
-          <ngu-item NguCarouselItem class="bannerStyle">
-              <h1>2</h1>
-          </ngu-item>
+      <ngu-item NguCarouselItem class="bannerStyle">
+        <h1>3</h1>
+      </ngu-item>
 
-          <ngu-item NguCarouselItem class="bannerStyle">
-              <h1>3</h1>
-          </ngu-item>
-
-          <button NguCarouselPrev class='leftRs'>&lt;</button>
-          <button NguCarouselNext class='rightRs'>&gt;</button>
+      <button NguCarouselPrev class="leftRs">&lt;</button>
+      <button NguCarouselNext class="rightRs">&gt;</button>
     </ngu-carousel>
   `,
   styles: [
     `
-    .bannerStyle h1 {
+      .bannerStyle h1 {
         background-color: #ccc;
         min-height: 300px;
         text-align: center;
         line-height: 300px;
-    }
-    .leftRs {
+      }
+      .leftRs {
         position: absolute;
         margin: auto;
         top: 0;
         bottom: 0;
         width: 50px;
         height: 50px;
-        box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, .3);
+        box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, 0.3);
         border-radius: 999px;
         left: 0;
-    }
+      }
 
-    .rightRs {
+      .rightRs {
         position: absolute;
         margin: auto;
         top: 0;
         bottom: 0;
         width: 50px;
         height: 50px;
-        box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, .3);
+        box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, 0.3);
         border-radius: 999px;
         right: 0;
-    }
+      }
 
-    .ngucarouselPoint {
-      list-style-type: none;
-      text-align: center;
-      padding: 12px;
-      margin: 0;
-      white-space: nowrap;
-      overflow: auto;
-      position: absolute;
-      width: 100%;
-      bottom: 20px;
-      left: 0;
-      box-sizing: border-box;
-    }
-    .ngucarouselPoint li {
-      display: inline-block;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.55);
-      padding: 5px;
-      margin: 0 3px;
-      transition: .4s ease all;
-    }
-    .ngucarouselPoint li.active {
+      .ngucarouselPoint {
+        list-style-type: none;
+        text-align: center;
+        padding: 12px;
+        margin: 0;
+        white-space: nowrap;
+        overflow: auto;
+        position: absolute;
+        width: 100%;
+        bottom: 20px;
+        left: 0;
+        box-sizing: border-box;
+      }
+      .ngucarouselPoint li {
+        display: inline-block;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.55);
+        padding: 5px;
+        margin: 0 3px;
+        transition: 0.4s ease all;
+      }
+      .ngucarouselPoint li.active {
         background: white;
         width: 10px;
-    }
-  `
+      }
+    `
   ]
 })
 export class Sample implements OnInit {
@@ -436,7 +426,7 @@ export class Sample implements OnInit {
       load: 2,
       loop: true,
       touch: true, // touch is not currently in active for vertical carousel, will enable it in future build
-      vertical {
+      vertical: {
         enabled: true,
         height: 400
       }
