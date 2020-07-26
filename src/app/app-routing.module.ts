@@ -22,7 +22,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'getting-started',
+    redirectTo: 'tile',
     pathMatch: 'full'
   }
 ];
