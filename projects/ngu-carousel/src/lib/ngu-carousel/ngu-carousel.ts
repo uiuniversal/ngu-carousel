@@ -31,7 +31,7 @@ export class NguCarouselStore {
     public velocity = 1
   ) {}
 }
-export type DeviceType = 'xs' | 'sm' | 'md' | 'lg' | 'all';
+export type DeviceType = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'all';
 
 export type ButtonVisible = 'disabled' | 'hide';
 
@@ -58,11 +58,25 @@ export class Touch {
 }
 
 export class Transfrom {
+  public xl?:number = 0;
   constructor(public xs = 0, public sm = 0, public md = 0, public lg = 0, public all = 0) {}
+}
+
+
+/**
+ * Default values
+ * {sm: 768, md: 992, lg: 1200, xl: 1200}
+ * 
+ * Bootstrap values:
+ * {sm: 576, md: 768, lg: 992, xl: 1200}
+ */
+export class Breakpoints {
+  constructor(public sm = 768, public md = 992, public lg = 1200, public xl = 1200) {}
 }
 
 export class NguCarouselConfig {
   grid: Transfrom;
+  gridBreakpoints?: Breakpoints;
   slide?: number;
   speed?: number;
   interval?: CarouselInterval;
