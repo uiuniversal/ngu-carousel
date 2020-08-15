@@ -58,7 +58,7 @@ export class Touch {
 }
 
 export class Transfrom {
-  public xl?:number = 0;
+  public xl? = 0;
   constructor(public xs = 0, public sm = 0, public md = 0, public lg = 0, public all = 0) {}
 }
 
@@ -66,7 +66,7 @@ export class Transfrom {
 /**
  * Default values
  * {sm: 768, md: 992, lg: 1200, xl: 1200}
- * 
+ *
  * Bootstrap values:
  * {sm: 576, md: 768, lg: 992, xl: 1200}
  */

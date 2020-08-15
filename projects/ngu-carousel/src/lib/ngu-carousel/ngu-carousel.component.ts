@@ -36,7 +36,7 @@ import {
   NguCarouselOutlet,
   NguCarouselPrevDirective
 } from './../ngu-carousel.directive';
-import { NguCarouselConfig, NguCarouselOutletContext, NguCarouselStore, Breakpoints } from './ngu-carousel';
+import { Breakpoints, NguCarouselConfig, NguCarouselOutletContext, NguCarouselStore } from './ngu-carousel';
 
 // @dynamic
 @Component({
@@ -452,7 +452,7 @@ export class NguCarousel<T> extends NguCarouselStore
 
   /** store data based on width of the screen for the carousel */
   private _storeCarouselData(): void {
-    let breakpoints = this.inputs.gridBreakpoints;
+    const breakpoints = this.inputs.gridBreakpoints;
     this.deviceWidth = isPlatformBrowser(this.platformId) ? window.innerWidth : breakpoints.xl;
 
     this.carouselWidth = this.carouselMain1.nativeElement.offsetWidth;
@@ -562,9 +562,7 @@ export class NguCarousel<T> extends NguCarouselStore
       dism += `${this.styleid} > .item {transition: transform .6s ease;}`;
     }
 
-    let breakpoints = this.inputs.gridBreakpoints;
-    
-    console.log("breakpoints", breakpoints)
+    const breakpoints = this.inputs.gridBreakpoints;
 
     let itemStyle = '';
     if (this.vertical.enabled) {
@@ -745,7 +743,7 @@ export class NguCarousel<T> extends NguCarouselStore
   private _transformStyle(slide: number): void {
     let slideCss = '';
     if (this.type === 'responsive') {
-      let breakpoints = this.inputs.gridBreakpoints;
+      const breakpoints = this.inputs.gridBreakpoints;
       slideCss = `@media (max-width: ${breakpoints.sm - 1}px) {${this._transformString('xs', slide)}}
       @media (min-width: ${breakpoints.sm}px) {${this._transformString('sm', slide)} }
       @media (min-width: ${breakpoints.md}px) {${this._transformString('md', slide)} }
