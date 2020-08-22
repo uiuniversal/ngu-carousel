@@ -94,6 +94,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "rat-matheson",
+      "name": "rat-matheson",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/61026434?v=4",
+      "profile": "https://github.com/rat-matheson",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
