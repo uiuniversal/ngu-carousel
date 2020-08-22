@@ -174,7 +174,7 @@ export class NguCarouselStore {
   RTL: boolean;
   vertical: Vertical;
 }
-export type DeviceType = 'xs' | 'sm' | 'md' | 'lg' | 'all';
+export type DeviceType = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'all';
 
 export class ItemsControl {
   start: number;
@@ -194,6 +194,7 @@ export class Touch {
 
 export class NguCarouselConfig {
   grid: Transfrom;
+  gridBreakpoints?: Breakpoints;
   slide?: number;
   speed?: number;
   interval?: CarouselInterval;
@@ -216,6 +217,7 @@ export class Grid {
   sm: number;
   md: number;
   lg: number;
+  xl: number;
   all: number;
 }
 
@@ -230,7 +232,8 @@ export type Animate = 'lazy';
 
 | Command                   | Type          | Required | Description                                                                                                                                                                                                                   |
 | ------------------------- | ------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `grid`                    | Object        | Yes      | **xs** - mobile, **sm** - tablet, **md** - desktop, **lg** - large desktops, **all** - fixed width (When you use **all** make others 0 and vise versa)                                                                        |
+| `grid`                    | Object        | Yes      | **xs** - mobile, **sm** - tablet, **md** - desktop, **lg** - large desktops, **xl** - extra large desktops, **all** - fixed width (When you use **all** make others 0 and vise versa)                                                                         |
+| `gridBreakpoints`                    | Object        | optional      | Determines the browser width in pixels that the grid displays the intended number of tiles.<br/><br/> default: `{sm: 768, md: 992, lg: 1200, xl: 1200}`                                                                        |
 | `slide`                   | number        | optional | It is used to slide the number items on click                                                                                                                                                                                 |
 | `speed`                   | milli seconds | optional | It is used for time taken to slide the number items                                                                                                                                                                           |
 | `interval`                | milli seconds | optional | It is used to make carousel auto slide with given value. interval defines the interval between slides                                                                                                                         |
@@ -330,7 +333,7 @@ import { NguCarousel, NguCarouselStore } from '@ngu/carousel';
 export class Sample implements OnInit {
   ngOnInit() {
     this.carouselBanner = {
-      grid: { xs: 1, sm: 1, md: 1, lg: 1, all: 0 },
+      grid: { xs: 1, sm: 1, md: 1, lg: 1, xl:1, all: 0 },
       slide: 1,
       speed: 400,
       interval: {
@@ -445,7 +448,7 @@ import { NguCarousel, NguCarouselConfig } from '@ngu/carousel';
 export class Sample implements OnInit {
   ngOnInit() {
     this.carouselBanner = {
-      grid: { xs: 1, sm: 1, md: 1, lg: 1, all: 0 },
+      grid: { xs: 1, sm: 1, md: 1, lg: 1, xl:1, all: 0 },
       slide: 1,
       speed: 400,
       interval: 4000,
@@ -537,7 +540,7 @@ export class Sample implements OnInit {
     this.carouselTileItems = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 
     this.carouselTile = {
-      grid: {xs: 2, sm: 3, md: 3, lg: 5, all: 0},
+      grid: {xs: 2, sm: 3, md: 3, lg: 5, xl:5, all: 0},
       slide: 2,
       speed: 400,
       animation: 'lazy',
@@ -643,7 +646,7 @@ export class Sample implements OnInit {
     this.carouselTileItems = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 
     this.carouselTile = {
-      grid: {xs: 2, sm: 3, md: 3, lg: 5, all: 0},
+      grid: {xs: 2, sm: 3, md: 3, lg: 5, xl:5, all: 0},
       slide: 2,
       speed: 400,
       animation: 'lazy',

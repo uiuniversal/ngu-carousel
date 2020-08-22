@@ -36,7 +36,7 @@ import {
   NguCarouselOutlet,
   NguCarouselPrevDirective
 } from './../ngu-carousel.directive';
-import { NguCarouselConfig, NguCarouselOutletContext, NguCarouselStore } from './ngu-carousel';
+import { Breakpoints, NguCarouselConfig, NguCarouselOutletContext, NguCarouselStore } from './ngu-carousel';
 
 // @dynamic
 @Component({
@@ -286,6 +286,11 @@ export class NguCarousel<T> extends NguCarouselStore
   }
 
   private _inputValidation() {
+    this.inputs.gridBreakpoints = this.inputs.gridBreakpoints ? this.inputs.gridBreakpoints : new Breakpoints();
+    if (this.inputs.grid.xl === undefined) {
+      this.inputs.grid.xl = this.inputs.grid.lg;
+    }
+
     this.type = this.inputs.grid.all !== 0 ? 'fixed' : 'responsive';
     this.loop = this.inputs.loop || false;
     this.inputs.easing = this.inputs.easing || 'cubic-bezier(0, 0, 0.2, 1)';
@@ -447,19 +452,22 @@ export class NguCarousel<T> extends NguCarouselStore
 
   /** store data based on width of the screen for the carousel */
   private _storeCarouselData(): void {
-    this.deviceWidth = isPlatformBrowser(this.platformId) ? window.innerWidth : 1200;
+    const breakpoints = this.inputs.gridBreakpoints;
+    this.deviceWidth = isPlatformBrowser(this.platformId) ? window.innerWidth : breakpoints.xl;
 
     this.carouselWidth = this.carouselMain1.nativeElement.offsetWidth;
 
     if (this.type === 'responsive') {
       this.deviceType =
-        this.deviceWidth >= 1200
-          ? 'lg'
-          : this.deviceWidth >= 992
-            ? 'md'
-            : this.deviceWidth >= 768
-              ? 'sm'
-              : 'xs';
+        this.deviceWidth >= breakpoints.xl
+          ? 'xl'
+          : this.deviceWidth >= breakpoints.lg
+            ? 'lg'
+            : this.deviceWidth >= breakpoints.md
+              ? 'md'
+              : this.deviceWidth >= breakpoints.sm
+                ? 'sm'
+                : 'xs';
 
       this.items = this.inputs.grid[this.deviceType];
       this.itemWidth = this.carouselWidth / this.items;
@@ -554,6 +562,8 @@ export class NguCarousel<T> extends NguCarouselStore
       dism += `${this.styleid} > .item {transition: transform .6s ease;}`;
     }
 
+    const breakpoints = this.inputs.gridBreakpoints;
+
     let itemStyle = '';
     if (this.vertical.enabled) {
       const itemWidthXS = `${this.styleid} > .item {height: ${this.vertical.height /
@@ -564,11 +574,14 @@ export class NguCarousel<T> extends NguCarouselStore
         +this.inputs.grid.md}px}`;
       const itemWidthLG = `${this.styleid} > .item {height: ${this.vertical.height /
         +this.inputs.grid.lg}px}`;
+      const itemWidthXL = `${this.styleid} > .item {height: ${this.vertical.height /
+          +this.inputs.grid.xl}px}`;
 
-      itemStyle = `@media (max-width:767px){${itemWidthXS}}
-                    @media (min-width:768px){${itemWidthSM}}
-                    @media (min-width:992px){${itemWidthMD}}
-                    @media (min-width:1200px){${itemWidthLG}}`;
+      itemStyle = `@media (max-width:${breakpoints.sm - 1}px){${itemWidthXS}}
+                    @media (max-width:${breakpoints.sm}px){${itemWidthSM}}
+                    @media (min-width:${breakpoints.md}px){${itemWidthMD}}
+                    @media (min-width:${breakpoints.lg}px){${itemWidthLG}}
+                    @media (min-width:${breakpoints.xl}px){${itemWidthXL}}`;
     } else if (this.type === 'responsive') {
       const itemWidthXS =
         this.inputs.type === 'mobile'
@@ -583,11 +596,14 @@ export class NguCarousel<T> extends NguCarouselStore
         +this.inputs.grid.md}%; width: ${100 / +this.inputs.grid.md}%}`;
       const itemWidthLG = `${this.styleid} > .item {flex: 0 0 ${100 /
         +this.inputs.grid.lg}%; width: ${100 / +this.inputs.grid.lg}%}`;
+      const itemWidthXL = `${this.styleid} > .item {flex: 0 0 ${100 /
+        +this.inputs.grid.xl}%; width: ${100 / +this.inputs.grid.xl}%}`;
 
-      itemStyle = `@media (max-width:767px){${itemWidthXS}}
-                    @media (min-width:768px){${itemWidthSM}}
-                    @media (min-width:992px){${itemWidthMD}}
-                    @media (min-width:1200px){${itemWidthLG}}`;
+      itemStyle = `@media (max-width:${breakpoints.sm-1}px){${itemWidthXS}}
+                    @media (min-width:${breakpoints.sm}px){${itemWidthSM}}
+                    @media (min-width:${breakpoints.md}px){${itemWidthMD}}
+                    @media (min-width:${breakpoints.lg}px){${itemWidthLG}}
+                    @media (min-width:${breakpoints.xl}px){${itemWidthXL}}`;
     } else {
       itemStyle = `${this.styleid} .item {flex: 0 0 ${this.inputs.grid.all}px; width: ${this.inputs.grid.all}px;}`;
     }
@@ -727,10 +743,12 @@ export class NguCarousel<T> extends NguCarouselStore
   private _transformStyle(slide: number): void {
     let slideCss = '';
     if (this.type === 'responsive') {
-      slideCss = `@media (max-width: 767px) {${this._transformString('xs', slide)}}
-      @media (min-width: 768px) {${this._transformString('sm', slide)} }
-      @media (min-width: 992px) {${this._transformString('md', slide)} }
-      @media (min-width: 1200px) {${this._transformString('lg', slide)} }`;
+      const breakpoints = this.inputs.gridBreakpoints;
+      slideCss = `@media (max-width: ${breakpoints.sm - 1}px) {${this._transformString('xs', slide)}}
+      @media (min-width: ${breakpoints.sm}px) {${this._transformString('sm', slide)} }
+      @media (min-width: ${breakpoints.md}px) {${this._transformString('md', slide)} }
+      @media (min-width: ${breakpoints.lg}px) {${this._transformString('lg', slide)} }
+      @media (min-width: ${breakpoints.xl}px) {${this._transformString('xl', slide)} }`;
     } else {
       this.transform.all = this.inputs.grid.all * slide;
       slideCss = `${this.styleid} { transform: translate3d(${this.directionSym}${this.transform.all}px, 0, 0);`;
