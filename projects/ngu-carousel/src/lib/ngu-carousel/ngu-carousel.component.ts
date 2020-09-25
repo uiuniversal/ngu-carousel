@@ -61,8 +61,9 @@ export class NguCarousel<T> extends NguCarouselStore
   isHovered = false;
   private inputs: NguCarouselConfig;
   // tslint:disable-next-line:no-input-rename
-  @Input('inputs') public set publicInputs(inputs: NguCarouselConfig) {
-    this.inputs = inputs; 
+  @Input('inputs')
+  set publicInputs(inputs: NguCarouselConfig) {
+    this.inputs = inputs;
   }
   private carouselLoad = new EventEmitter();
   // tslint:disable-next-line:no-input-rename
