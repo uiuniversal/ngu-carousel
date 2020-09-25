@@ -64,7 +64,7 @@ export class NguCarousel<T> extends NguCarouselStore
   @Input('inputs') public set publicInputs(inputs: NguCarouselConfig) {
     this.inputs = inputs; 
   }
-  private crouselLoad = new EventEmitter();
+  private carouselLoad = new EventEmitter();
   // tslint:disable-next-line:no-input-rename
   @Output('carouselLoad') 
   get publicCarouselLoad(): EventEmitter {
