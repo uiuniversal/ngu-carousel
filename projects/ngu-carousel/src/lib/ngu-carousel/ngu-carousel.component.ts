@@ -59,13 +59,11 @@ export class NguCarousel<T> extends NguCarouselStore
   private withAnim = true;
   activePoint: number;
   isHovered = false;
-  @Input()
-  inputs: NguCarouselConfig;
-  @Output()
-  carouselLoad = new EventEmitter<any>();
+  @Input() inputs: NguCarouselConfig;
+  @Output() carouselLoad = new EventEmitter();
   // tslint:disable-next-line:no-output-on-prefix
-  @Output()
-  onMove = new EventEmitter<NguCarousel<T>>();
+  // tslint:disable-next-line:no-output-on-prefix
+  @Output() onMove = new EventEmitter<NguCarousel<T>>();
     
   // isFirstss = 0;
   arrayChanges: IterableChanges<{}>;
