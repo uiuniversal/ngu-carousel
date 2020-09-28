@@ -59,26 +59,13 @@ export class NguCarousel<T> extends NguCarouselStore
   private withAnim = true;
   activePoint: number;
   isHovered = false;
-  private inputs: NguCarouselConfig;
-  // tslint:disable-next-line:no-input-rename
-  @Input('inputs')
-  set publicInputs(inputs: NguCarouselConfig) {
-    this.inputs = inputs;
-  }
-  private carouselLoad = new EventEmitter<any>();
-  // tslint:disable-next-line:no-input-rename
-  @Output('carouselLoad')
-  get publicCarouselLoad(): EventEmitter<any> {
-    return this.carouselLoad;
-  }
-
-  private onMove = new EventEmitter<NguCarousel<T>>();
-  // tslint:disable-next-line:no-output-on-prefix
-  // tslint:disable-next-line:no-input-rename
-  @Output('onMove')
-  get publicOnMove(): EventEmitter<NguCarousel<T>> {
-    return this.onMove;
-  }
+  @Input()
+  inputs: NguCarouselConfig;
+  @Output()
+  carouselLoad = new EventEmitter<any>();
+  @Output()
+  onMove = new EventEmitter<NguCarousel<T>>();
+    
   // isFirstss = 0;
   arrayChanges: IterableChanges<{}>;
   carouselInt: Subscription;
