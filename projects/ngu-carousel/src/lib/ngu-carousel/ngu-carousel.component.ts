@@ -62,7 +62,6 @@ export class NguCarousel<T> extends NguCarouselStore
   @Input() inputs: NguCarouselConfig;
   @Output() carouselLoad = new EventEmitter();
   // tslint:disable-next-line:no-output-on-prefix
-  // tslint:disable-next-line:no-output-on-prefix
   @Output() onMove = new EventEmitter<NguCarousel<T>>();
   // isFirstss = 0;
   arrayChanges: IterableChanges<{}>;
