@@ -164,7 +164,7 @@ export class NguCarousel<T> extends NguCarouselStore
 
   ngOnInit() {
     this._dataDiffer = this._differs.find([]).create((_i: number, item: any) => {
-      return this.trackBy ? this.trackBy(item.dataIndex, item.data) : item;
+      return this.trackBy ? this.trackBy(_i, item) : item;
     });
   }
 
