@@ -1,0 +1,23 @@
+<p>sample works!</p>
+<ngu-carousel #myCarousel [inputs]="carouselTile" [dataSource]="carouselTileItems">
+  <ngu-tile *nguCarouselDef="let item; let i = index">
+
+    <ngu-carousel #myCarousel [inputs]="carouselTile" (carouselLoad)="carouselTileLoad(i)"
+      [dataSource]="carouselTiles[i]">
+      <ngu-tile *nguCarouselDef="let item; let j = index">
+        <div class="tile" [style.background]="'url(' + item + ')'" style="min-height: 200px">
+          <h1>{{j}}</h1>
+        </div>
+      </ngu-tile>
+      <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst ? 0.5:1">&lt;</button>
+      <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast ? 0.5:1">&gt;</button>
+      <ul class="myPoint" NguCarouselPoint>
+        <li *ngFor="let carousel of myCarousel.pointNumbers; let j = index" [class.active]="j==myCarousel.activePoint"
+          (click)="myCarousel.moveTo(j)" [style.background]="'url(' + carouselTileItems[j] + ')'"></li>
+      </ul>
+    </ngu-carousel>
+
+  </ngu-tile>
+  <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst ? 0.5:1">&lt;</button>
+  <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast ? 0.5:1">&gt;</button>
+</ngu-carousel>

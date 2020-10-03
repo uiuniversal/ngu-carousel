@@ -20,7 +20,7 @@ import { slider } from './slide-animation';
 export class AppComponent implements OnInit, AfterViewInit {
   images = ['assets/bg.jpg', 'assets/car.png', 'assets/canberra.jpg', 'assets/holi.jpg'];
 
-  public carouselTileItems$: Observable<number[]>;
+  public carouselTileItems$: Observable<(string | number)[]>;
   public carouselTileConfig: NguCarouselConfig = {
     grid: { xs: 1, sm: 1, md: 1, lg: 5, all: 0 },
     speed: 250,
@@ -32,13 +32,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     interval: { timing: 1500 },
     animation: 'lazy'
   };
-  tempData: any[];
+  tempData: (string | number)[] = [];
 
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.tempData = [];
-
     this.carouselTileItems$ = interval(500).pipe(
       startWith(-1),
       take(30),

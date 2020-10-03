@@ -37,8 +37,8 @@ export class BannerVerticalComponent implements OnInit {
       height: 400
     }
   };
-  tempData: any[];
-  public carouselTileItems$: Observable<number[]>;
+  tempData: (string | number)[];
+  public carouselTileItems$: Observable<(string | number)[]>;
   ngOnInit() {
     this.tempData = [];
 

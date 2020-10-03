@@ -24,7 +24,8 @@ const routes: Routes = [
     path: '',
     redirectTo: 'tile',
     pathMatch: 'full'
-  }
+  },
+  { path: 'sample', loadChildren: () => import('./sample/sample.module').then(m => m.SampleModule) }
 ];
 
 @NgModule({
