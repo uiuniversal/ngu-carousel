@@ -1,15 +1,16 @@
 <h2>Tile</h2>
 
 <ngu-carousel #myCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItems$ | async">
+  <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst ? 0.5 : 1">
+    &lt;
+  </button>
+
   <ngu-tile *nguCarouselDef="let item; index as i; let ani = animate" [@slider]="ani">
     <div class="tile" [style.background]="'url(' + item + ')'">
       <h1>{{ i + 1 }}</h1>
     </div>
   </ngu-tile>
 
-  <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst ? 0.5 : 1">
-    &lt;
-  </button>
   <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast ? 0.5 : 1">
     &gt;
   </button>
