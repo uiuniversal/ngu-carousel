@@ -57,11 +57,30 @@ export class Touch {
   velocity: number;
 }
 
-export class Transfrom {
+// Interface is declared to prevent property-minification
+// See: https://github.com/uiuniversal/ngu-carousel/issues/322
+declare interface TransformInterface {
+  xs: number;
+  sm: number;
+  md: number;
+  lg: number;
+  xl?: number;
+  all: number;
+}
+
+export class Transfrom implements TransformInterface {
   public xl? = 0;
   constructor(public xs = 0, public sm = 0, public md = 0, public lg = 0, public all = 0) {}
 }
 
+// Interface is declared to prevent property-minification
+// See: https://github.com/uiuniversal/ngu-carousel/issues/322
+declare interface BreakpointsInterface {
+  sm: number;
+  md: number;
+  lg: number;
+  xl: number;
+}
 
 /**
  * Default values
@@ -70,7 +89,7 @@ export class Transfrom {
  * Bootstrap values:
  * {sm: 576, md: 768, lg: 992, xl: 1200}
  */
-export class Breakpoints {
+export class Breakpoints implements BreakpointsInterface {
   constructor(public sm = 768, public md = 992, public lg = 1200, public xl = 1200) {}
 }
 
