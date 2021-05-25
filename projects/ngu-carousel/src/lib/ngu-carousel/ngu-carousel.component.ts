@@ -196,7 +196,7 @@ export class NguCarousel<T> extends NguCarouselStore
         .pipe(takeUntil(this._intervalController$))
         .subscribe(data => {
           this.renderNodeChanges(data);
-          this.isLast = false;
+          this.isLast = this.pointIndex === this.currentSlide;
         });
     }
   }
