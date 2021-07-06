@@ -45,7 +45,7 @@
     "@angular/language-service": "10.0.5",
     "@types/hammerjs": "2.0.36",
     "@types/jasmine": "3.5.10",
-    "@types/jasminewd2": "2.0.8",
+    "@types/jasminewd2": "2.0.10",
     "@types/node": "12.12.39",
     "codelyzer": "5.2.2",
     "jasmine-core": "3.5.0",
