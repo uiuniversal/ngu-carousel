@@ -627,7 +627,8 @@ export class NguCarousel<T> extends NguCarouselStore
     let itemSpeed = this.speed;
     let translateXval = 0;
     let currentSlide = 0;
-    const touchMove = Math.ceil(this.dexVal / this.itemWidth);
+    let touchMove = Math.ceil(this.dexVal / this.itemWidth)
+    touchMove = isFinite(touchMove) ? touchMove : 0
     this._setStyle(this.nguItemsContainer.nativeElement, 'transform', '');
 
     if (this.pointIndex === 1) {
