@@ -484,7 +484,7 @@ export class NguCarousel<T> extends NguCarouselStore
   /** Used to reset the carousel */
   public reset(withOutAnimation?: boolean): void {
     withOutAnimation && (this.withAnim = false);
-    this.carouselCssNode.innerHTML = '';
+    this.carouselCssNode.textContent = '';
     this.moveTo(0);
     this._carouselPoint();
   }
