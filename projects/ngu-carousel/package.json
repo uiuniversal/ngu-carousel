@@ -1,12 +1,12 @@
 {
   "name": "@ngu/carousel",
-  "version": "3.0.2",
+  "version": "4.0.0",
   "peerDependencies": {
-    "@angular/common": "^10.0.4",
-    "@angular/core": "^10.0.4"
+    "@angular/common": "^12.2.0",
+    "@angular/core": "^12.2.0"
   },
   "dependencies": {
-    "tslib": "^2.0.0"
+    "tslib": "^2.3.0"
   },
   "license": "MIT",
   "repository": {
