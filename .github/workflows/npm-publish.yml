@@ -23,9 +23,6 @@ jobs:
     publish-npm:
         needs: build
         runs-on: ubuntu-latest
-        defaults:
-            run:
-                working-directory: ./src
         steps:
             - uses: actions/checkout@v2
             - uses: actions/setup-node@v2
@@ -34,8 +31,10 @@ jobs:
                   registry-url: https://registry.npmjs.org/
                   scope: '@ngu'
             - run: npm install
-            - run: npm run build
-            - run: npm publish
+            - run: npm run build:lib
+            - name: Run Publish
+              working-directory: ./dist/ngu/carousel
+              run: npm publish --access=public
               env:
                   NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
