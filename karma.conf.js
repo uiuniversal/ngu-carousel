@@ -15,7 +15,7 @@ module.exports = function (config) {
     client: {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
-    coverageIstanbulReporter: {
+    jcoverageIstanbulReporter: {
       dir: require('path').join(__dirname, './coverage/ngu-carousel-example'),
       reports: ['html', 'lcovonly', 'text-summary'],
       fixWebpackSourcePaths: true
