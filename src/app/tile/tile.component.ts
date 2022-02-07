@@ -1,8 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { NguCarouselConfig } from '@ngu/carousel';
 import { interval, Observable } from 'rxjs';
 import { map, startWith, take } from 'rxjs/operators';
@@ -15,8 +11,7 @@ import { slider } from '../slide-animation';
   animations: [slider],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TileComponent implements OnInit {
-
+export class TileComponent {
   images = ['assets/bg.jpg', 'assets/car.png', 'assets/canberra.jpg', 'assets/holi.jpg'];
 
   public carouselTileItems$: Observable<number[]>;
@@ -33,9 +28,7 @@ export class TileComponent implements OnInit {
   };
   tempData: any[];
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor() {
     this.tempData = [];
 
     this.carouselTileItems$ = interval(500).pipe(
@@ -50,5 +43,4 @@ export class TileComponent implements OnInit {
       })
     );
   }
-
 }

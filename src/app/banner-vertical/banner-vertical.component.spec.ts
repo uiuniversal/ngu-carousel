@@ -8,9 +8,8 @@ describe('BannerVerticalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BannerVerticalComponent ]
-    })
-    .compileComponents();
+      declarations: [BannerVerticalComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

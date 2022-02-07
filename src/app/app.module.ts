@@ -31,4 +31,4 @@ import { MainNavComponent } from './main-nav/main-nav.component';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

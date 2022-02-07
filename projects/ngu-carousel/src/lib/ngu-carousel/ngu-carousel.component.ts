@@ -36,7 +36,12 @@ import {
   NguCarouselOutlet,
   NguCarouselPrevDirective
 } from './../ngu-carousel.directive';
-import { Breakpoints, NguCarouselConfig, NguCarouselOutletContext, NguCarouselStore } from './ngu-carousel';
+import {
+  Breakpoints,
+  NguCarouselConfig,
+  NguCarouselOutletContext,
+  NguCarouselStore
+} from './ngu-carousel';
 
 // @dynamic
 @Component({
@@ -46,9 +51,11 @@ import { Breakpoints, NguCarouselConfig, NguCarouselOutletContext, NguCarouselSt
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 // @dynamic
-// tslint:disable-next-line:component-class-suffix
-export class NguCarousel<T> extends NguCarouselStore
-  implements OnInit, AfterContentInit, AfterViewInit, OnDestroy, DoCheck {
+// eslint-disable-next-line @angular-eslint/component-class-suffix
+export class NguCarousel<T>
+  extends NguCarouselStore
+  implements OnInit, AfterContentInit, AfterViewInit, OnDestroy, DoCheck
+{
   _dataSubscription: Subscription;
   _dataSource: any;
   _dataDiffer: IterableDiffer<{}>;
@@ -61,7 +68,7 @@ export class NguCarousel<T> extends NguCarouselStore
   isHovered = false;
   @Input() inputs: NguCarouselConfig;
   @Output() carouselLoad = new EventEmitter();
-  // tslint:disable-next-line:no-output-on-prefix
+  // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   @Output() onMove = new EventEmitter<NguCarousel<T>>();
   // isFirstss = 0;
   arrayChanges: IterableChanges<{}>;
@@ -95,7 +102,7 @@ export class NguCarousel<T> extends NguCarouselStore
    */
   @ContentChild(NguCarouselNextDirective, /* TODO: add static flag */ { read: ElementRef })
   set nextBtn(btn: ElementRef) {
-    this.listener2 && this.listener2();
+    this.listener2?.();
     if (btn) {
       this.listener2 = this._renderer.listen(btn.nativeElement, 'click', () =>
         this._carouselScrollOne(1)
@@ -108,7 +115,7 @@ export class NguCarousel<T> extends NguCarouselStore
    */
   @ContentChild(NguCarouselPrevDirective, /* TODO: add static flag */ { read: ElementRef })
   set prevBtn(btn: ElementRef) {
-    this.listener1 && this.listener1();
+    this.listener1?.();
     if (btn) {
       this.listener1 = this._renderer.listen(btn.nativeElement, 'click', () =>
         this._carouselScrollOne(0)
@@ -284,7 +291,9 @@ export class NguCarousel<T> extends NguCarouselStore
   }
 
   private _inputValidation() {
-    this.inputs.gridBreakpoints = this.inputs.gridBreakpoints ? this.inputs.gridBreakpoints : new Breakpoints();
+    this.inputs.gridBreakpoints = this.inputs.gridBreakpoints
+      ? this.inputs.gridBreakpoints
+      : new Breakpoints();
     if (this.inputs.grid.xl === undefined) {
       this.inputs.grid.xl = this.inputs.grid.lg;
     }
@@ -404,8 +413,8 @@ export class NguCarousel<T> extends NguCarouselStore
     valt =
       this.type === 'responsive'
         ? (Math.abs(ev - this.dexVal) /
-          (this.vertical.enabled ? this.vertical.height : this.carouselWidth)) *
-        100
+            (this.vertical.enabled ? this.vertical.height : this.carouselWidth)) *
+          100
         : valt;
     this.dexVal = ev;
     this.touch.swipe = e;
@@ -460,12 +469,12 @@ export class NguCarousel<T> extends NguCarouselStore
         this.deviceWidth >= breakpoints.xl
           ? 'xl'
           : this.deviceWidth >= breakpoints.lg
-            ? 'lg'
-            : this.deviceWidth >= breakpoints.md
-              ? 'md'
-              : this.deviceWidth >= breakpoints.sm
-                ? 'sm'
-                : 'xs';
+          ? 'lg'
+          : this.deviceWidth >= breakpoints.md
+          ? 'md'
+          : this.deviceWidth >= breakpoints.sm
+          ? 'sm'
+          : 'xs';
 
       this.items = this.inputs.grid[this.deviceType];
       this.itemWidth = this.carouselWidth / this.items;
@@ -564,16 +573,21 @@ export class NguCarousel<T> extends NguCarouselStore
 
     let itemStyle = '';
     if (this.vertical.enabled) {
-      const itemWidthXS = `${this.styleid} > .item {height: ${this.vertical.height /
-        +this.inputs.grid.xs}px}`;
-      const itemWidthSM = `${this.styleid} > .item {height: ${this.vertical.height /
-        +this.inputs.grid.sm}px}`;
-      const itemWidthMD = `${this.styleid} > .item {height: ${this.vertical.height /
-        +this.inputs.grid.md}px}`;
-      const itemWidthLG = `${this.styleid} > .item {height: ${this.vertical.height /
-        +this.inputs.grid.lg}px}`;
-      const itemWidthXL = `${this.styleid} > .item {height: ${this.vertical.height /
-          +this.inputs.grid.xl}px}`;
+      const itemWidthXS = `${this.styleid} > .item {height: ${
+        this.vertical.height / +this.inputs.grid.xs
+      }px}`;
+      const itemWidthSM = `${this.styleid} > .item {height: ${
+        this.vertical.height / +this.inputs.grid.sm
+      }px}`;
+      const itemWidthMD = `${this.styleid} > .item {height: ${
+        this.vertical.height / +this.inputs.grid.md
+      }px}`;
+      const itemWidthLG = `${this.styleid} > .item {height: ${
+        this.vertical.height / +this.inputs.grid.lg
+      }px}`;
+      const itemWidthXL = `${this.styleid} > .item {height: ${
+        this.vertical.height / +this.inputs.grid.xl
+      }px}`;
 
       itemStyle = `@media (max-width:${breakpoints.sm - 1}px){${itemWidthXS}}
                     @media (max-width:${breakpoints.sm}px){${itemWidthSM}}
@@ -583,21 +597,27 @@ export class NguCarousel<T> extends NguCarouselStore
     } else if (this.type === 'responsive') {
       const itemWidthXS =
         this.inputs.type === 'mobile'
-          ? `${this.styleid} .item {flex: 0 0 ${95 / +this.inputs.grid.xs}%; width: ${95 /
-          +this.inputs.grid.xs}%;}`
-          : `${this.styleid} .item {flex: 0 0 ${100 / +this.inputs.grid.xs}%; width: ${100 /
-          +this.inputs.grid.xs}%;}`;
+          ? `${this.styleid} .item {flex: 0 0 ${95 / +this.inputs.grid.xs}%; width: ${
+              95 / +this.inputs.grid.xs
+            }%;}`
+          : `${this.styleid} .item {flex: 0 0 ${100 / +this.inputs.grid.xs}%; width: ${
+              100 / +this.inputs.grid.xs
+            }%;}`;
 
-      const itemWidthSM = `${this.styleid} > .item {flex: 0 0 ${100 /
-        +this.inputs.grid.sm}%; width: ${100 / +this.inputs.grid.sm}%}`;
-      const itemWidthMD = `${this.styleid} > .item {flex: 0 0 ${100 /
-        +this.inputs.grid.md}%; width: ${100 / +this.inputs.grid.md}%}`;
-      const itemWidthLG = `${this.styleid} > .item {flex: 0 0 ${100 /
-        +this.inputs.grid.lg}%; width: ${100 / +this.inputs.grid.lg}%}`;
-      const itemWidthXL = `${this.styleid} > .item {flex: 0 0 ${100 /
-        +this.inputs.grid.xl}%; width: ${100 / +this.inputs.grid.xl}%}`;
+      const itemWidthSM = `${this.styleid} > .item {flex: 0 0 ${
+        100 / +this.inputs.grid.sm
+      }%; width: ${100 / +this.inputs.grid.sm}%}`;
+      const itemWidthMD = `${this.styleid} > .item {flex: 0 0 ${
+        100 / +this.inputs.grid.md
+      }%; width: ${100 / +this.inputs.grid.md}%}`;
+      const itemWidthLG = `${this.styleid} > .item {flex: 0 0 ${
+        100 / +this.inputs.grid.lg
+      }%; width: ${100 / +this.inputs.grid.lg}%}`;
+      const itemWidthXL = `${this.styleid} > .item {flex: 0 0 ${
+        100 / +this.inputs.grid.xl
+      }%; width: ${100 / +this.inputs.grid.xl}%}`;
 
-      itemStyle = `@media (max-width:${breakpoints.sm-1}px){${itemWidthXS}}
+      itemStyle = `@media (max-width:${breakpoints.sm - 1}px){${itemWidthXS}}
                     @media (min-width:${breakpoints.sm}px){${itemWidthSM}}
                     @media (min-width:${breakpoints.md}px){${itemWidthMD}}
                     @media (min-width:${breakpoints.lg}px){${itemWidthLG}}
@@ -627,14 +647,13 @@ export class NguCarousel<T> extends NguCarouselStore
     let itemSpeed = this.speed;
     let translateXval = 0;
     let currentSlide = 0;
-    let touchMove = Math.ceil(this.dexVal / this.itemWidth)
-    touchMove = isFinite(touchMove) ? touchMove : 0
+    let touchMove = Math.ceil(this.dexVal / this.itemWidth);
+    touchMove = isFinite(touchMove) ? touchMove : 0;
     this._setStyle(this.nguItemsContainer.nativeElement, 'transform', '');
 
     if (this.pointIndex === 1) {
       return;
     } else if (Btn === 0 && ((!this.loop && !this.isFirst) || this.loop)) {
-
       const currentSlideD = this.currentSlide - this.slideItems;
       const MoveSlide = currentSlideD + this.slideItems;
       this._btnBoolean(0, 1);
@@ -743,7 +762,10 @@ export class NguCarousel<T> extends NguCarouselStore
     let slideCss = '';
     if (this.type === 'responsive') {
       const breakpoints = this.inputs.gridBreakpoints;
-      slideCss = `@media (max-width: ${breakpoints.sm - 1}px) {${this._transformString('xs', slide)}}
+      slideCss = `@media (max-width: ${breakpoints.sm - 1}px) {${this._transformString(
+        'xs',
+        slide
+      )}}
       @media (min-width: ${breakpoints.sm}px) {${this._transformString('sm', slide)} }
       @media (min-width: ${breakpoints.md}px) {${this._transformString('md', slide)} }
       @media (min-width: ${breakpoints.lg}px) {${this._transformString('lg', slide)} }

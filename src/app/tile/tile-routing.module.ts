@@ -9,4 +9,4 @@ const routes: Routes = [{ path: '', component: TileComponent }];
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class TileRoutingModule { }
+export class TileRoutingModule {}

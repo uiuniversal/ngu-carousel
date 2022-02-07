@@ -1,6 +1,4 @@
-import {
-  ChangeDetectionStrategy, Component, OnInit
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { NguCarouselConfig } from '@ngu/carousel';
 import { interval, Observable } from 'rxjs';
 import { map, startWith, take } from 'rxjs/operators';
@@ -13,8 +11,7 @@ import { slider } from '../slide-animation';
   animations: [slider],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BannerComponent implements OnInit {
-
+export class BannerComponent {
   images = ['assets/bg.jpg', 'assets/car.png', 'assets/canberra.jpg', 'assets/holi.jpg'];
   carouselBanner: NguCarouselConfig = {
     grid: { xs: 1, sm: 1, md: 1, lg: 1, all: 0 },
@@ -37,8 +34,10 @@ export class BannerComponent implements OnInit {
     }
   };
   tempData: any[];
+
   public carouselTileItems$: Observable<number[]>;
-  ngOnInit() {
+
+  constructor() {
     this.tempData = [];
 
     this.carouselTileItems$ = interval(500).pipe(
@@ -59,4 +58,7 @@ export class BannerComponent implements OnInit {
     console.log(data);
   }
 
+  trackCarousel(_, item) {
+    return item;
+  }
 }

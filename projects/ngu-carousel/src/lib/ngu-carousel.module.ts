@@ -37,4 +37,4 @@ import { NguTileComponent } from './ngu-tile/ngu-tile.component';
     NguCarouselOutlet
   ]
 })
-export class NguCarouselModule { }
+export class NguCarouselModule {}

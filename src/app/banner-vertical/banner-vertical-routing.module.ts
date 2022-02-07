@@ -9,4 +9,4 @@ const routes: Routes = [{ path: '', component: BannerVerticalComponent }];
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class BannerVerticalRoutingModule { }
+export class BannerVerticalRoutingModule {}

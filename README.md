@@ -5,7 +5,9 @@
 [![npm version](https://badge.fury.io/js/%40ngu%2Fcarousel.svg)](https://badge.fury.io/js/%40ngu%2Fcarousel)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Angular Universal carousel
@@ -231,8 +233,8 @@ export type Animate = 'lazy';
 
 | Command                   | Type          | Required | Description                                                                                                                                                                                                                   |
 | ------------------------- | ------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `grid`                    | Object        | Yes      | **xs** - mobile, **sm** - tablet, **md** - desktop, **lg** - large desktops, **xl** - extra large desktops, **all** - fixed width (When you use **all** make others 0 and vise versa)                                                                         |
-| `gridBreakpoints`                    | Object        | optional      | Determines the browser width in pixels that the grid displays the intended number of tiles.<br/><br/> default: `{sm: 768, md: 992, lg: 1200, xl: 1200}`                                                                        |
+| `grid`                    | Object        | Yes      | **xs** - mobile, **sm** - tablet, **md** - desktop, **lg** - large desktops, **xl** - extra large desktops, **all** - fixed width (When you use **all** make others 0 and vise versa)                                         |
+| `gridBreakpoints`         | Object        | optional | Determines the browser width in pixels that the grid displays the intended number of tiles.<br/><br/> default: `{sm: 768, md: 992, lg: 1200, xl: 1200}`                                                                       |
 | `slide`                   | number        | optional | It is used to slide the number items on click                                                                                                                                                                                 |
 | `speed`                   | milli seconds | optional | It is used for time taken to slide the number items                                                                                                                                                                           |
 | `interval`                | milli seconds | optional | It is used to make carousel auto slide with given value. interval defines the interval between slides                                                                                                                         |
@@ -241,7 +243,7 @@ export type Animate = 'lazy';
 | `point.hideOnSingleSlide` | boolean       | optional | It is used to hide the point indicator when slide is less than one.                                                                                                                                                           |
 | `touch`                   | boolean       | optional | It is used to active touch support to the carousel.                                                                                                                                                                           |
 | `easing`                  | string        | optional | It is used to define the easing style of the carousel. Only define the ease name without any timing like `ease`,`ease-in`                                                                                                     |
-| `loop`                    | boolean       | optional | It is used to loop the `ngu-item | ngu-tile`. It must be true for `interval`                                                                                                                                                  |
+| `loop`                    | boolean       | optional | It is used to loop the `ngu-item ngu-tile`. It must be true for `interval`                                                                                                                                                    |
 | `animation`               | string        | optional | It is used to animate the sliding items. currently it only supports `lazy`. more coming soon and also with custom css animation option                                                                                        |
 | `custom`                  | string        | optional | It is you to define the purpose of the carousel. currently it only supports `banner`. more coming soon and also with custom css animation option                                                                              |
 | `RTL`                     | boolean       | optional | This option enable the `rtl` direction and act as rtl. By default it is `ltr`                                                                                                                                                 |
@@ -278,7 +280,7 @@ import { NguCarousel, NguCarouselStore } from '@ngu/carousel';
 @Component({
   selector: 'app-carousel',
   template: `
-    <ngu-carousel [inputs]="carouselBanner" (onMove)="onmoveFn($event)">
+    <ngu-carousel [inputs]="carouselBanner" (onMove)="onmoveFn($event)" [trackBy]="trackCarousel">
       <ngu-item NguCarouselItem class="bannerStyle">
         <h1>1</h1>
       </ngu-item>
@@ -332,7 +334,7 @@ import { NguCarousel, NguCarouselStore } from '@ngu/carousel';
 export class Sample implements OnInit {
   ngOnInit() {
     this.carouselBanner = {
-      grid: { xs: 1, sm: 1, md: 1, lg: 1, xl:1, all: 0 },
+      grid: { xs: 1, sm: 1, md: 1, lg: 1, xl: 1, all: 0 },
       slide: 1,
       speed: 400,
       interval: {
@@ -351,6 +353,10 @@ export class Sample implements OnInit {
   /* It will be triggered on every slide*/
   onmoveFn(data: NguCarouselStore) {
     console.log(data);
+  }
+
+  trackCarousel(_, item) {
+    return item;
   }
 }
 ```
@@ -731,6 +737,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
