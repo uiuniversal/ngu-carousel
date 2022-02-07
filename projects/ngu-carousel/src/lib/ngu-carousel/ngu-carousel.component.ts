@@ -51,7 +51,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 // @dynamic
-// tslint:disable-next-line:component-class-suffix
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export class NguCarousel<T>
   extends NguCarouselStore
   implements OnInit, AfterContentInit, AfterViewInit, OnDestroy, DoCheck
@@ -68,7 +68,7 @@ export class NguCarousel<T>
   isHovered = false;
   @Input() inputs: NguCarouselConfig;
   @Output() carouselLoad = new EventEmitter();
-  // tslint:disable-next-line:no-output-on-prefix
+  // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   @Output() onMove = new EventEmitter<NguCarousel<T>>();
   // isFirstss = 0;
   arrayChanges: IterableChanges<{}>;

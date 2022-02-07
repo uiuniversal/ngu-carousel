@@ -108,6 +108,12 @@
               "devServerTarget": "ngu-carousel-example:serve:production"
             }
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+          }
         }
       }
     },
@@ -139,13 +145,20 @@
             "tsConfig": "projects/ngu-carousel/tsconfig.spec.json",
             "karmaConfig": "projects/ngu-carousel/karma.conf.js"
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["projects/ngu-carousel/**/*.ts", "projects/ngu-carousel/**/*.html"]
+          }
         }
       }
     }
   },
   "cli": {
     "analytics": false,
-    "packageManager": "yarn"
+    "packageManager": "yarn",
+    "defaultCollection": "@angular-eslint/schematics"
   },
   "defaultProject": "ngu-carousel-example"
 }

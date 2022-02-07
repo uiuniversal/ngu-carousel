@@ -18,7 +18,7 @@ jobs:
             - uses: actions/setup-node@v2
               with:
                   node-version: 14
-            - run: npm install
+            - run: yarn
 
     publish-npm:
         needs: build
@@ -30,8 +30,8 @@ jobs:
                   node-version: 14
                   registry-url: https://registry.npmjs.org/
                   scope: '@ngu'
-            - run: npm install
-            - run: npm run build:lib
+            - run: yarn
+            - run: yarn build:lib
             - name: Run Publish
               working-directory: ./dist/ngu/carousel
               run: npm publish --access=public

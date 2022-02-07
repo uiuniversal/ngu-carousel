@@ -17,7 +17,7 @@ import { slider } from './slide-animation';
   animations: [slider],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements AfterViewInit {
   images = ['assets/bg.jpg', 'assets/car.png', 'assets/canberra.jpg', 'assets/holi.jpg'];
 
   public carouselTileItems$: Observable<number[]>;
@@ -49,8 +49,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       })
     );
   }
-
-  ngOnInit() {}
 
   ngAfterViewInit() {
     this.cdr.detectChanges();

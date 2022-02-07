@@ -11,7 +11,7 @@ import { slider } from '../slide-animation';
   animations: [slider],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BannerComponent implements OnInit {
+export class BannerComponent {
   images = ['assets/bg.jpg', 'assets/car.png', 'assets/canberra.jpg', 'assets/holi.jpg'];
   carouselBanner: NguCarouselConfig = {
     grid: { xs: 1, sm: 1, md: 1, lg: 1, all: 0 },
@@ -52,8 +52,6 @@ export class BannerComponent implements OnInit {
       })
     );
   }
-
-  ngOnInit(): void {}
 
   /* It will be triggered on every slide*/
   onmoveFn(data: any) {

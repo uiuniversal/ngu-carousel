@@ -11,7 +11,7 @@ import { slider } from '../slide-animation';
   animations: [slider],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TileComponent implements OnInit {
+export class TileComponent {
   images = ['assets/bg.jpg', 'assets/car.png', 'assets/canberra.jpg', 'assets/holi.jpg'];
 
   public carouselTileItems$: Observable<number[]>;
@@ -43,6 +43,4 @@ export class TileComponent implements OnInit {
       })
     );
   }
-
-  ngOnInit(): void {}
 }
