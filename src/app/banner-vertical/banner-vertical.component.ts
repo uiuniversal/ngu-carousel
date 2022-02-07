@@ -1,7 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component, OnInit
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { NguCarouselConfig } from '@ngu/carousel';
 import { interval, Observable } from 'rxjs';
 import { map, startWith, take } from 'rxjs/operators';
@@ -15,7 +12,6 @@ import { slider } from '../slide-animation';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BannerVerticalComponent implements OnInit {
-
   images = ['assets/bg.jpg', 'assets/car.png', 'assets/canberra.jpg', 'assets/holi.jpg'];
   carouselBanner: NguCarouselConfig = {
     grid: { xs: 1, sm: 1, md: 1, lg: 1, all: 0 },
@@ -38,8 +34,10 @@ export class BannerVerticalComponent implements OnInit {
     }
   };
   tempData: any[];
+
   public carouselTileItems$: Observable<number[]>;
-  ngOnInit() {
+
+  constructor() {
     this.tempData = [];
 
     this.carouselTileItems$ = interval(500).pipe(
@@ -54,6 +52,8 @@ export class BannerVerticalComponent implements OnInit {
       })
     );
   }
+
+  ngOnInit() {}
 
   /* It will be triggered on every slide*/
   onmoveFn(data: any) {

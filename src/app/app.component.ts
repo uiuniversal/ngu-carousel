@@ -34,9 +34,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   };
   tempData: any[];
 
-  constructor(private cdr: ChangeDetectorRef) { }
-
-  ngOnInit() {
+  constructor(private cdr: ChangeDetectorRef) {
     this.tempData = [];
 
     this.carouselTileItems$ = interval(500).pipe(
@@ -52,8 +50,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     );
   }
 
+  ngOnInit() {}
+
   ngAfterViewInit() {
     this.cdr.detectChanges();
   }
-
 }

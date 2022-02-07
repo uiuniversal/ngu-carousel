@@ -3,10 +3,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "@ngu/carousel": [
-        "dist/ngu/carousel/ngu-carousel",
-        "dist/ngu/carousel"
-      ]
+      "@ngu/carousel": ["dist/ngu/carousel/ngu-carousel", "dist/ngu/carousel"]
     },
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
@@ -22,10 +19,7 @@
     "importHelpers": true,
     "target": "es2017",
     "module": "es2020",
-    "lib": [
-      "es2018",
-      "dom"
-    ]
+    "lib": ["es2018", "dom"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
