@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "ghaschel.vscode-angular-html",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode"
+  ]
+}

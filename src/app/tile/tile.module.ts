@@ -7,10 +7,6 @@ import { TileComponent } from './tile.component';
 
 @NgModule({
   declarations: [TileComponent],
-  imports: [
-    CommonModule,
-    TileRoutingModule,
-    NguCarouselModule
-  ]
+  imports: [CommonModule, TileRoutingModule, NguCarouselModule]
 })
-export class TileModule { }
+export class TileModule {}
