@@ -57,4 +57,8 @@ export class BannerComponent {
   onmoveFn(data: any) {
     console.log(data);
   }
+
+  trackCarousel(_, item) {
+    return item;
+  }
 }
