@@ -57,7 +57,7 @@
     "@typescript-eslint/parser": "5.3.0",
     "eslint": "8.8.0",
     "husky": "7.0.4",
-    "jasmine-core": "3.8.0",
+    "jasmine-core": "4.2.0",
     "jasmine-spec-reporter": "7.0.0",
     "karma": "6.3.15",
     "karma-chrome-launcher": "3.1.0",
