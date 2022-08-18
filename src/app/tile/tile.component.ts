@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NguCarouselConfig } from '@ngu/carousel';
 import { interval, Observable } from 'rxjs';
 import { map, startWith, take } from 'rxjs/operators';
@@ -34,11 +34,12 @@ export class TileComponent {
     this.carouselTileItems$ = interval(500).pipe(
       startWith(-1),
       take(30),
-      map(val => {
+      map(() => {
         const data = (this.tempData = [
           ...this.tempData,
           this.images[Math.floor(Math.random() * this.images.length)]
         ]);
+
         return data;
       })
     );

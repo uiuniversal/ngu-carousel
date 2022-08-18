@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NguCarousel } from '../../../dist/ngu/carousel';
 
 import { BannerVerticalComponent } from './banner-vertical.component';
 
@@ -6,9 +7,9 @@ describe('BannerVerticalComponent', () => {
   let component: BannerVerticalComponent;
   let fixture: ComponentFixture<BannerVerticalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [BannerVerticalComponent]
+      declarations: [BannerVerticalComponent, NguCarousel]
     }).compileComponents();
   }));
 

@@ -1,5 +1,8 @@
 {
   "root": true,
+  "parserOptions": {
+    "ecmaVersion": 2020
+  },
   "ignorePatterns": [
     "projects/**/*"
   ],
@@ -10,8 +13,7 @@
       ],
       "parserOptions": {
         "project": [
-          "tsconfig.json",
-          "e2e/tsconfig.json"
+          "tsconfig.json"
         ],
         "createDefaultProgram": true
       },
