@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NguCarousel } from '../../../dist/ngu/carousel';
 
 import { TileComponent } from './tile.component';
 
@@ -6,9 +7,9 @@ describe('TileComponent', () => {
   let component: TileComponent;
   let fixture: ComponentFixture<TileComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [TileComponent]
+      declarations: [TileComponent, NguCarousel]
     }).compileComponents();
   }));
 

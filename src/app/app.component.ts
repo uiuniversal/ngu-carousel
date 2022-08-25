@@ -40,11 +40,12 @@ export class AppComponent implements AfterViewInit {
     this.carouselTileItems$ = interval(500).pipe(
       startWith(-1),
       take(30),
-      map(val => {
+      map(() => {
         const data = (this.tempData = [
           ...this.tempData,
           this.images[Math.floor(Math.random() * this.images.length)]
         ]);
+
         return data;
       })
     );
