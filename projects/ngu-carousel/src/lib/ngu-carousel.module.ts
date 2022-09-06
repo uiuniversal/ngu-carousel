@@ -15,7 +15,6 @@ import { NguTileComponent } from './ngu-tile/ngu-tile.component';
 @NgModule({
   imports: [CommonModule],
   exports: [
-    NguCarousel,
     NguItemComponent,
     NguTileComponent,
     NguCarouselPointDirective,
@@ -26,7 +25,6 @@ import { NguTileComponent } from './ngu-tile/ngu-tile.component';
     NguCarouselOutlet
   ],
   declarations: [
-    NguCarousel,
     NguItemComponent,
     NguTileComponent,
     NguCarouselPointDirective,

@@ -45,6 +45,7 @@ import {
 
 // @dynamic
 @Component({
+  standalone: true,
   selector: 'ngu-carousel',
   templateUrl: 'ngu-carousel.component.html',
   styleUrls: ['ngu-carousel.component.scss'],
