@@ -6,6 +6,7 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
+    "strictNullChecks": true,
     "types": []
   },
   "exclude": ["src/test.ts", "**/*.spec.ts"]

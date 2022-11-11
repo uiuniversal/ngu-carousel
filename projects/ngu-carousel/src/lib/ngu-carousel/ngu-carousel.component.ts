@@ -176,7 +176,7 @@ export class NguCarousel<T>
   }
 
   ngDoCheck() {
-    this.arrayChanges = this._dataDiffer.diff(this.dataSource);
+    this.arrayChanges = this._dataDiffer.diff(this.dataSource)!;
     if (this.arrayChanges && this._defDirec) {
       this._observeRenderChanges();
     }
@@ -226,7 +226,7 @@ export class NguCarousel<T>
           viewContainer.remove(adjustedPreviousIndex);
         } else {
           const view = viewContainer.get(adjustedPreviousIndex);
-          viewContainer.move(view, currentIndex);
+          viewContainer.move(view!, currentIndex);
         }
       }
     );
@@ -260,8 +260,8 @@ export class NguCarousel<T>
       return this._defDirec.first;
     }
 
-    const nodeDef =
-      this._defDirec.find(def => def.when && def.when(i, data)) || this._defaultNodeDef;
+    const nodeDef: NguCarouselDefDirective<any> =
+      this._defDirec.find(def => def.when && def.when(i, data)) || this._defaultNodeDef!;
 
     return nodeDef;
   }
@@ -303,7 +303,7 @@ export class NguCarousel<T>
     this.inputs.easing = this.inputs.easing || 'cubic-bezier(0, 0, 0.2, 1)';
     this.touch.active = this.inputs.touch || false;
     this.RTL = this.inputs.RTL ? true : false;
-    this.interval = this.inputs.interval || null;
+    this.interval = this.inputs.interval || undefined;
     this.velocity = typeof this.inputs.velocity === 'number' ? this.inputs.velocity : this.velocity;
 
     if (this.inputs.vertical && this.inputs.vertical.enabled) {
@@ -352,7 +352,7 @@ export class NguCarousel<T>
 
         hammertime.on('panstart', (ev: any) => {
           this.carouselWidth = this.nguItemsContainer.nativeElement.offsetWidth;
-          this.touchTransform = this.transform[this.deviceType];
+          this.touchTransform = this.transform[this.deviceType!]!;
           this.dexVal = 0;
           this._setStyle(this.nguItemsContainer.nativeElement, 'transition', '');
         });
@@ -460,23 +460,23 @@ export class NguCarousel<T>
   /** store data based on width of the screen for the carousel */
   private _storeCarouselData(): void {
     const breakpoints = this.inputs.gridBreakpoints;
-    this.deviceWidth = isPlatformBrowser(this.platformId) ? window.innerWidth : breakpoints.xl;
+    this.deviceWidth = isPlatformBrowser(this.platformId) ? window.innerWidth : breakpoints?.xl!;
 
     this.carouselWidth = this.carouselMain1.nativeElement.offsetWidth;
 
     if (this.type === 'responsive') {
       this.deviceType =
-        this.deviceWidth >= breakpoints.xl
+        this.deviceWidth >= breakpoints?.xl!
           ? 'xl'
-          : this.deviceWidth >= breakpoints.lg
+          : this.deviceWidth >= breakpoints?.lg!
           ? 'lg'
-          : this.deviceWidth >= breakpoints.md
+          : this.deviceWidth >= breakpoints?.md!
           ? 'md'
-          : this.deviceWidth >= breakpoints.sm
+          : this.deviceWidth >= breakpoints?.sm!
           ? 'sm'
           : 'xs';
 
-      this.items = this.inputs.grid[this.deviceType];
+      this.items = this.inputs.grid[this.deviceType]!;
       this.itemWidth = this.carouselWidth / this.items;
     } else {
       this.items = Math.trunc(this.carouselWidth / this.inputs.grid.all);
@@ -484,8 +484,8 @@ export class NguCarousel<T>
       this.deviceType = 'all';
     }
 
-    this.slideItems = +(this.inputs.slide < this.items ? this.inputs.slide : this.items);
-    this.load = this.inputs.load >= this.slideItems ? this.inputs.load : this.slideItems;
+    this.slideItems = +(this.inputs.slide! < this.items ? this.inputs.slide! : this.items);
+    this.load = this.inputs.load! >= this.slideItems ? this.inputs.load! : this.slideItems;
     this.speed = this.inputs.speed && this.inputs.speed > -1 ? this.inputs.speed : 400;
     this._carouselPoint();
   }
@@ -502,9 +502,9 @@ export class NguCarousel<T>
   private _carouselPoint(): void {
     const Nos = this.dataSource.length - (this.items - this.slideItems);
     this.pointIndex = Math.ceil(Nos / this.slideItems);
-    const pointers = [];
+    const pointers: number[] = [];
 
-    if (this.pointIndex > 1 || !this.inputs.point.hideOnSingleSlide) {
+    if (this.pointIndex > 1 || !this.inputs.point?.hideOnSingleSlide) {
       for (let i = 0; i < this.pointIndex; i++) {
         pointers.push(i);
       }
@@ -586,14 +586,14 @@ export class NguCarousel<T>
         this.vertical.height / +this.inputs.grid.lg
       }px}`;
       const itemWidthXL = `${this.styleid} > .item {height: ${
-        this.vertical.height / +this.inputs.grid.xl
+        this.vertical.height / +this.inputs.grid.xl!
       }px}`;
 
-      itemStyle = `@media (max-width:${breakpoints.sm - 1}px){${itemWidthXS}}
-                    @media (max-width:${breakpoints.sm}px){${itemWidthSM}}
-                    @media (min-width:${breakpoints.md}px){${itemWidthMD}}
-                    @media (min-width:${breakpoints.lg}px){${itemWidthLG}}
-                    @media (min-width:${breakpoints.xl}px){${itemWidthXL}}`;
+      itemStyle = `@media (max-width:${breakpoints?.sm! - 1}px){${itemWidthXS}}
+                    @media (max-width:${breakpoints?.sm}px){${itemWidthSM}}
+                    @media (min-width:${breakpoints?.md}px){${itemWidthMD}}
+                    @media (min-width:${breakpoints?.lg}px){${itemWidthLG}}
+                    @media (min-width:${breakpoints?.xl}px){${itemWidthXL}}`;
     } else if (this.type === 'responsive') {
       const itemWidthXS =
         this.inputs.type === 'mobile'
@@ -614,14 +614,14 @@ export class NguCarousel<T>
         100 / +this.inputs.grid.lg
       }%; width: ${100 / +this.inputs.grid.lg}%}`;
       const itemWidthXL = `${this.styleid} > .item {flex: 0 0 ${
-        100 / +this.inputs.grid.xl
-      }%; width: ${100 / +this.inputs.grid.xl}%}`;
+        100 / +this.inputs.grid.xl!
+      }%; width: ${100 / +this.inputs.grid.xl!}%}`;
 
-      itemStyle = `@media (max-width:${breakpoints.sm - 1}px){${itemWidthXS}}
-                    @media (min-width:${breakpoints.sm}px){${itemWidthSM}}
-                    @media (min-width:${breakpoints.md}px){${itemWidthMD}}
-                    @media (min-width:${breakpoints.lg}px){${itemWidthLG}}
-                    @media (min-width:${breakpoints.xl}px){${itemWidthXL}}`;
+      itemStyle = `@media (max-width:${breakpoints?.sm! - 1}px){${itemWidthXS}}
+                    @media (min-width:${breakpoints?.sm}px){${itemWidthSM}}
+                    @media (min-width:${breakpoints?.md}px){${itemWidthMD}}
+                    @media (min-width:${breakpoints?.lg}px){${itemWidthLG}}
+                    @media (min-width:${breakpoints?.xl}px){${itemWidthXL}}`;
     } else {
       itemStyle = `${this.styleid} .item {flex: 0 0 ${this.inputs.grid.all}px; width: ${this.inputs.grid.all}px;}`;
     }
@@ -762,14 +762,14 @@ export class NguCarousel<T>
     let slideCss = '';
     if (this.type === 'responsive') {
       const breakpoints = this.inputs.gridBreakpoints;
-      slideCss = `@media (max-width: ${breakpoints.sm - 1}px) {${this._transformString(
+      slideCss = `@media (max-width: ${breakpoints?.sm! - 1}px) {${this._transformString(
         'xs',
         slide
       )}}
-      @media (min-width: ${breakpoints.sm}px) {${this._transformString('sm', slide)} }
-      @media (min-width: ${breakpoints.md}px) {${this._transformString('md', slide)} }
-      @media (min-width: ${breakpoints.lg}px) {${this._transformString('lg', slide)} }
-      @media (min-width: ${breakpoints.xl}px) {${this._transformString('xl', slide)} }`;
+      @media (min-width: ${breakpoints?.sm}px) {${this._transformString('sm', slide)} }
+      @media (min-width: ${breakpoints?.md}px) {${this._transformString('md', slide)} }
+      @media (min-width: ${breakpoints?.lg}px) {${this._transformString('lg', slide)} }
+      @media (min-width: ${breakpoints?.xl}px) {${this._transformString('xl', slide)} }`;
     } else {
       this.transform.all = this.inputs.grid.all * slide;
       slideCss = `${this.styleid} { transform: translate3d(${this.directionSym}${this.transform.all}px, 0, 0);`;
@@ -813,7 +813,7 @@ export class NguCarousel<T>
       const touchPlay$ = fromEvent(container, 'touchstart').pipe(mapTo(1));
       const touchPause$ = fromEvent(container, 'touchend').pipe(mapTo(0));
 
-      const interval$ = interval(this.inputs.interval.timing).pipe(mapTo(1));
+      const interval$ = interval(this.inputs.interval?.timing!).pipe(mapTo(1));
 
       setTimeout(() => {
         this.carouselInt = merge(play$, touchPlay$, pause$, touchPause$, this._intervalController$)
@@ -857,7 +857,7 @@ export class NguCarousel<T>
   ): void {
     let val = length < 5 ? length : 5;
     val = val === 1 ? 3 : val;
-    const collectIndex = [];
+    const collectIndex: number[] = [];
 
     if (direction === 1) {
       for (let i = start - 1; i < end; i++) {
