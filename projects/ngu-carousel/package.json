@@ -6,7 +6,7 @@
     "@angular/core": "^15.0.0"
   },
   "dependencies": {
-    "tslib": "2.4.0"
+    "tslib": "2.4.1"
   },
   "license": "MIT",
   "repository": {
