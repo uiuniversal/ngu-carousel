@@ -1,14 +1,11 @@
 {
-  "extends": "../../.eslintrc.json",
+  "extends": "../../../.eslintrc.json",
   "ignorePatterns": ["!**/*"],
   "overrides": [
     {
       "files": ["*.ts"],
       "parserOptions": {
-        "project": [
-          "projects/ngu-carousel/tsconfig.lib.json",
-          "projects/ngu-carousel/tsconfig.spec.json"
-        ],
+        "project": ["libs/@ngu/carousel/tsconfig.*?.json"],
         "createDefaultProgram": true
       },
       "rules": {

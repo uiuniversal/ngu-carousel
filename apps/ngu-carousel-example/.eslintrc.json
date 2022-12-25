@@ -1,13 +1,13 @@
 {
-  "root": true,
   "parserOptions": {
     "ecmaVersion": 2020
   },
-  "ignorePatterns": ["**/*"],
+  "ignorePatterns": ["!**/*"],
   "overrides": [
     {
       "files": ["*.ts"],
       "parserOptions": {
+        "project": ["apps/ngu-carousel-example/tsconfig.*?.json"],
         "createDefaultProgram": true
       },
       "extends": [
@@ -37,25 +37,7 @@
       "files": ["*.html"],
       "extends": ["plugin:@angular-eslint/template/recommended"],
       "rules": {}
-    },
-    {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {
-        "@nrwl/nx/enforce-module-boundaries": [
-          "error",
-          {
-            "enforceBuildableLibDependency": true,
-            "allow": [],
-            "depConstraints": [
-              {
-                "sourceTag": "*",
-                "onlyDependOnLibsWithTags": ["*"]
-              }
-            ]
-          }
-        ]
-      }
     }
   ],
-  "plugins": ["@nrwl/nx"]
+  "extends": "../../.eslintrc.json"
 }

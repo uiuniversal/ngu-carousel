@@ -27,7 +27,6 @@ jobs:
         run: yarn
       - name: Build
         run: |
-          yarn build:lib
-          yarn build:app
+          yarn nx run-many --target=build --all 
         env:
           CI: true
