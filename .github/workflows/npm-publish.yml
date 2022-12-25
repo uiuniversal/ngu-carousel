@@ -30,8 +30,8 @@ jobs:
                   node-version: 16
                   registry-url: https://registry.npmjs.org/
                   scope: '@ngu'
-            - run: yarn
-            - run: yarn nx run-many --target=build --all
+            - run: yarn build
+            - run: yarn nx build @ngu/carousel
             - name: Run Publish
               working-directory: ./dist/libs/ngu/carousel
               run: npm publish --access=public
