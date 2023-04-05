@@ -18,6 +18,7 @@ import {
   IterableChanges,
   IterableDiffer,
   IterableDiffers,
+  NgZone,
   OnDestroy,
   OnInit,
   Output,
@@ -29,7 +30,7 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import { EMPTY, fromEvent, interval, merge, Observable, of, Subject, Subscription } from 'rxjs';
-import { mapTo, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { debounceTime, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import {
   NguCarouselDefDirective,
   NguCarouselNextDirective,
@@ -136,8 +137,11 @@ export class NguCarousel<T>
 
   private carousel: any;
 
-  private onResize: any;
   private onScrolling: any;
+
+  private _hammertime: HammerManager | null = null;
+
+  private _destroy$ = new Subject<void>();
 
   pointNumbers: Array<any> = [];
 
@@ -164,7 +168,8 @@ export class NguCarousel<T>
     private _renderer: Renderer2,
     private _differs: IterableDiffers,
     @Inject(PLATFORM_ID) private platformId: object,
-    private cdr: ChangeDetectorRef
+    private _cdr: ChangeDetectorRef,
+    private _ngZone: NgZone
   ) {
     super();
   }
@@ -275,11 +280,9 @@ export class NguCarousel<T>
     if (isPlatformBrowser(this.platformId)) {
       this._carouselInterval();
       if (!this.vertical.enabled) {
-        this._touch();
+        this._setupHammer();
       }
-      this.listener3 = this._renderer.listen('window', 'resize', event => {
-        this._onResizing(event);
-      });
+      this._setupWindowResizeListener();
       this._onWindowScrolling();
     }
   }
@@ -287,7 +290,7 @@ export class NguCarousel<T>
   ngAfterContentInit() {
     this._observeRenderChanges();
 
-    this.cdr.markForCheck();
+    this._cdr.markForCheck();
   }
 
   private _inputValidation() {
@@ -320,6 +323,8 @@ export class NguCarousel<T>
   }
 
   ngOnDestroy() {
+    this._hammertime?.destroy();
+    this._destroy$.next();
     this.carouselInt && this.carouselInt.unsubscribe();
     this._intervalController$.unsubscribe();
     this.carouselLoad.complete();
@@ -333,21 +338,11 @@ export class NguCarousel<T>
     }
   }
 
-  private _onResizing(event: any): void {
-    clearTimeout(this.onResize);
-    this.onResize = setTimeout(() => {
-      if (this.deviceWidth !== event.target.outerWidth) {
-        this._setStyle(this.nguItemsContainer.nativeElement, 'transition', ``);
-        this._storeCarouselData();
-      }
-    }, 500);
-  }
-
   /** Get Touch input */
-  private _touch(): void {
+  private _setupHammer(): void {
     if (this.inputs.touch) {
       import('hammerjs').then(() => {
-        const hammertime = new Hammer(this.touchContainer.nativeElement);
+        const hammertime = (this._hammertime = new Hammer(this.touchContainer.nativeElement));
         hammertime.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL });
 
         hammertime.on('panstart', (ev: any) => {
@@ -527,7 +522,7 @@ export class NguCarousel<T>
   private _carouselPointActiver(): void {
     const i = Math.ceil(this.currentSlide / this.slideItems);
     this.activePoint = i;
-    this.cdr.markForCheck();
+    this._cdr.markForCheck();
   }
 
   /** this function is used to scoll the carousel when point is clicked */
@@ -807,13 +802,16 @@ export class NguCarousel<T>
         }, 600);
       });
 
-      const play$ = fromEvent(container, 'mouseleave').pipe(mapTo(1));
-      const pause$ = fromEvent(container, 'mouseenter').pipe(mapTo(0));
+      const mapToZero = map(() => 0);
+      const mapToOne = map(() => 1);
 
-      const touchPlay$ = fromEvent(container, 'touchstart').pipe(mapTo(1));
-      const touchPause$ = fromEvent(container, 'touchend').pipe(mapTo(0));
+      const play$ = fromEvent(container, 'mouseleave').pipe(mapToOne);
+      const pause$ = fromEvent(container, 'mouseenter').pipe(mapToZero);
 
-      const interval$ = interval(this.inputs.interval?.timing!).pipe(mapTo(1));
+      const touchPlay$ = fromEvent(container, 'touchstart').pipe(mapToOne);
+      const touchPause$ = fromEvent(container, 'touchend').pipe(mapToZero);
+
+      const interval$ = interval(this.inputs.interval?.timing!).pipe(mapToOne);
 
       setTimeout(() => {
         this.carouselInt = merge(play$, touchPlay$, pause$, touchPause$, this._intervalController$)
@@ -821,28 +819,14 @@ export class NguCarousel<T>
             startWith(1),
             switchMap(val => {
               this.isHovered = !val;
-              this.cdr.markForCheck();
+              this._cdr.markForCheck();
               return val ? interval$ : EMPTY;
             })
           )
-          .subscribe(res => {
+          .subscribe(() => {
             this._carouselScrollOne(1);
           });
       }, this.interval.initialDelay);
-    }
-  }
-
-  private _updateItemIndexContextAni() {
-    const viewContainer = this._nodeOutlet.viewContainer;
-    for (let renderIndex = 0, count = viewContainer.length; renderIndex < count; renderIndex++) {
-      const viewRef = viewContainer.get(renderIndex) as any;
-      const context = viewRef.context as any;
-      context.count = count;
-      context.first = renderIndex === 0;
-      context.last = renderIndex === count - 1;
-      context.even = renderIndex % 2 === 0;
-      context.odd = !context.even;
-      context.index = renderIndex;
     }
   }
 
@@ -876,7 +860,7 @@ export class NguCarousel<T>
         context.animate = { value: true, params: { distance: -val } };
       }
     }
-    this.cdr.markForCheck();
+    this._cdr.markForCheck();
     setTimeout(() => {
       this._removeAnimations(collectIndex);
     }, speed * 0.7);
@@ -889,7 +873,7 @@ export class NguCarousel<T>
       const context = viewRef.context as any;
       context.animate = { value: false, params: { distance: 0 } };
     });
-    this.cdr.markForCheck();
+    this._cdr.markForCheck();
   }
 
   /** Short form for setElementStyle */
@@ -906,5 +890,25 @@ export class NguCarousel<T>
     }
     this._renderer.appendChild(this.carousel, styleItem);
     return styleItem;
+  }
+
+  private _setupWindowResizeListener(): void {
+    this._ngZone.runOutsideAngular(() =>
+      fromEvent(window, 'resize')
+        .pipe(
+          debounceTime(500),
+          filter(() => this.deviceWidth !== window.outerWidth),
+          takeUntil(this._destroy$)
+        )
+        .subscribe(() => {
+          this._setStyle(this.nguItemsContainer.nativeElement, 'transition', ``);
+          // Re-enter the Angular zone only after `resize` events have been dispatched
+          // and the timer has run (in `debounceTime`).
+          this._ngZone.run(() => {
+            this._storeCarouselData();
+            this._cdr.markForCheck();
+          });
+        })
+    );
   }
 }
