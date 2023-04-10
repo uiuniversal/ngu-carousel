@@ -38,7 +38,8 @@ import {
   Observable,
   of,
   Subject,
-  Subscription
+  Subscription,
+  timer
 } from 'rxjs';
 import { debounceTime, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import {
@@ -48,20 +49,20 @@ import {
   NguCarouselPrevDirective
 } from './../ngu-carousel.directive';
 import {
+  Transfrom,
   Breakpoints,
   NguCarouselConfig,
   NguCarouselOutletContext,
   NguCarouselStore
 } from './ngu-carousel';
+import { NguWindowScrollListener } from './ngu-window-scroll-listener';
 
-// @dynamic
 @Component({
   selector: 'ngu-carousel',
   templateUrl: 'ngu-carousel.component.html',
   styleUrls: ['ngu-carousel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-// @dynamic
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export class NguCarousel<T>
   extends NguCarouselStore
@@ -88,7 +89,6 @@ export class NguCarousel<T>
   listener1: () => void;
   listener2: () => void;
   listener3: () => void;
-  listener4: () => void;
 
   @Input('dataSource')
   get dataSource(): any {
@@ -147,8 +147,6 @@ export class NguCarousel<T>
 
   private carousel: any;
 
-  private onScrolling: any;
-
   private _hammertime: HammerManager | null = null;
 
   private _destroy$ = new Subject<void>();
@@ -179,7 +177,8 @@ export class NguCarousel<T>
     private _differs: IterableDiffers,
     @Inject(PLATFORM_ID) private platformId: object,
     private _cdr: ChangeDetectorRef,
-    private _ngZone: NgZone
+    private _ngZone: NgZone,
+    private _nguWindowScrollListener: NguWindowScrollListener
   ) {
     super();
   }
@@ -230,17 +229,21 @@ export class NguCarousel<T>
     if (!this.arrayChanges) return;
 
     this.arrayChanges.forEachOperation(
-      (item: IterableChangeRecord<any>, adjustedPreviousIndex: number, currentIndex: number) => {
-        const node = this._getNodeDef(data[currentIndex], currentIndex);
+      (
+        item: IterableChangeRecord<any>,
+        adjustedPreviousIndex: number | null,
+        currentIndex: number | null
+      ) => {
+        const node = this._getNodeDef(data[currentIndex!], currentIndex!);
 
         if (item.previousIndex == null) {
-          const context = new NguCarouselOutletContext<any>(data[currentIndex]);
-          context.index = currentIndex;
-          viewContainer.createEmbeddedView(node.template, context, currentIndex);
+          const context = new NguCarouselOutletContext<any>(data[currentIndex!]);
+          context.index = currentIndex!;
+          viewContainer.createEmbeddedView(node.template, context, currentIndex!);
         } else if (currentIndex == null) {
-          viewContainer.remove(adjustedPreviousIndex);
+          viewContainer.remove(adjustedPreviousIndex!);
         } else {
-          const view = viewContainer.get(adjustedPreviousIndex);
+          const view = viewContainer.get(adjustedPreviousIndex!);
           viewContainer.move(view!, currentIndex);
         }
       }
@@ -341,9 +344,9 @@ export class NguCarousel<T>
     this.onMove.complete();
 
     /** remove listeners */
-    clearTimeout(this.onScrolling);
-    for (let i = 1; i <= 4; i++) {
-      const str = `listener${i}`;
+    for (let i = 1; i <= 3; i++) {
+      // TODO: revisit later.
+      const str = `listener${i}` as 'listener1' | 'listener2' | 'listener3';
       this[str] && this[str]();
     }
   }
@@ -644,7 +647,6 @@ export class NguCarousel<T>
       );
     }
 
-    // tslint:disable-next-line:no-unused-expression
     this.RTL && !this.vertical.enabled && this._renderer.addClass(this.carousel, 'ngurtl');
     this._createStyleElem(`${dism} ${itemStyle}`);
     this._storeCarouselData();
@@ -653,7 +655,6 @@ export class NguCarousel<T>
   /** logic to scroll the carousel step 1 */
   private _carouselScrollOne(Btn: number): void {
     let itemSpeed = this.speed;
-    let translateXval = 0;
     let currentSlide = 0;
     let touchMove = Math.ceil(this.dexVal / this.itemWidth);
     touchMove = isFinite(touchMove) ? touchMove : 0;
@@ -670,7 +671,7 @@ export class NguCarousel<T>
         itemSpeed = 400;
         this._btnBoolean(0, 1);
       } else if (this.slideItems >= MoveSlide) {
-        currentSlide = translateXval = 0;
+        currentSlide = 0;
         this._btnBoolean(1, 0);
       } else {
         this._btnBoolean(0, 0);
@@ -690,7 +691,7 @@ export class NguCarousel<T>
         currentSlide = this.dataSource.length - this.items;
         this._btnBoolean(0, 1);
       } else if (this.isLast) {
-        currentSlide = translateXval = 0;
+        currentSlide = 0;
         itemSpeed = 400;
         this._btnBoolean(1, 0);
       } else {
@@ -708,8 +709,6 @@ export class NguCarousel<T>
 
   /** logic to scroll the carousel step 2 */
   private _carouselScrollTwo(Btn: number, currentSlide: number, itemSpeed: number): void {
-    // tslint:disable-next-line:no-unused-expression
-
     if (this.dexVal !== 0) {
       const val = Math.abs(this.touch.velocity);
       let somt = Math.floor((this.dexVal / val / this.dexVal) * (this.deviceWidth - this.dexVal));
@@ -750,15 +749,15 @@ export class NguCarousel<T>
     this.isLast = !!last;
   }
 
-  private _transformString(grid: string, slide: number): string {
+  private _transformString(grid: keyof Transfrom, slide: number): string {
     let collect = '';
     collect += `${this.styleid} { transform: translate3d(`;
 
     if (this.vertical.enabled) {
-      this.transform[grid] = (this.vertical.height / this.inputs.grid[grid]) * slide;
+      this.transform[grid] = (this.vertical.height / this.inputs.grid[grid]!) * slide;
       collect += `0, -${this.transform[grid]}px, 0`;
     } else {
-      this.transform[grid] = (100 / this.inputs.grid[grid]) * slide;
+      this.transform[grid] = (100 / this.inputs.grid[grid]!) * slide;
       collect += `${this.directionSym}${this.transform[grid]}%, 0, 0`;
     }
     collect += `); }`;
@@ -808,12 +807,18 @@ export class NguCarousel<T>
   private _carouselInterval(): void {
     const container = this.carouselMain1.nativeElement;
     if (this.interval && this.loop) {
-      this.listener4 = this._renderer.listen('window', 'scroll', () => {
-        clearTimeout(this.onScrolling);
-        this.onScrolling = setTimeout(() => {
-          this._onWindowScrolling();
-        }, 600);
-      });
+      this._nguWindowScrollListener
+        .pipe(
+          // Note: do not use `debounceTime` since it may flush queued actions within the Angular zone.
+          switchMap(() => timer(600)),
+          takeUntil(this._destroy$)
+        )
+        .subscribe(() => {
+          // Note: we don't run change detection on each `scroll` event, but we re-enter the
+          //       Angular zone once the DOM timer fires to be backwards compatible.
+          //       TODO: revisit later since we may not run change detection at all on this task.
+          this._ngZone.run(() => this._onWindowScrolling());
+        });
 
       const mapToZero = map(() => 0);
       const mapToOne = map(() => 1);
