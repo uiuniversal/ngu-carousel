@@ -5,7 +5,7 @@
 [![npm version](https://badge.fury.io/js/%40ngu%2Fcarousel.svg)](https://badge.fury.io/js/%40ngu%2Fcarousel)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-13-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-14-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Angular Universal carousel
@@ -736,6 +736,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/rat-matheson"><img src="https://avatars0.githubusercontent.com/u/61026434?v=4?s=100" width="100px;" alt="rat-matheson"/><br /><sub><b>rat-matheson</b></sub></a><br /><a href="https://github.com/uiuniversal/ngu-carousel/commits?author=rat-matheson" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Yberion"><img src="https://avatars.githubusercontent.com/u/4186385?v=4?s=100" width="100px;" alt="Brandon Largeau"/><br /><sub><b>Brandon Largeau</b></sub></a><br /><a href="https://github.com/uiuniversal/ngu-carousel/commits?author=Yberion" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://ng-guru.io"><img src="https://avatars.githubusercontent.com/u/7337691?v=4?s=100" width="100px;" alt="Artur Androsovych"/><br /><sub><b>Artur Androsovych</b></sub></a><br /><a href="https://github.com/uiuniversal/ngu-carousel/commits?author=arturovt" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/chivesrs"><img src="https://avatars.githubusercontent.com/u/7110657?v=4?s=100" width="100px;" alt="chivesrs"/><br /><sub><b>chivesrs</b></sub></a><br /><a href="https://github.com/uiuniversal/ngu-carousel/commits?author=chivesrs" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
