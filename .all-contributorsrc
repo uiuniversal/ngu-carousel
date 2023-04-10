@@ -112,6 +112,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "arturovt",
+      "name": "Artur Androsovych",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7337691?v=4",
+      "profile": "http://ng-guru.io",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
@@ -119,5 +128,6 @@
   "projectOwner": "uiuniversal",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": true
+  "skipCi": true,
+  "commitConvention": "angular"
 }
