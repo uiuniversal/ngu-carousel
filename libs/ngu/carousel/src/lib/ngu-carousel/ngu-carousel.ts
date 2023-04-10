@@ -68,6 +68,7 @@ declare interface TransformInterface {
   all: number;
 }
 
+// This is misspelled. Must be changed to `Transform`.
 export class Transfrom implements TransformInterface {
   public xl? = 0;
   constructor(public xs = 0, public sm = 0, public md = 0, public lg = 0, public all = 0) {}
