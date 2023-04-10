@@ -29,7 +29,17 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { EMPTY, fromEvent, interval, merge, Observable, of, Subject, Subscription } from 'rxjs';
+import {
+  EMPTY,
+  from,
+  fromEvent,
+  interval,
+  merge,
+  Observable,
+  of,
+  Subject,
+  Subscription
+} from 'rxjs';
 import { debounceTime, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import {
   NguCarouselDefDirective,
@@ -279,7 +289,7 @@ export class NguCarousel<T>
 
     if (isPlatformBrowser(this.platformId)) {
       this._carouselInterval();
-      if (!this.vertical.enabled) {
+      if (!this.vertical.enabled && this.inputs.touch) {
         this._setupHammer();
       }
       this._setupWindowResizeListener();
@@ -340,8 +350,12 @@ export class NguCarousel<T>
 
   /** Get Touch input */
   private _setupHammer(): void {
-    if (this.inputs.touch) {
-      import('hammerjs').then(() => {
+    from(import('hammerjs'))
+      // Note: the dynamic import is always a microtask which may run after the view is destroyed.
+      //       `takeUntil` is used to prevent setting Hammer up if the view had been destroyed before
+      //       the HammerJS is loaded.
+      .pipe(takeUntil(this._destroy$))
+      .subscribe(() => {
         const hammertime = (this._hammertime = new Hammer(this.touchContainer.nativeElement));
         hammertime.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL });
 
@@ -392,7 +406,6 @@ export class NguCarousel<T>
           ev.srcEvent.stopPropagation();
         });
       });
-    }
   }
 
   /** handle touch input */
