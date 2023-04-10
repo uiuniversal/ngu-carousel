@@ -17,7 +17,7 @@
     "module": "es2020",
     "lib": ["es2020", "dom"],
     "paths": {
-      "@ngu/carousel": ["libs/@ngu/carousel/src/public-api"]
+      "@ngu/carousel": ["libs/ngu/carousel/src/public-api"]
     },
     "useDefineForClassFields": false,
     "rootDir": "."

@@ -30,11 +30,13 @@ jobs:
                   node-version: 16
                   registry-url: https://registry.npmjs.org/
                   scope: '@ngu'
-            - run: yarn install
-            - run: yarn nx run-many --target=build --all 
-            - name: Run Publish
-              working-directory: dist/libs/ngu/carousel
-              run: npm publish --access=public
+            - name: Build and Publish
+              run: |
+                   yarn install
+                   yarn nx run-many --target=build --all 
+                   cd dist/libs/ngu/carousel
+                   npm publish --access=public
+              shell: bash
               env:
                   NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 

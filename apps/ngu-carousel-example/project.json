@@ -23,7 +23,7 @@
         "inlineStyleLanguage": "scss",
         "assets": [
           "apps/ngu-carousel-example/src/favicon.ico",
-          "apps/ngu-carousel-example/src/src/assets",
+          "apps/ngu-carousel-example/src/assets",
           "apps/ngu-carousel-example/src/src/_redirects"
         ],
         "styles": [
