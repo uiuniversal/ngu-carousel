@@ -8,8 +8,7 @@
       "runner": "@nrwl/nx-cloud",
       "options": {
         "cacheableOperations": ["build", "test", "lint"],
-        "accessToken": "ZDc5YjI3NDItNzg5OS00YWM4LWE4ODItZjAzNjFkOWUwNzE3fHJlYWQtd3JpdGU=",
-        "runtimeCacheInputs": ["node -v", "node ./scripts/get-os.js"]
+        "accessToken": "ZDc5YjI3NDItNzg5OS00YWM4LWE4ODItZjAzNjFkOWUwNzE3fHJlYWQtd3JpdGU="
       }
     }
   },
