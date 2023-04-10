@@ -121,6 +121,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "chivesrs",
+      "name": "chivesrs",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7110657?v=4",
+      "profile": "https://github.com/chivesrs",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
