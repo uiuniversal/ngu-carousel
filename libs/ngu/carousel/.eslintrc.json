@@ -5,7 +5,7 @@
     {
       "files": ["*.ts"],
       "parserOptions": {
-        "project": ["libs/@ngu/carousel/tsconfig.*?.json"],
+        "project": ["libs/ngu/carousel/tsconfig.*?.json"],
         "createDefaultProgram": true
       },
       "rules": {

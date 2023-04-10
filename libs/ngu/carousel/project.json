@@ -1,20 +1,20 @@
 {
   "name": "@ngu/carousel",
   "projectType": "library",
-  "sourceRoot": "libs/@ngu/carousel/src",
+  "sourceRoot": "libs/ngu/carousel/src",
   "prefix": "ngu",
   "targets": {
     "build": {
       "executor": "@nrwl/angular:package",
       "options": {
-        "project": "libs/@ngu/carousel/ng-package.json"
+        "project": "libs/ngu/carousel/ng-package.json"
       },
       "configurations": {
         "production": {
-          "tsConfig": "libs/@ngu/carousel/tsconfig.lib.prod.json"
+          "tsConfig": "libs/ngu/carousel/tsconfig.lib.prod.json"
         },
         "development": {
-          "tsConfig": "libs/@ngu/carousel/tsconfig.lib.json"
+          "tsConfig": "libs/ngu/carousel/tsconfig.lib.json"
         }
       },
       "defaultConfiguration": "production"
@@ -22,15 +22,15 @@
     "test": {
       "executor": "@angular-devkit/build-angular:karma",
       "options": {
-        "main": "libs/@ngu/carousel/src/test.ts",
-        "tsConfig": "libs/@ngu/carousel/tsconfig.spec.json",
-        "karmaConfig": "libs/@ngu/carousel/karma.conf.js"
+        "main": "libs/ngu/carousel/src/test.ts",
+        "tsConfig": "libs/ngu/carousel/tsconfig.spec.json",
+        "karmaConfig": "libs/ngu/carousel/karma.conf.js"
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "options": {
-        "lintFilePatterns": ["libs/@ngu/carousel/**/*.ts", "libs/@ngu/carousel/**/*.html"]
+        "lintFilePatterns": ["libs/ngu/carousel/**/*.ts", "libs/ngu/carousel/**/*.html"]
       }
     }
   }
