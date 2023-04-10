@@ -30,6 +30,7 @@ jobs:
                   node-version: 16
                   registry-url: https://registry.npmjs.org/
                   scope: '@ngu'
+            - run: yarn install
             - run: yarn nx run-many --target=build --all 
             - name: Run Publish
               working-directory: ./dist/libs/ngu/carousel
