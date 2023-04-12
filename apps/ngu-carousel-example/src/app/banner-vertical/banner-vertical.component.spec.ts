@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { NguCarousel } from '../../../dist/ngu/carousel';
+import { NguCarousel } from '@ngu/carousel';
 
 import { BannerVerticalComponent } from './banner-vertical.component';
 
