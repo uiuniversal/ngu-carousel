@@ -1,5 +1,3 @@
-import { isPlatformBrowser } from '@angular/common';
-
 import {
   AfterContentInit,
   AfterViewInit,
@@ -22,12 +20,10 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  PLATFORM_ID,
   QueryList,
   Renderer2,
   TrackByFunction,
-  ViewChild,
-  ViewContainerRef
+  ViewChild
 } from '@angular/core';
 import {
   EMPTY,
@@ -42,12 +38,14 @@ import {
   timer
 } from 'rxjs';
 import { debounceTime, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
+
 import {
   NguCarouselDefDirective,
   NguCarouselNextDirective,
   NguCarouselOutlet,
   NguCarouselPrevDirective
 } from './../ngu-carousel.directive';
+import { IS_BROWSER } from '../symbols';
 import {
   Transfrom,
   Breakpoints,
@@ -83,12 +81,7 @@ export class NguCarousel<T>
   // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   @Output() onMove = new EventEmitter<NguCarousel<T>>();
   // isFirstss = 0;
-  arrayChanges: IterableChanges<{}>;
-  carouselInt: Subscription;
-
-  listener1: () => void;
-  listener2: () => void;
-  listener3: () => void;
+  private _arrayChanges: IterableChanges<{}> | null = null;
 
   @Input('dataSource')
   get dataSource(): any {
@@ -103,35 +96,27 @@ export class NguCarousel<T>
   private _defaultNodeDef: NguCarouselDefDirective<any> | null;
 
   @ContentChildren(NguCarouselDefDirective)
-  private _defDirec: QueryList<NguCarouselDefDirective<any>>;
+  private _defDirectives: QueryList<NguCarouselDefDirective<any>>;
 
   @ViewChild(NguCarouselOutlet, { static: true })
   _nodeOutlet: NguCarouselOutlet;
 
-  /** The setter is used to catch the button if the button has ngIf
-   * issue id #91
+  /**
+   * The setter is used to catch the button if the button is wrapped with `ngIf`.
+   * https://github.com/uiuniversal/ngu-carousel/issues/91
    */
-  @ContentChild(NguCarouselNextDirective, /* TODO: add static flag */ { read: ElementRef })
-  set nextBtn(btn: ElementRef) {
-    this.listener2?.();
-    if (btn) {
-      this.listener2 = this._renderer.listen(btn.nativeElement, 'click', () =>
-        this._carouselScrollOne(1)
-      );
-    }
+  @ContentChild(NguCarouselNextDirective, { read: ElementRef, static: false })
+  set nextButton(nextButton: ElementRef<HTMLElement> | undefined) {
+    this._nextButton$.next(nextButton?.nativeElement);
   }
 
-  /** The setter is used to catch the button if the button has ngIf
-   * issue id #91
+  /**
+   * The setter is used to catch the button if the button is wrapped with `ngIf`.
+   * https://github.com/uiuniversal/ngu-carousel/issues/91
    */
-  @ContentChild(NguCarouselPrevDirective, /* TODO: add static flag */ { read: ElementRef })
-  set prevBtn(btn: ElementRef) {
-    this.listener1?.();
-    if (btn) {
-      this.listener1 = this._renderer.listen(btn.nativeElement, 'click', () =>
-        this._carouselScrollOne(0)
-      );
-    }
+  @ContentChild(NguCarouselPrevDirective, { read: ElementRef, static: false })
+  set prevButton(prevButton: ElementRef<HTMLElement> | undefined) {
+    this._prevButton$.next(prevButton?.nativeElement);
   }
 
   @ViewChild('ngucarousel', { read: ElementRef, static: true })
@@ -141,7 +126,7 @@ export class NguCarousel<T>
   private nguItemsContainer: ElementRef;
 
   @ViewChild('touchContainer', { read: ElementRef, static: true })
-  private touchContainer: ElementRef;
+  private _touchContainer: ElementRef<HTMLElement>;
 
   private _intervalController$ = new Subject<number>();
 
@@ -171,16 +156,21 @@ export class NguCarousel<T>
   }
   private _trackByFn: TrackByFunction<T>;
 
+  /** Subjects used to notify whenever buttons are removed or rendered so we can re-add listeners. */
+  private readonly _prevButton$ = new Subject<HTMLElement | undefined>();
+  private readonly _nextButton$ = new Subject<HTMLElement | undefined>();
+
   constructor(
     private _el: ElementRef,
     private _renderer: Renderer2,
     private _differs: IterableDiffers,
-    @Inject(PLATFORM_ID) private platformId: object,
+    @Inject(IS_BROWSER) private _isBrowser: boolean,
     private _cdr: ChangeDetectorRef,
     private _ngZone: NgZone,
     private _nguWindowScrollListener: NguWindowScrollListener
   ) {
     super();
+    this._setupButtonListeners();
   }
 
   ngOnInit() {
@@ -190,15 +180,15 @@ export class NguCarousel<T>
   }
 
   ngDoCheck() {
-    this.arrayChanges = this._dataDiffer.diff(this.dataSource)!;
-    if (this.arrayChanges && this._defDirec) {
+    this._arrayChanges = this._dataDiffer.diff(this.dataSource)!;
+    if (this._arrayChanges && this._defDirectives) {
       this._observeRenderChanges();
     }
   }
 
   private _switchDataSource(dataSource: any): any {
     this._dataSource = dataSource;
-    if (this._defDirec) {
+    if (this._defDirectives) {
       this._observeRenderChanges();
     }
   }
@@ -222,13 +212,12 @@ export class NguCarousel<T>
     }
   }
 
-  private renderNodeChanges(
-    data: any[],
-    viewContainer: ViewContainerRef = this._nodeOutlet.viewContainer
-  ) {
-    if (!this.arrayChanges) return;
+  private renderNodeChanges(data: any[]) {
+    if (!this._arrayChanges) return;
 
-    this.arrayChanges.forEachOperation(
+    const viewContainer = this._nodeOutlet.viewContainer;
+
+    this._arrayChanges.forEachOperation(
       (
         item: IterableChangeRecord<any>,
         adjustedPreviousIndex: number | null,
@@ -274,12 +263,12 @@ export class NguCarousel<T>
   }
 
   private _getNodeDef(data: any, i: number): NguCarouselDefDirective<any> {
-    if (this._defDirec.length === 1) {
-      return this._defDirec.first;
+    if (this._defDirectives.length === 1) {
+      return this._defDirectives.first;
     }
 
     const nodeDef: NguCarouselDefDirective<any> =
-      this._defDirec.find(def => def.when && def.when(i, data)) || this._defaultNodeDef!;
+      this._defDirectives.find(def => !!def.when?.(i, data)) || this._defaultNodeDef!;
 
     return nodeDef;
   }
@@ -290,7 +279,7 @@ export class NguCarousel<T>
 
     this.carouselCssNode = this._createStyleElem();
 
-    if (isPlatformBrowser(this.platformId)) {
+    if (this._isBrowser) {
       this._carouselInterval();
       if (!this.vertical.enabled && this.inputs.touch) {
         this._setupHammer();
@@ -338,17 +327,8 @@ export class NguCarousel<T>
   ngOnDestroy() {
     this._hammertime?.destroy();
     this._destroy$.next();
-    this.carouselInt && this.carouselInt.unsubscribe();
-    this._intervalController$.unsubscribe();
     this.carouselLoad.complete();
     this.onMove.complete();
-
-    /** remove listeners */
-    for (let i = 1; i <= 3; i++) {
-      // TODO: revisit later.
-      const str = `listener${i}` as 'listener1' | 'listener2' | 'listener3';
-      this[str] && this[str]();
-    }
   }
 
   /** Get Touch input */
@@ -359,7 +339,7 @@ export class NguCarousel<T>
       //       the HammerJS is loaded.
       .pipe(takeUntil(this._destroy$))
       .subscribe(() => {
-        const hammertime = (this._hammertime = new Hammer(this.touchContainer.nativeElement));
+        const hammertime = (this._hammertime = new Hammer(this._touchContainer.nativeElement));
         hammertime.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL });
 
         hammertime.on('panstart', (ev: any) => {
@@ -471,7 +451,7 @@ export class NguCarousel<T>
   /** store data based on width of the screen for the carousel */
   private _storeCarouselData(): void {
     const breakpoints = this.inputs.gridBreakpoints;
-    this.deviceWidth = isPlatformBrowser(this.platformId) ? window.innerWidth : breakpoints?.xl!;
+    this.deviceWidth = this._isBrowser ? window.innerWidth : breakpoints?.xl!;
 
     this.carouselWidth = this.carouselMain1.nativeElement.offsetWidth;
 
@@ -831,20 +811,31 @@ export class NguCarousel<T>
 
       const interval$ = interval(this.inputs.interval?.timing!).pipe(mapToOne);
 
-      setTimeout(() => {
-        this.carouselInt = merge(play$, touchPlay$, pause$, touchPause$, this._intervalController$)
-          .pipe(
-            startWith(1),
-            switchMap(val => {
-              this.isHovered = !val;
-              this._cdr.markForCheck();
-              return val ? interval$ : EMPTY;
-            })
-          )
-          .subscribe(() => {
-            this._carouselScrollOne(1);
-          });
-      }, this.interval.initialDelay);
+      const initialDelay = this.interval.initialDelay || 0;
+
+      const carouselInterval$ = merge(
+        play$,
+        touchPlay$,
+        pause$,
+        touchPause$,
+        this._intervalController$
+      ).pipe(
+        startWith(1),
+        switchMap(val => {
+          this.isHovered = !val;
+          this._cdr.markForCheck();
+          return val ? interval$ : EMPTY;
+        })
+      );
+
+      timer(initialDelay)
+        .pipe(
+          switchMap(() => carouselInterval$),
+          takeUntil(this._destroy$)
+        )
+        .subscribe(() => {
+          this._carouselScrollOne(1);
+        });
     }
   }
 
@@ -854,16 +845,17 @@ export class NguCarousel<T>
     start: number,
     end: number,
     speed: number,
-    length: number,
-    viewContainer = this._nodeOutlet.viewContainer
+    length: number
   ): void {
+    const viewContainer = this._nodeOutlet.viewContainer;
+
     let val = length < 5 ? length : 5;
     val = val === 1 ? 3 : val;
-    const collectIndex: number[] = [];
+    const collectedIndexes: number[] = [];
 
     if (direction === 1) {
       for (let i = start - 1; i < end; i++) {
-        collectIndex.push(i);
+        collectedIndexes.push(i);
         val = val * 2;
         const viewRef = viewContainer.get(i) as any;
         const context = viewRef.context as any;
@@ -871,7 +863,7 @@ export class NguCarousel<T>
       }
     } else {
       for (let i = end - 1; i >= start - 1; i--) {
-        collectIndex.push(i);
+        collectedIndexes.push(i);
         val = val * 2;
         const viewRef = viewContainer.get(i) as any;
         const context = viewRef.context as any;
@@ -879,14 +871,15 @@ export class NguCarousel<T>
       }
     }
     this._cdr.markForCheck();
-    setTimeout(() => {
-      this._removeAnimations(collectIndex);
-    }, speed * 0.7);
+
+    timer(speed * 0.7)
+      .pipe(takeUntil(this._destroy$))
+      .subscribe(() => this._removeAnimations(collectedIndexes));
   }
 
-  private _removeAnimations(indexs: number[]) {
+  private _removeAnimations(collectedIndexes: number[]) {
     const viewContainer = this._nodeOutlet.viewContainer;
-    indexs.forEach(i => {
+    collectedIndexes.forEach(i => {
       const viewRef = viewContainer.get(i) as any;
       const context = viewRef.context as any;
       context.animate = { value: false, params: { distance: 0 } };
@@ -908,6 +901,23 @@ export class NguCarousel<T>
     }
     this._renderer.appendChild(this.carousel, styleItem);
     return styleItem;
+  }
+
+  private _setupButtonListeners(): void {
+    this._prevButton$
+      .pipe(
+        // Returning `EMPTY` will remove event listener once the button is removed from the DOM.
+        switchMap(prevButton => (prevButton ? fromEvent(prevButton, 'click') : EMPTY)),
+        takeUntil(this._destroy$)
+      )
+      .subscribe(() => this._carouselScrollOne(0));
+
+    this._nextButton$
+      .pipe(
+        switchMap(nextButton => (nextButton ? fromEvent(nextButton, 'click') : EMPTY)),
+        takeUntil(this._destroy$)
+      )
+      .subscribe(() => this._carouselScrollOne(1));
   }
 
   private _setupWindowResizeListener(): void {

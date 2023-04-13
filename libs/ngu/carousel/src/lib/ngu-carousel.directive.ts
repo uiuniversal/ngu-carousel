@@ -34,7 +34,7 @@ export class NguCarouselPointDirective {}
   selector: '[nguCarouselDef]'
 })
 export class NguCarouselDefDirective<T> {
-  when: (index: number, nodeData: T) => boolean;
+  when?: (index: number, nodeData: T) => boolean;
 
   constructor(public template: TemplateRef<any>) {}
 }
