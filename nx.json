@@ -7,7 +7,7 @@
     "default": {
       "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": ["build", "test", "lint"],
+        "cacheableOperations": ["build", "test", "lint", "component-test", "build-storybook"],
         "accessToken": "ZDc5YjI3NDItNzg5OS00YWM4LWE4ODItZjAzNjFkOWUwNzE3fHJlYWQtd3JpdGU=",
         "runtimeCacheInputs": ["node -v", "node ./scripts/get-os.js"]
       }
@@ -21,7 +21,12 @@
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/**/*.spec.[jt]s",
       "!{projectRoot}/karma.conf.js",
-      "!{projectRoot}/.eslintrc.json"
+      "!{projectRoot}/.eslintrc.json",
+      "!{projectRoot}/cypress/**/*",
+      "!{projectRoot}/**/*.cy.[jt]s?(x)",
+      "!{projectRoot}/cypress.config.[jt]s",
+      "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+      "!{projectRoot}/.storybook/**/*"
     ]
   },
   "targetDefaults": {
@@ -37,6 +42,12 @@
     },
     "e2e": {
       "inputs": ["default", "^production"]
+    },
+    "component-test": {
+      "inputs": ["default", "^production"]
+    },
+    "build-storybook": {
+      "inputs": ["default", "^production", "!{projectRoot}/.storybook/**/*"]
     }
   },
   "cli": {
