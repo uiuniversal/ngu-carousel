@@ -1,5 +1,6 @@
 {
   "name": "@ngu/carousel",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/ngu/carousel/src",
   "prefix": "ngu",
@@ -31,6 +32,54 @@
       "executor": "@nrwl/linter:eslint",
       "options": {
         "lintFilePatterns": ["libs/ngu/carousel/**/*.ts", "libs/ngu/carousel/**/*.html"]
+      }
+    },
+    "component-test": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "libs/ngu/carousel/cypress.config.ts",
+        "testingType": "component"
+      }
+    },
+    "storybook": {
+      "executor": "@storybook/angular:start-storybook",
+      "options": {
+        "port": 4400,
+        "configDir": "libs/ngu/carousel/.storybook",
+        "browserTarget": "@ngu/carousel:build-storybook",
+        "compodoc": false
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "build-storybook": {
+      "executor": "@storybook/angular:build-storybook",
+      "outputs": ["{options.outputDir}"],
+      "options": {
+        "outputDir": "dist/storybook/@ngu/carousel",
+        "configDir": "libs/ngu/carousel/.storybook",
+        "browserTarget": "@ngu/carousel:build-storybook",
+        "compodoc": false
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "static-storybook": {
+      "executor": "@nrwl/web:file-server",
+      "options": {
+        "buildTarget": "@ngu/carousel:build-storybook",
+        "staticFilePath": "dist/storybook/@ngu/carousel"
+      },
+      "configurations": {
+        "ci": {
+          "buildTarget": "@ngu/carousel:build-storybook:ci"
+        }
       }
     }
   }

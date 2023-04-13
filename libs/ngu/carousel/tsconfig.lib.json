@@ -8,6 +8,17 @@
     "strictNullChecks": true,
     "types": []
   },
-  "exclude": ["src/test.ts", "**/*.spec.ts"],
+  "exclude": [
+    "src/test.ts",
+    "**/*.spec.ts",
+    "cypress/**/*",
+    "cypress.config.ts",
+    "**/*.cy.ts",
+    "**/*.cy.js",
+    "**/*.cy.tsx",
+    "**/*.cy.jsx",
+    "**/*.stories.ts",
+    "**/*.stories.js"
+  ],
   "include": ["**/*.ts"]
 }
