@@ -1,6 +1,6 @@
 {
   "name": "@ngu/carousel",
-  "version": "7.1.1",
+  "version": "7.1.2",
   "peerDependencies": {
     "@angular/common": "^15.0.0",
     "@angular/core": "^15.0.0",
