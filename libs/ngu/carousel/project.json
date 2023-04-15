@@ -8,7 +8,8 @@
     "build": {
       "executor": "@nrwl/angular:package",
       "options": {
-        "project": "libs/ngu/carousel/ng-package.json"
+        "project": "libs/ngu/carousel/ng-package.json",
+        "updateBuildableProjectDepsInPackageJson": false
       },
       "configurations": {
         "production": {
