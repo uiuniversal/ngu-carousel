@@ -26,6 +26,14 @@
     "@angular-devkit/core" "15.2.5"
     rxjs "6.6.7"
 
+"@angular-devkit/architect@0.1502.6":
+  version "0.1502.6"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.1502.6.tgz#bf9452610f128ee312ee836510700152993a2447"
+  integrity sha512-n4oJ9vzFWwabf+AfgqqevVzdJhNKNCav7ytefjD/Y01vkNwlXqWnHcvyyHCLkVibJ6WR8J9lK4t77j/HFlDvWQ==
+  dependencies:
+    "@angular-devkit/core" "15.2.6"
+    rxjs "6.6.7"
+
 "@angular-devkit/build-angular@15.2.5":
   version "15.2.5"
   resolved "https://registry.yarnpkg.com/@angular-devkit/build-angular/-/build-angular-15.2.5.tgz#76864b74b05566077590914080961d51e20eabdf"
@@ -124,6 +132,17 @@
     rxjs "6.6.7"
     source-map "0.7.4"
 
+"@angular-devkit/core@15.2.6":
+  version "15.2.6"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-15.2.6.tgz#9118faadbc5e3613283da1774826d2b41883330f"
+  integrity sha512-YVTWZ+M+xNKdFX4EnY9QX49PZraawiaA0iTd2CUW8ZoTUvU7yOGMKZLSdz6aokTMRVfm0449wt6YL994ibOo1g==
+  dependencies:
+    ajv "8.12.0"
+    ajv-formats "2.1.1"
+    jsonc-parser "3.2.0"
+    rxjs "6.6.7"
+    source-map "0.7.4"
+
 "@angular-devkit/schematics@15.0.2":
   version "15.0.2"
   resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-15.0.2.tgz#5177dab4382eeebe84f4768c3368799ef99cef48"
@@ -141,6 +160,17 @@
   integrity sha512-zm7chQRQtPXQzzSAvK/mbZ+RJ3eP7hlU53yyJ/i6kjWAh3Y5uiSHNYGmqhhAHFuzw4Jhb4OC2S9iycxrqmI8TA==
   dependencies:
     "@angular-devkit/core" "15.2.5"
+    jsonc-parser "3.2.0"
+    magic-string "0.29.0"
+    ora "5.4.1"
+    rxjs "6.6.7"
+
+"@angular-devkit/schematics@15.2.6":
+  version "15.2.6"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-15.2.6.tgz#fb5b7530f21586dbdec45cac56f8a418bcfd053d"
+  integrity sha512-f7VgnAcok7AwR/DhX0ZWskB0rFBo/KsvtIUA2qZSrpKMf8eFiwu03dv/b2mI0vnf+1FBfIQzJvO0ww45zRp6dA==
+  dependencies:
+    "@angular-devkit/core" "15.2.6"
     jsonc-parser "3.2.0"
     magic-string "0.29.0"
     ora "5.4.1"
@@ -3500,6 +3530,15 @@
   version "15.2.5"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-15.2.5.tgz#679c509fde254e92442ce97bc512638f4189453a"
   integrity sha512-wD6GY4xghVK+SQL0dy/M3saGx5pqi7+1VHEr+BBI7IUNYGSqPNzylKNxLBgQiTzfkzvbrZ6MhfaMNkhvSCYr5w==
+
+"@ngx-builders/analyze@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@ngx-builders/analyze/-/analyze-4.0.0.tgz#48d3c5082b1902f721d2a94668188395710acbbd"
+  integrity sha512-jLzXkCoslP5UjNJDiVKv3Cet9Laln85nWbwftSr+eCaNMUBufaFInJbTNid2R/2YhMX29PITt5tLorbylWhfEw==
+  dependencies:
+    "@angular-devkit/architect" "0.1502.6"
+    "@angular-devkit/core" "15.2.6"
+    "@angular-devkit/schematics" "15.2.6"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
