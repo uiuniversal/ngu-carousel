@@ -5,7 +5,9 @@
 [![npm version](https://badge.fury.io/js/%40ngu%2Fcarousel.svg)](https://badge.fury.io/js/%40ngu%2Fcarousel)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-14-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Angular Universal carousel
@@ -20,6 +22,8 @@ Demo available [Here](https://ngu-carousel.netlify.app)
 
 ## Installation
 
+`ngu-carousel` supports touch actions and requires `hammerjs` to be installed before the `ngu-carousel` is installed.
+
 | Angular Version | ngu-carousel Version                |
 | --------------- | ----------------------------------- |
 | Angular >= 15   | `npm i --save @ngu/carousel@latest` |
@@ -29,22 +33,6 @@ Demo available [Here](https://ngu-carousel.netlify.app)
 | Angular >= 10   | `npm i --save @ngu/carousel@3.0.2`  |
 | Angular = 9     | `npm i --save @ngu/carousel@2.1.0`  |
 | Angular < 9     | `npm i --save @ngu/carousel@1.5.5`  |
-
-### Optional Dependencies
-
-#### hammer.js
-
-Now ngu-carousel supports touch with the help of hammerjs.
-You can install and import it in the `main.ts` file like this
-
-```
-npm install hammerjs --save
-```
-
-```typescript
-// main.ts
-import 'hammerjs';
-```
 
 ## Usage
 
