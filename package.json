@@ -9,20 +9,10 @@
   "scripts": {
     "ng": "nx",
     "start": "nx serve",
-    "build": "nx build",
-    "watch": "nx build --watch --configuration development",
-    "test": "nx test",
     "format:write": "nx format:write",
-    "format:check": "nx format:check",
-    "build:lib": "nx build @ngu/carousel",
-    "build:lib:watch": "nx build @ngu/carousel --watch",
-    "build:app": "nx build",
-    "lint": "nx lint",
-    "deploy:app": "npm run build:lib && nx build",
-    "run-lib": "npm run build:lib && nx serve -o",
-    "postinstall": "node ./decorate-angular-cli.js"
+    "format:check": "nx format:check"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "@angular/animations": "15.2.6",
     "@angular/cdk": "15.2.6",
@@ -34,6 +24,7 @@
     "@angular/platform-browser": "15.2.6",
     "@angular/platform-browser-dynamic": "15.2.6",
     "@angular/router": "15.2.6",
+    "@ngx-builders/analyze": "4.0.0",
     "@nrwl/angular": "15.9.2",
     "hammerjs": "2.0.8",
     "rxjs": "7.8.0",
