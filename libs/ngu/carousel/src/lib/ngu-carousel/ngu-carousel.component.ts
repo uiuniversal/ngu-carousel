@@ -22,8 +22,10 @@ import {
   QueryList,
   Renderer2,
   TrackByFunction,
-  ViewChild
+  ViewChild,
+  inject
 } from '@angular/core';
+import { Direction, Directionality } from '@angular/cdk/bidi';
 import { EMPTY, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
 import { debounceTime, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 
@@ -59,13 +61,18 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || ngDevMode;
   templateUrl: 'ngu-carousel.component.html',
   styleUrls: ['ngu-carousel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [NguCarouselHammerManager]
+  providers: [NguCarouselHammerManager],
+  host: {
+    '[class.ngurtl]': `!vertical.enabled && dir === 'rtl'`
+  }
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export class NguCarousel<T>
   extends NguCarouselStore
   implements OnInit, AfterContentInit, AfterViewInit, OnDestroy, DoCheck
 {
+  dir!: Direction;
+
   /** Public property that may be accessed outside of the component. */
   activePoint = 0;
 
@@ -175,6 +182,8 @@ export class NguCarousel<T>
   private readonly _prevButton$ = new Subject<HTMLElement | undefined>();
   private readonly _nextButton$ = new Subject<HTMLElement | undefined>();
 
+  private readonly _directionality = inject(Directionality);
+
   constructor(
     private _host: ElementRef<HTMLElement>,
     private _renderer: Renderer2,
@@ -187,6 +196,7 @@ export class NguCarousel<T>
   ) {
     super();
     this._setupButtonListeners();
+    this._setupDirectionalityListener();
   }
 
   ngOnInit() {
@@ -200,6 +210,18 @@ export class NguCarousel<T>
     if (this._arrayChanges && this._defDirectives) {
       this._observeRenderChanges();
     }
+  }
+
+  get itemsContainerNgStyle(): { [klass: string]: any } {
+    if (this.touchTransform < 0) {
+      this.touchTransform = 0;
+    }
+    const type = this.type === 'responsive' ? '%' : 'px';
+    return {
+      transform: this.vertical.enabled
+        ? `translate3d(0, ${this._directionSymbol}${this.touchTransform}${type}, 0)`
+        : `translate3d(${this._directionSymbol}${this.touchTransform}${type}, 0, 0)`
+    };
   }
 
   private _switchDataSource(dataSource: any): any {
@@ -321,7 +343,6 @@ export class NguCarousel<T>
     this.loop = this.inputs.loop || false;
     this.inputs.easing = this.inputs.easing || 'cubic-bezier(0, 0, 0.2, 1)';
     this.touch.active = this.inputs.touch || false;
-    this.RTL = this.inputs.RTL ? true : false;
     this.interval = this.inputs.interval || undefined;
     this.velocity = typeof this.inputs.velocity === 'number' ? this.inputs.velocity : this.velocity;
 
@@ -329,7 +350,7 @@ export class NguCarousel<T>
       this.vertical.enabled = this.inputs.vertical.enabled;
       this.vertical.height = this.inputs.vertical.height;
     }
-    this._directionSymbol = this.RTL ? '' : '-';
+
     this.point =
       this.inputs.point && typeof this.inputs.point.visible !== 'undefined'
         ? this.inputs.point.visible
@@ -382,7 +403,7 @@ export class NguCarousel<T>
           if (Math.abs(velocity) >= this.velocity) {
             this.touch.velocity = velocity;
             let direc = 0;
-            if (!this.RTL) {
+            if (this.dir === 'ltr') {
               direc = this.touch.swipe === 'panright' ? 0 : 1;
             } else {
               direc = this.touch.swipe === 'panright' ? 1 : 0;
@@ -425,27 +446,9 @@ export class NguCarousel<T>
         : valt;
     this.dexVal = ev;
     this.touch.swipe = e;
-    this._setTouchTransfrom(e, valt);
-    this._setTransformFromTouch();
-  }
 
-  private _setTouchTransfrom(e: string, valt: number) {
-    const condition = this.RTL ? 'panright' : 'panleft';
+    const condition = this.dir === 'rtl' ? 'panright' : 'panleft';
     this.touchTransform = e === condition ? valt + this.touchTransform : this.touchTransform - valt;
-  }
-
-  private _setTransformFromTouch() {
-    if (this.touchTransform < 0) {
-      this.touchTransform = 0;
-    }
-    const type = this.type === 'responsive' ? '%' : 'px';
-    this._setStyle(
-      this._nguItemsContainer.nativeElement,
-      'transform',
-      this.vertical.enabled
-        ? `translate3d(0, ${this._directionSymbol}${this.touchTransform}${type}, 0)`
-        : `translate3d(${this._directionSymbol}${this.touchTransform}${type}, 0, 0)`
-    );
   }
 
   /** this fn used to disable the interval when it is not on the viewport */
@@ -643,9 +646,6 @@ export class NguCarousel<T>
       );
     }
 
-    this.RTL &&
-      !this.vertical.enabled &&
-      this._renderer.addClass(this._host.nativeElement, 'ngurtl');
     this._createStyleElem(`${dism} ${itemStyle}`);
     this._storeCarouselData();
   }
@@ -955,6 +955,21 @@ export class NguCarousel<T>
           });
         })
     );
+  }
+
+  private _setupDirectionalityListener(): void {
+    this.dir = this._directionality.value;
+    this._updateDirectionSymbol();
+
+    this._directionality.change.pipe(takeUntil(this._destroy$)).subscribe((dir: Direction) => {
+      this.dir = dir;
+      this._updateDirectionSymbol();
+      this._cdr.markForCheck();
+    });
+  }
+
+  private _updateDirectionSymbol(): void {
+    this._directionSymbol = this.dir === 'rtl' ? '' : '-';
   }
 
   static ngAcceptInputType_dataSource: NguCarouselDataSource;
