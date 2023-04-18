@@ -24,18 +24,7 @@ import {
   TrackByFunction,
   ViewChild
 } from '@angular/core';
-import {
-  EMPTY,
-  from,
-  fromEvent,
-  interval,
-  merge,
-  Observable,
-  of,
-  Subject,
-  Subscription,
-  timer
-} from 'rxjs';
+import { EMPTY, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
 import { debounceTime, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 
 import {
@@ -53,6 +42,7 @@ import {
   NguCarouselStore
 } from './ngu-carousel';
 import { NguWindowScrollListener } from './ngu-window-scroll-listener';
+import { NguCarouselHammerManager } from './ngu-carousel-hammer-manager';
 
 type DirectionSymbol = '' | '-';
 
@@ -68,7 +58,8 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || ngDevMode;
   selector: 'ngu-carousel',
   templateUrl: 'ngu-carousel.component.html',
   styleUrls: ['ngu-carousel.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [NguCarouselHammerManager]
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export class NguCarousel<T>
@@ -146,7 +137,7 @@ export class NguCarousel<T>
 
   private _intervalController$ = new Subject<number>();
 
-  private _hammertime: HammerManager | null = null;
+  private _hammer: HammerManager | null = null;
 
   private _withAnimation = true;
 
@@ -191,7 +182,8 @@ export class NguCarousel<T>
     @Inject(IS_BROWSER) private _isBrowser: boolean,
     private _cdr: ChangeDetectorRef,
     private _ngZone: NgZone,
-    private _nguWindowScrollListener: NguWindowScrollListener
+    private _nguWindowScrollListener: NguWindowScrollListener,
+    private _nguCarouselHammerManager: NguCarouselHammerManager
   ) {
     super();
     this._setupButtonListeners();
@@ -347,45 +339,48 @@ export class NguCarousel<T>
   }
 
   ngOnDestroy() {
-    this._hammertime?.destroy();
+    this._hammer?.destroy();
     this._destroy$.next();
   }
 
   /** Get Touch input */
   private _setupHammer(): void {
-    from(import('hammerjs'))
-      // Note: the dynamic import is always a microtask which may run after the view is destroyed.
-      //       `takeUntil` is used to prevent setting Hammer up if the view had been destroyed before
-      //       the HammerJS is loaded.
-      .pipe(takeUntil(this._destroy$))
-      .subscribe(() => {
-        const hammertime = (this._hammertime = new Hammer(this._touchContainer.nativeElement));
-        hammertime.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL });
+    // Note: doesn't need to unsubscribe because streams are piped with `takeUntil` already.
+    this._nguCarouselHammerManager
+      .createHammer(this._touchContainer.nativeElement)
+      .subscribe(hammer => {
+        this._hammer = hammer;
 
-        hammertime.on('panstart', () => {
+        hammer.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL });
+
+        this._nguCarouselHammerManager.on(hammer, 'panstart').subscribe(() => {
           this.carouselWidth = this._nguItemsContainer.nativeElement.offsetWidth;
           this.touchTransform = this.transform[this.deviceType!]!;
           this.dexVal = 0;
           this._setStyle(this._nguItemsContainer.nativeElement, 'transition', '');
         });
+
         if (this.vertical.enabled) {
-          hammertime.on('panup', (ev: any) => {
+          this._nguCarouselHammerManager.on(hammer, 'panup').subscribe((ev: any) => {
             this._touchHandling('panleft', ev);
           });
-          hammertime.on('pandown', (ev: any) => {
+
+          this._nguCarouselHammerManager.on(hammer, 'pandown').subscribe((ev: any) => {
             this._touchHandling('panright', ev);
           });
         } else {
-          hammertime.on('panleft', (ev: any) => {
+          this._nguCarouselHammerManager.on(hammer, 'panleft').subscribe((ev: any) => {
             this._touchHandling('panleft', ev);
           });
-          hammertime.on('panright', (ev: any) => {
+
+          this._nguCarouselHammerManager.on(hammer, 'panright').subscribe((ev: any) => {
             this._touchHandling('panright', ev);
           });
         }
-        hammertime.on('panend pancancel', (ev: any) => {
-          if (Math.abs(ev.velocity) >= this.velocity) {
-            this.touch.velocity = ev.velocity;
+
+        this._nguCarouselHammerManager.on(hammer, 'panend pancancel').subscribe(({ velocity }) => {
+          if (Math.abs(velocity) >= this.velocity) {
+            this.touch.velocity = velocity;
             let direc = 0;
             if (!this.RTL) {
               direc = this.touch.swipe === 'panright' ? 0 : 1;
@@ -403,10 +398,11 @@ export class NguCarousel<T>
             this._setStyle(this._nguItemsContainer.nativeElement, 'transform', '');
           }
         });
-        hammertime.on('hammer.input', ev => {
+
+        this._nguCarouselHammerManager.on(hammer, 'hammer.input').subscribe(({ srcEvent }) => {
           // allow nested touch events to no propagate, this may have other side affects but works for now.
           // TODO: It is probably better to check the source element of the event and only apply the handle to the correct carousel
-          ev.srcEvent.stopPropagation();
+          srcEvent.stopPropagation();
         });
       });
   }
