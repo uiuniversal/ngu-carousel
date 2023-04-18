@@ -6,8 +6,7 @@
     "@angular/core": "^15.0.0",
     "@angular/animations": "^15.0.0",
     "hammerjs": "^2.0.0",
-    "rxjs": "^7.0.0",
-    "zone.js": "^0.11.4"
+    "rxjs": "^7.0.0"
   },
   "dependencies": {
     "tslib": "2.4.1"
