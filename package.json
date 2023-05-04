@@ -26,7 +26,7 @@
     "@angular/router": "15.2.6",
     "@ngx-builders/analyze": "4.0.0",
     "@nrwl/angular": "15.9.2",
-    "hammerjs": "2.0.8",
+    "contactjs": "^2.1.6",
     "rxjs": "7.8.0",
     "tslib": "2.4.1",
     "zone.js": "0.11.4"
