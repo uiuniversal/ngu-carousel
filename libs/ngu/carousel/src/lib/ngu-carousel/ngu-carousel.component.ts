@@ -348,9 +348,6 @@ export class NguCarousel<T>
     this._pointerListener = new PointerListener(this._touchContainer.nativeElement, options);
 
 
-    // this._touchContainer.nativeElement.addEventListener('pan', onPan);
-
-
     if (this.vertical.enabled) {
       this._touchContainer.nativeElement.addEventListener('swipeup', (ev: any) => {
         this._touchHandling('panup', ev);
