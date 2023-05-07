@@ -26,6 +26,7 @@
     "@angular/router": "16.0.0",
     "@ngx-builders/analyze": "4.0.0",
     "@nx/angular": "16.1.1",
+    "core-js": "~3.30.2",
     "hammerjs": "2.0.8",
     "rxjs": "7.8.0",
     "tslib": "2.4.1",
