@@ -95,7 +95,7 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": [
           "apps/ngu-carousel-example/**/*.ts",
@@ -104,7 +104,7 @@
       }
     },
     "component-test": {
-      "executor": "@nrwl/cypress:cypress",
+      "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "apps/ngu-carousel-example/cypress.config.ts",
         "testingType": "component"
