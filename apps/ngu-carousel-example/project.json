@@ -31,7 +31,10 @@
           "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
           "apps/ngu-carousel-example/src/styles.scss"
         ],
-        "scripts": []
+        "scripts": [],
+        "allowedCommonJsDependencies": [
+          "hammerjs"
+        ]
       },
       "configurations": {
         "production": {
