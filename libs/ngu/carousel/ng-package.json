@@ -3,5 +3,6 @@
   "dest": "../../../dist/libs/ngu/carousel",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "allowedNonPeerDependencies": ["@angular/cdk"]
 }

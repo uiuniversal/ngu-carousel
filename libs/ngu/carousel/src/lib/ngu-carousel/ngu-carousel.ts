@@ -26,6 +26,10 @@ export class NguCarouselStore {
     public isEnd = false,
     public isFirst = true,
     public isLast = false,
+    /**
+     * @deprecated the `RTL` property is not considered anymore since we're using
+     * `@angular/cdk/bidi` to deal with directionality changes.
+     */
     public RTL = false,
     public point = true,
     public velocity = 1
@@ -108,6 +112,10 @@ export class NguCarouselConfig {
   loop?: boolean;
   touch?: boolean;
   easing?: string;
+  /**
+   * @deprecated the `RTL` property is not considered anymore since we're using
+   * `@angular/cdk/bidi` to deal with directionality changes.
+   */
   RTL?: boolean;
   button?: NguButton;
   vertical?: Vertical;

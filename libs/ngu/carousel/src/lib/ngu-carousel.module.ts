@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { BidiModule } from '@angular/cdk/bidi';
+
 import {
   NguCarouselDefDirective,
   NguCarouselItemDirective,
@@ -13,7 +15,7 @@ import { NguItemComponent } from './ngu-item/ngu-item.component';
 import { NguTileComponent } from './ngu-tile/ngu-tile.component';
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [BidiModule, CommonModule],
   exports: [
     NguCarousel,
     NguItemComponent,

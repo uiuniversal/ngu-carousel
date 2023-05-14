@@ -1,5 +1,19 @@
 # ngu-carousel
 
+- [Demo](#demo)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Input Interface](#input-interface)
+- [Custom CSS for Point](#custom-css-for-point)
+- [Get Started guide](#get-started-guide)
+  - [Banner with Custom point style](#banner-with-custom-point-style)
+  - [Direction](#direction)
+  - [Banner with Vertical carousel](#banner-with-vertical-carousel)
+  - [Tile with Carousel Control](#tile-with-carousel-control)
+  - [Tile with custom point style](#tile-with-custom-point-style)
+  - [License](#license)
+  - [Contributors ✨](#contributors--)
+
 [![npm downloads](https://img.shields.io/npm/dt/@ngu/carousel?label=npm%20downloads)](https://www.npmjs.com/package/@ngu/carousel)
 
 [![npm version](https://badge.fury.io/js/%40ngu%2Fcarousel.svg)](https://badge.fury.io/js/%40ngu%2Fcarousel)
@@ -235,11 +249,10 @@ export type Animate = 'lazy';
 | `loop`                    | boolean       | optional | It is used to loop the `ngu-item ngu-tile`. It must be true for `interval`                                                                                                                                                    |
 | `animation`               | string        | optional | It is used to animate the sliding items. currently it only supports `lazy`. more coming soon and also with custom css animation option                                                                                        |
 | `custom`                  | string        | optional | It is you to define the purpose of the carousel. currently it only supports `banner`. more coming soon and also with custom css animation option                                                                              |
-| `RTL`                     | boolean       | optional | This option enable the `rtl` direction and act as rtl. By default it is `ltr`                                                                                                                                                 |
 | `vertical.enabled`        | boolean       | optional | This option enable the `vertical` direction                                                                                                                                                                                   |
 | `vertical.height`         | boolean       | optional | This option is used to set the height of the carousel                                                                                                                                                                         |
 
-### Custom css for Point
+### Custom CSS for Point
 
 ```html
 <ul class="ngucarouselPoint">
@@ -258,7 +271,7 @@ This is HTML I'm using in the carousel. Add your own css according to this eleme
 - `onMove` is an `Output` which triggered on every slide before start and it will emit `$event` as `NguCarouselStore` object.
 - `carouselLoad` is an `Output` which triggered when slide reaches the end on items based on inputs `load`.
 
-# Getstarted guide
+# Get Started guide
 
 ## Banner with Custom point style
 
@@ -348,6 +361,26 @@ export class Sample implements OnInit {
     return item;
   }
 }
+```
+
+## Direction
+
+Set the `dir` attribute on the document `body` or `html` tag:
+
+```html
+<html dir="rtl"></html>
+```
+
+Or set it in the template, it requires importing `BidiModule`:
+
+```ts
+import { BidiModule } from '@angular/cdk/bidi';
+```
+
+Set the direction for the application or its descendants in the template:
+
+```html
+<div dir="rtl"></div>
 ```
 
 ## Banner with Vertical carousel

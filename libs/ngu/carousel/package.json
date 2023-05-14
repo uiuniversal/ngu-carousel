@@ -2,14 +2,13 @@
   "name": "@ngu/carousel",
   "version": "7.1.3",
   "peerDependencies": {
-    "@angular/common": "^15.0.0",
     "@angular/core": "^15.0.0",
     "@angular/animations": "^15.0.0",
     "hammerjs": "^2.0.0",
-    "rxjs": "^7.0.0"
+    "rxjs": ">=6.5.5"
   },
   "dependencies": {
-    "tslib": "2.4.1"
+    "@angular/cdk": "^15.0.0"
   },
   "license": "MIT",
   "repository": {
