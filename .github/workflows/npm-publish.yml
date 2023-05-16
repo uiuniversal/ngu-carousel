@@ -15,9 +15,9 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
-            - uses: actions/setup-node@v2
+            - uses: actions/setup-node@v3
               with:
-                  node-version: 16
+                  node-version: 18
             - run: yarn
 
     publish-npm:
@@ -25,15 +25,15 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
-            - uses: actions/setup-node@v2
+            - uses: actions/setup-node@v3
               with:
-                  node-version: 16
+                  node-version: 18
                   registry-url: https://registry.npmjs.org/
                   scope: '@ngu'
             - name: Build and Publish
               run: |
                    yarn install
-                   yarn nx run-many --target=build --all 
+                   yarn nx run-many --target=build --all
                    cd dist/libs/ngu/carousel
                    npm publish --access=public
               shell: bash

@@ -6,7 +6,7 @@
   "prefix": "ngu",
   "targets": {
     "build": {
-      "executor": "@nrwl/angular:package",
+      "executor": "@nx/angular:package",
       "options": {
         "project": "libs/ngu/carousel/ng-package.json",
         "updateBuildableProjectDepsInPackageJson": false
@@ -30,13 +30,13 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": ["libs/ngu/carousel/**/*.ts", "libs/ngu/carousel/**/*.html"]
       }
     },
     "component-test": {
-      "executor": "@nrwl/cypress:cypress",
+      "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "libs/ngu/carousel/cypress.config.ts",
         "testingType": "component"
@@ -72,7 +72,7 @@
       }
     },
     "static-storybook": {
-      "executor": "@nrwl/web:file-server",
+      "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "@ngu/carousel:build-storybook",
         "staticFilePath": "dist/storybook/@ngu/carousel"
