@@ -26,7 +26,6 @@ import {
 } from '@angular/core';
 import { EMPTY, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
 import { debounceTime, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
-import { Pan, PointerListener } from "contactjs";
 
 import {
   NguCarouselDefDirective,
@@ -43,6 +42,7 @@ import {
   NguCarouselStore
 } from './ngu-carousel';
 import { NguWindowScrollListener } from './ngu-window-scroll-listener';
+import { NguCarouselHammerManager } from './ngu-carousel-hammer-manager';
 
 type DirectionSymbol = '' | '-';
 
@@ -59,6 +59,7 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || ngDevMode;
   templateUrl: 'ngu-carousel.component.html',
   styleUrls: ['ngu-carousel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [NguCarouselHammerManager]
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export class NguCarousel<T>
@@ -135,6 +136,8 @@ export class NguCarousel<T>
 
   private _intervalController$ = new Subject<number>();
 
+  private _hammer: HammerManager | null = null;
+
   private _withAnimation = true;
 
   private _directionSymbol: DirectionSymbol;
@@ -148,8 +151,6 @@ export class NguCarousel<T>
   private _pointIndex: number;
 
   private _destroy$ = new Subject<void>();
-
-  private _pointerListener: any;
 
   /**
    * Tracking function that will be used to check the differences in data changes. Used similarly
@@ -181,6 +182,7 @@ export class NguCarousel<T>
     private _cdr: ChangeDetectorRef,
     private _ngZone: NgZone,
     private _nguWindowScrollListener: NguWindowScrollListener,
+    private _nguCarouselHammerManager: NguCarouselHammerManager
   ) {
     super();
     this._setupButtonListeners();
@@ -336,73 +338,83 @@ export class NguCarousel<T>
   }
 
   ngOnDestroy() {
+    this._hammer?.destroy();
     this._destroy$.next();
   }
 
   /** Get Touch input */
   private _setupHammer(): void {
-    const options = {
-      "supportedGestures": [Pan]
-    };
+    // Note: doesn't need to unsubscribe because streams are piped with `takeUntil` already.
+    this._nguCarouselHammerManager
+      .createHammer(this._touchContainer.nativeElement)
+      .subscribe(hammer => {
+        this._hammer = hammer;
 
-    this._pointerListener = new PointerListener(this._touchContainer.nativeElement, options);
+        hammer.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL });
 
+        this._nguCarouselHammerManager.on(hammer, 'panstart').subscribe(() => {
+          this.carouselWidth = this._nguItemsContainer.nativeElement.offsetWidth;
+          this.touchTransform = this.transform[this.deviceType!]!;
+          this.dexVal = 0;
+          this._setStyle(this._nguItemsContainer.nativeElement, 'transition', '');
+        });
 
-    if (this.vertical.enabled) {
-      this._touchContainer.nativeElement.addEventListener('swipeup', (ev: any) => {
-        this._touchHandling('panup', ev);
-      });
-      this._touchContainer.nativeElement.addEventListener('swipedown', (ev: any) => {
-        this._touchHandling('pandown', ev);
-      });
-    } else {
-      this._touchContainer.nativeElement.addEventListener('swiperight', (ev: any) => {
-        this._touchHandling('panright', ev);
-      });
-      this._touchContainer.nativeElement.addEventListener('swipeleft', (ev: any) => {
-        this._touchHandling('panleft', ev);
-      });
-    }
+        if (this.vertical.enabled) {
+          this._nguCarouselHammerManager.on(hammer, 'panup').subscribe((ev: any) => {
+            this._touchHandling('panleft', ev);
+          });
 
-    this._touchContainer.nativeElement.addEventListener('panend', (ev: any) => {
-      if (Math.abs(ev.detail.global.speed) >= this.velocity) {
-        this.touch.velocity = ev.detail.global.speed;
-        let direc = 0;
-        if (!this.RTL) {
-          direc = this.touch.swipe === 'panright' ? 0 : 1;
+          this._nguCarouselHammerManager.on(hammer, 'pandown').subscribe((ev: any) => {
+            this._touchHandling('panright', ev);
+          });
         } else {
-          direc = this.touch.swipe === 'panright' ? 1 : 0;
+          this._nguCarouselHammerManager.on(hammer, 'panleft').subscribe((ev: any) => {
+            this._touchHandling('panleft', ev);
+          });
+
+          this._nguCarouselHammerManager.on(hammer, 'panright').subscribe((ev: any) => {
+            this._touchHandling('panright', ev);
+          });
         }
-        this._carouselScrollOne(direc);
-      } else {
-        this.dexVal = 0;
-        this._setStyle(
-          this._nguItemsContainer.nativeElement,
-          'transition',
-          'transform 324ms cubic-bezier(0, 0, 0.2, 1)'
-        );
-        this._setStyle(this._nguItemsContainer.nativeElement, 'transform', '');
-      }
-    });
 
+        this._nguCarouselHammerManager.on(hammer, 'panend pancancel').subscribe(({ velocity }) => {
+          if (Math.abs(velocity) >= this.velocity) {
+            this.touch.velocity = velocity;
+            let direc = 0;
+            if (!this.RTL) {
+              direc = this.touch.swipe === 'panright' ? 0 : 1;
+            } else {
+              direc = this.touch.swipe === 'panright' ? 1 : 0;
+            }
+            this._carouselScrollOne(direc);
+          } else {
+            this.dexVal = 0;
+            this._setStyle(
+              this._nguItemsContainer.nativeElement,
+              'transition',
+              'transform 324ms cubic-bezier(0, 0, 0.2, 1)'
+            );
+            this._setStyle(this._nguItemsContainer.nativeElement, 'transform', '');
+          }
+        });
 
-    this._touchContainer.nativeElement.addEventListener('panstart', () => {
-      this.carouselWidth = this._nguItemsContainer.nativeElement.offsetWidth;
-      this.touchTransform = this.transform[this.deviceType!]!;
-      this.dexVal = 0;
-      this._setStyle(this._nguItemsContainer.nativeElement, 'transition', '');
-    });
+        this._nguCarouselHammerManager.on(hammer, 'hammer.input').subscribe(({ srcEvent }) => {
+          // allow nested touch events to no propagate, this may have other side affects but works for now.
+          // TODO: It is probably better to check the source element of the event and only apply the handle to the correct carousel
+          srcEvent.stopPropagation();
+        });
+      });
   }
 
   /** handle touch input */
   private _touchHandling(e: string, ev: any): void {
     // vertical touch events seem to cause to panstart event with an odd delta
     // and a center of {x:0,y:0} so this will ignore them
-    if (ev.detail.global.center.x === 0) {
+    if (ev.center.x === 0) {
       return;
     }
 
-    ev = Math.abs(this.vertical.enabled ? ev.detail.global.deltaY : ev.detail.global.deltaX);
+    ev = Math.abs(this.vertical.enabled ? ev.deltaY : ev.deltaX);
     let valt = ev - this.dexVal;
     valt =
       this.type === 'responsive'

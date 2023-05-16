@@ -26,7 +26,7 @@
     "@angular/router": "15.2.6",
     "@ngx-builders/analyze": "4.0.0",
     "@nrwl/angular": "15.9.2",
-    "contactjs": "^2.1.6",
+    "hammerjs": "2.0.8",
     "rxjs": "7.8.0",
     "tslib": "2.4.1",
     "zone.js": "0.11.4"
@@ -56,7 +56,6 @@
     "@storybook/builder-webpack5": "^6.5.15",
     "@storybook/core-server": "^6.5.15",
     "@storybook/manager-webpack5": "^6.5.15",
-    "@types/hammerjs": "2.0.41",
     "@types/jasmine": "4.3.0",
     "@types/node": "16.11.7",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
