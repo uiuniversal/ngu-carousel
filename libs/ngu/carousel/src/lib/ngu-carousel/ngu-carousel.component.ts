@@ -293,7 +293,7 @@ export class NguCarousel<T>
     if (this._isBrowser) {
       this._carouselInterval();
       if (!this.vertical.enabled && this.inputs.touch) {
-        this._setupHammer();
+        this.setupTouch();
       }
       this._setupWindowResizeListener();
       this._onWindowScrolling();
@@ -340,7 +340,7 @@ export class NguCarousel<T>
   }
 
   /** Get Touch input */
-  private _setupHammer(): void {
+  private setupTouch(): void {
     const options = {
       "supportedGestures": [Pan]
     };

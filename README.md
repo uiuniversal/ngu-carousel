@@ -22,7 +22,7 @@ Demo available [Here](https://ngu-carousel.netlify.app)
 
 ## Installation
 
-`ngu-carousel` supports touch actions and requires `hammerjs` to be installed before the `ngu-carousel` is installed.
+`ngu-carousel` is installed.
 
 | Angular Version | ngu-carousel Version                |
 | --------------- | ----------------------------------- |

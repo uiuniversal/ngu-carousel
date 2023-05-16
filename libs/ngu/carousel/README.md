@@ -35,13 +35,6 @@ import { NguCarouselModule } from '@ngu/carousel';
 export class AppModule {}
 ```
 
-Now ngu-carousel supports touch with the help of hammerjs
-
-Import hammerjs in `main.ts` file
-
-```javascript
-import 'hammerjs';
-```
 
 Then use in your component:
 
