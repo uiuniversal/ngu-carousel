@@ -149,7 +149,6 @@ export class NguCarousel<T>
 
   private _destroy$ = new Subject<void>();
 
-  private _pointerListener: any;
 
   /**
    * Tracking function that will be used to check the differences in data changes. Used similarly
@@ -345,7 +344,7 @@ export class NguCarousel<T>
       "supportedGestures": [Pan]
     };
 
-    this._pointerListener = new PointerListener(this._touchContainer.nativeElement, options);
+    new PointerListener(this._touchContainer.nativeElement, options);
 
 
     if (this.vertical.enabled) {
