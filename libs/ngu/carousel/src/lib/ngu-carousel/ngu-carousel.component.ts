@@ -215,7 +215,7 @@ export class NguCarousel<T>
     if (this._dataSource instanceof Observable) {
       dataStream = this._dataSource;
     } else if (Array.isArray(this._dataSource)) {
-      dataStream = of(this._dataSource);
+      this._unwrappedData  = this._dataSource;
     }
 
     dataStream
