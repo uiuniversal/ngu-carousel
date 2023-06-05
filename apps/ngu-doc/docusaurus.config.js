@@ -42,14 +42,14 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/uiuniversal/ngu-carousel/tree/master/apps/docs/',
+            'https://github.com/uiuniversal/ngu-carousel/tree/master/apps/ngu-doc/',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/uiuniversal/ngu-carousel/tree/master/apps/docs/',
+            'https://github.com/uiuniversal/ngu-carousel/tree/master/apps/ngu-doc/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

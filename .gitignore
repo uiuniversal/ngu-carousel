@@ -47,3 +47,7 @@ testem.log
 .DS_Store
 Thumbs.db
 migrations.json
+
+# Generated Docusaurus files
+.docusaurus/
+.cache-loader/
