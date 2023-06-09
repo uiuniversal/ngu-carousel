@@ -11,6 +11,7 @@ import {
   EventEmitter,
   Inject,
   Input,
+  isDevMode,
   IterableChangeRecord,
   IterableChanges,
   IterableDiffer,
@@ -46,14 +47,6 @@ import { NguCarouselHammerManager } from './ngu-carousel-hammer-manager';
 
 type DirectionSymbol = '' | '-';
 
-type NguCarouselDataSource = Observable<any[]> | any[] | null | undefined;
-
-// This will be provided through Terser global definitions by Angular CLI.
-// This is how Angular does tree-shaking internally.
-declare const ngDevMode: boolean;
-
-const NG_DEV_MODE = typeof ngDevMode === 'undefined' || ngDevMode;
-
 @Component({
   selector: 'ngu-carousel',
   templateUrl: 'ngu-carousel.component.html',
@@ -79,26 +72,16 @@ export class NguCarousel<T>
 
   private _arrayChanges: IterableChanges<{}> | null = null;
 
-  @Input()
-  get dataSource(): NguCarouselDataSource {
+  @Input('dataSource')
+  get dataSource(): any {
     return this._dataSource;
   }
-  set dataSource(data: NguCarouselDataSource) {
+  set dataSource(data: any) {
     if (data) {
       this._switchDataSource(data);
     }
   }
-  private _dataSource: NguCarouselDataSource = null;
-
-  /**
-   * `_dataSource` allows multiple values to be set considering nullable and
-   * observable values. We shouldn't try to get `_dataSource.length` since it
-   * might be `null|undefined` which will throw an error that property doesn't
-   * exist on `undefined`. It will also always equal `undefined` on observable.
-   * We should wait until the observable is unwrapped and then check the length
-   * of the actual unwrapped data.
-   */
-  private _unwrappedData: any[] = [];
+  private _dataSource: any;
 
   private _defaultNodeDef: NguCarouselDefDirective<any> | null;
 
@@ -164,7 +147,7 @@ export class NguCarousel<T>
     return this._trackByFn;
   }
   set trackBy(fn: TrackByFunction<T>) {
-    if (NG_DEV_MODE && fn != null && typeof fn !== 'function' && console?.warn) {
+    if (isDevMode() && fn != null && typeof fn !== 'function' && console && console.warn) {
       console.warn(`trackBy must be a function, but received ${JSON.stringify(fn)}.`);
     }
     this._trackByFn = fn;
@@ -190,13 +173,13 @@ export class NguCarousel<T>
   }
 
   ngOnInit() {
-    this._dataDiffer = this._differs
-      .find([])
-      .create((index: number, item: any) => (this.trackBy ? this.trackBy(index, item) : item));
+    this._dataDiffer = this._differs.find([]).create((_i: number, item: any) => {
+      return this.trackBy ? this.trackBy(_i, item) : item;
+    });
   }
 
   ngDoCheck() {
-    this._arrayChanges = this._dataDiffer.diff(this._unwrappedData)!;
+    this._arrayChanges = this._dataDiffer.diff(this.dataSource)!;
     if (this._arrayChanges && this._defDirectives) {
       this._observeRenderChanges();
     }
@@ -219,9 +202,8 @@ export class NguCarousel<T>
     }
 
     dataStream
-      ?.pipe(takeUntil(merge(this._intervalController$, this._destroy$)))
+      ?.pipe(takeUntil(this._intervalController$), takeUntil(this._destroy$))
       .subscribe(data => {
-        this._unwrappedData = data;
         this.renderNodeChanges(data);
         this.isLast = this._pointIndex === this.currentSlide;
       });
@@ -341,6 +323,8 @@ export class NguCarousel<T>
   ngOnDestroy() {
     this._hammer?.destroy();
     this._destroy$.next();
+    this.carouselLoad.complete();
+    this.onMove.complete();
   }
 
   /** Get Touch input */
@@ -507,7 +491,7 @@ export class NguCarousel<T>
 
   /** Init carousel point */
   private _carouselPoint(): void {
-    const Nos = this._unwrappedData.length - (this.items - this.slideItems);
+    const Nos = this.dataSource.length - (this.items - this.slideItems);
     this._pointIndex = Math.ceil(Nos / this.slideItems);
     const pointers: number[] = [];
 
@@ -552,7 +536,7 @@ export class NguCarousel<T>
           break;
         case this._pointIndex - 1:
           this._btnBoolean(0, 1);
-          slideremains = this._unwrappedData.length - this.items;
+          slideremains = this.dataSource.length - this.items;
           break;
         default:
           this._btnBoolean(0, 0);
@@ -665,7 +649,7 @@ export class NguCarousel<T>
       const MoveSlide = currentSlideD + this.slideItems;
       this._btnBoolean(0, 1);
       if (this.currentSlide === 0) {
-        currentSlide = this._unwrappedData.length - this.items;
+        currentSlide = this.dataSource.length - this.items;
         itemSpeed = 400;
         this._btnBoolean(0, 1);
       } else if (this.slideItems >= MoveSlide) {
@@ -683,10 +667,10 @@ export class NguCarousel<T>
       this._carouselScrollTwo(Btn, currentSlide, itemSpeed);
     } else if (Btn === 1 && ((!this.loop && !this.isLast) || this.loop)) {
       if (
-        this._unwrappedData.length <= this.currentSlide + this.items + this.slideItems &&
+        this.dataSource.length <= this.currentSlide + this.items + this.slideItems &&
         !this.isLast
       ) {
-        currentSlide = this._unwrappedData.length - this.items;
+        currentSlide = this.dataSource.length - this.items;
         this._btnBoolean(0, 1);
       } else if (this.isLast) {
         currentSlide = 0;
@@ -732,7 +716,7 @@ export class NguCarousel<T>
       this._setStyle(this._nguItemsContainer.nativeElement, 'transition', ``);
     }
 
-    this.itemLength = this._unwrappedData.length;
+    this.itemLength = this.dataSource.length;
     this._transformStyle(currentSlide);
     this.currentSlide = currentSlide;
     this.onMove.emit(this);
@@ -785,7 +769,7 @@ export class NguCarousel<T>
   /** this will trigger the carousel to load the items */
   private _carouselLoadTrigger(): void {
     if (typeof this.inputs.load === 'number') {
-      this._unwrappedData.length - this.load <= this.currentSlide + this.items &&
+      this.dataSource.length - this.load <= this.currentSlide + this.items &&
         this.carouselLoad.emit(this.currentSlide);
     }
   }
@@ -956,6 +940,4 @@ export class NguCarousel<T>
         })
     );
   }
-
-  static ngAcceptInputType_dataSource: NguCarouselDataSource;
 }
