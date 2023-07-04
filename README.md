@@ -5,7 +5,9 @@
 [![npm version](https://badge.fury.io/js/%40ngu%2Fcarousel.svg)](https://badge.fury.io/js/%40ngu%2Fcarousel)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-15-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Angular Universal carousel
@@ -34,13 +36,13 @@ Demo available [Here](https://ngu-carousel.netlify.app)
 
 ## Usage
 
-1. Include CarouselModule in your app module:
+1. Include Carousel needed parts in your module or component (all carousel components and directives are standalone):
 
 ```typescript
 import { NguCarouselModule } from '@ngu/carousel';
 
 @NgModule({
-  imports: [NguCarouselModule]
+  imports: [NguCarousel, NguTileComponent, NguCarouselDefDirective]
 })
 export class AppModule {}
 ```

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "ng": "nx",
-    "start": "nx serve",
+    "start": "nx serve ngu-carousel-example",
     "format:write": "nx format:write",
     "format:check": "nx format:check"
   },

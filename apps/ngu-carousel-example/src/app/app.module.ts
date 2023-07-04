@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NguCarouselModule } from '@ngu/carousel';
 
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,6 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GettingStartedComponent } from './getting-started/getting-started.component';
 import { MainNavComponent } from './main-nav/main-nav.component';
+import { NguCarousel } from '@ngu/carousel';
 
 @NgModule({
   declarations: [AppComponent, MainNavComponent, GettingStartedComponent],
@@ -20,7 +20,7 @@ import { MainNavComponent } from './main-nav/main-nav.component';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    NguCarouselModule,
+    NguCarousel,
     LayoutModule,
     MatToolbarModule,
     MatButtonModule,

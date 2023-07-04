@@ -18,14 +18,13 @@ import {
   NgIterable,
   NgZone,
   OnDestroy,
-  OnInit,
   Output,
   QueryList,
   Renderer2,
   TrackByFunction,
   ViewChild
 } from '@angular/core';
-import { EMPTY, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
+import { EMPTY, fromEvent, interval, merge, Subject, timer } from 'rxjs';
 import { debounceTime, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 
 import {
@@ -36,11 +35,11 @@ import {
 } from './../ngu-carousel.directive';
 import { IS_BROWSER } from '../symbols';
 import {
-  Transfrom,
   Breakpoints,
   NguCarouselConfig,
   NguCarouselOutletContext,
-  NguCarouselStore
+  NguCarouselStore,
+  Transfrom
 } from './ngu-carousel';
 import { NguWindowScrollListener } from './ngu-window-scroll-listener';
 import { NguCarouselHammerManager } from './ngu-carousel-hammer-manager';
@@ -60,7 +59,9 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || ngDevMode;
   templateUrl: 'ngu-carousel.component.html',
   styleUrls: ['ngu-carousel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [NguCarouselHammerManager]
+  providers: [NguCarouselHammerManager],
+  imports: [NguCarouselOutlet],
+  standalone: true
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export class NguCarousel<T, U extends NgIterable<T> = NgIterable<T>>
