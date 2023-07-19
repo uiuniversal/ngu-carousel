@@ -16,7 +16,7 @@
     "build": {
       "executor": "@angular-devkit/build-angular:browser-esbuild",
       "options": {
-        "outputPath": "dist/apps/ngu-carousel-example",
+        "outputPath": "dist/apps/ngu-carousel-example/browser",
         "index": "apps/ngu-carousel-example/src/index.html",
         "main": "apps/ngu-carousel-example/src/main.ts",
         "polyfills": "apps/ngu-carousel-example/src/polyfills.ts",
@@ -93,7 +93,9 @@
           "apps/ngu-carousel-example/src/favicon.ico",
           "apps/ngu-carousel-example/src/assets"
         ],
-        "styles": ["apps/ngu-carousel-example/src/styles.scss"],
+        "styles": [
+          "apps/ngu-carousel-example/src/styles.scss"
+        ],
         "scripts": []
       }
     },
@@ -119,6 +121,61 @@
         "outputPath": "dist/apps/ngu-carousel-example",
         "reportPath": "reports"
       }
+    },
+    "server": {
+      "executor": "@angular-devkit/build-angular:server",
+      "options": {
+        "outputPath": "dist/apps/ngu-carousel-example/server",
+        "main": "apps/ngu-carousel-example/server.ts",
+        "tsConfig": "apps/ngu-carousel-example/tsconfig.server.json",
+        "inlineStyleLanguage": "scss"
+      },
+      "configurations": {
+        "production": {
+          "outputHashing": "media"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "sourceMap": true,
+          "extractLicenses": false,
+          "vendorChunk": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve-ssr": {
+      "executor": "@nguniversal/builders:ssr-dev-server",
+      "configurations": {
+        "development": {
+          "browserTarget": "ngu-carousel-example:build:development",
+          "serverTarget": "ngu-carousel-example:server:development"
+        },
+        "production": {
+          "browserTarget": "ngu-carousel-example:build:production",
+          "serverTarget": "ngu-carousel-example:server:production"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "prerender": {
+      "executor": "@nguniversal/builders:prerender",
+      "options": {
+        "routes": [
+          "/"
+        ]
+      },
+      "configurations": {
+        "production": {
+          "browserTarget": "ngu-carousel-example:build:production",
+          "serverTarget": "ngu-carousel-example:server:production"
+        },
+        "development": {
+          "browserTarget": "ngu-carousel-example:build:development",
+          "serverTarget": "ngu-carousel-example:server:development"
+        }
+      },
+      "defaultConfiguration": "production"
     }
   }
 }
