@@ -24,16 +24,16 @@ import {
   TrackByFunction,
   ViewChild
 } from '@angular/core';
-import { EMPTY, fromEvent, interval, merge, Subject, timer } from 'rxjs';
+import { EMPTY, Subject, fromEvent, interval, merge, timer } from 'rxjs';
 import { debounceTime, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 
+import { IS_BROWSER } from '../symbols';
 import {
   NguCarouselDefDirective,
   NguCarouselNextDirective,
   NguCarouselOutlet,
   NguCarouselPrevDirective
 } from './../ngu-carousel.directive';
-import { IS_BROWSER } from '../symbols';
 import {
   Breakpoints,
   NguCarouselConfig,
@@ -41,8 +41,8 @@ import {
   NguCarouselStore,
   Transfrom
 } from './ngu-carousel';
-import { NguWindowScrollListener } from './ngu-window-scroll-listener';
 import { NguCarouselHammerManager } from './ngu-carousel-hammer-manager';
+import { NguWindowScrollListener } from './ngu-window-scroll-listener';
 
 type DirectionSymbol = '' | '-';
 
@@ -91,8 +91,6 @@ export class NguCarousel<T, U extends NgIterable<T> = NgIterable<T>>
     }
   }
   private _dataSource: NguCarouselDataSource<T, U> = null;
-
-  private _defaultNodeDef: NguCarouselDefDirective<any> | null;
 
   @ContentChildren(NguCarouselDefDirective)
   private _defDirectives: QueryList<NguCarouselDefDirective<any>>;
@@ -147,6 +145,8 @@ export class NguCarousel<T, U extends NgIterable<T> = NgIterable<T>>
 
   private ngu_dirty: boolean = true;
 
+  private _markedForCheck: boolean = false;
+
   /**
    * Tracking function that will be used to check the differences in data changes. Used similarly
    * to `ngFor` `trackBy` function. Optimize Items operations by identifying a Items based on its data
@@ -184,6 +184,10 @@ export class NguCarousel<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   ngDoCheck() {
+    this._checkChanges();
+  }
+
+  private _checkChanges() {
     if (this.ngu_dirty) {
       this.ngu_dirty = false;
       const dataStream = this._dataSource;
@@ -193,8 +197,11 @@ export class NguCarousel<T, U extends NgIterable<T> = NgIterable<T>>
           .create((index: number, item: any) => (this.trackBy ? this.trackBy(index, item) : item))!;
       }
     }
-    if (this._dataDiffer && this._defDirectives) {
-      this._arrayChanges = this._dataDiffer.diff(this._dataSource)!;
+    if (this._dataDiffer) {
+      this._arrayChanges =
+        this._markedForCheck && this._arrayChanges
+          ? this._arrayChanges
+          : this._dataDiffer.diff(this._dataSource)!;
       if (this._arrayChanges) {
         this.renderNodeChanges(Array.from(this._dataSource!));
       }
@@ -210,7 +217,7 @@ export class NguCarousel<T, U extends NgIterable<T> = NgIterable<T>>
     if (!this._arrayChanges) return;
     this.isLast = this._pointIndex === this.currentSlide;
     const viewContainer = this._nodeOutlet.viewContainer;
-
+    this._markedForCheck = false;
     this._arrayChanges.forEachOperation(
       (
         item: IterableChangeRecord<any>,
@@ -218,16 +225,17 @@ export class NguCarousel<T, U extends NgIterable<T> = NgIterable<T>>
         currentIndex: number | null
       ) => {
         const node = this._getNodeDef(data[currentIndex!], currentIndex!);
-
-        if (item.previousIndex == null) {
-          const context = new NguCarouselOutletContext<any>(data[currentIndex!]);
-          context.index = currentIndex!;
-          viewContainer.createEmbeddedView(node.template, context, currentIndex!);
-        } else if (currentIndex == null) {
-          viewContainer.remove(adjustedPreviousIndex!);
-        } else {
-          const view = viewContainer.get(adjustedPreviousIndex!);
-          viewContainer.move(view!, currentIndex);
+        if (node?.template) {
+          if (item.previousIndex == null) {
+            const context = new NguCarouselOutletContext<any>(data[currentIndex!]);
+            context.index = currentIndex!;
+            viewContainer.createEmbeddedView(node.template, context, currentIndex!);
+          } else if (currentIndex == null) {
+            viewContainer.remove(adjustedPreviousIndex!);
+          } else {
+            const view = viewContainer.get(adjustedPreviousIndex!);
+            viewContainer.move(view!, currentIndex);
+          }
         }
       }
     );
@@ -256,13 +264,14 @@ export class NguCarousel<T, U extends NgIterable<T> = NgIterable<T>>
     }
   }
 
-  private _getNodeDef(data: any, i: number): NguCarouselDefDirective<any> {
-    if (this._defDirectives.length === 1) {
+  private _getNodeDef(data: any, i: number): NguCarouselDefDirective<any> | undefined {
+    if (this._defDirectives?.length === 1) {
       return this._defDirectives.first;
     }
 
-    const nodeDef: NguCarouselDefDirective<any> =
-      this._defDirectives.find(def => !!def.when?.(i, data)) || this._defaultNodeDef!;
+    const nodeDef: NguCarouselDefDirective<any> | undefined = (this._defDirectives || []).find(
+      def => !!def.when?.(i, data)
+    );
 
     return nodeDef;
   }
@@ -284,6 +293,11 @@ export class NguCarousel<T, U extends NgIterable<T> = NgIterable<T>>
 
   ngAfterContentInit() {
     this._cdr.markForCheck();
+    this._defDirectives.changes.subscribe(() => {
+      this._markedForCheck = true;
+      this._checkChanges();
+    });
+    this._defDirectives.notifyOnChanges();
   }
 
   private _inputValidation() {

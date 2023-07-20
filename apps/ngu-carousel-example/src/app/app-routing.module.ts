@@ -12,9 +12,19 @@ const routes: Routes = [
     loadChildren: () => import('./tile/tile.module').then(m => m.TileModule)
   },
   {
+    path: 'tile-2-images',
+    loadChildren: () =>
+      import('./tile-2-images/tile-2-images.module').then(m => m.Tile2ImagesModule)
+  },
+  {
     path: 'banner-vertical',
     loadChildren: () =>
       import('./banner-vertical/banner-vertical.module').then(m => m.BannerVerticalModule)
+  },
+  {
+    path: 'wrapped',
+    loadChildren: () =>
+      import('./wrapped/wrapped.module').then(m => m.WrappedModule)
   },
   {
     path: 'getting-started',
@@ -28,7 +38,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    initialNavigation: 'enabledBlocking'
+})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}
