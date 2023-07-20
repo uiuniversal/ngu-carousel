@@ -22,6 +22,11 @@ const routes: Routes = [
       import('./banner-vertical/banner-vertical.module').then(m => m.BannerVerticalModule)
   },
   {
+    path: 'wrapped',
+    loadChildren: () =>
+      import('./wrapped/wrapped.module').then(m => m.WrappedModule)
+  },
+  {
     path: 'getting-started',
     component: GettingStartedComponent
   },
@@ -33,7 +38,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    initialNavigation: 'enabledBlocking'
+})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}
