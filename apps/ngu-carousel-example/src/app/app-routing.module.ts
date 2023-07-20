@@ -12,6 +12,11 @@ const routes: Routes = [
     loadChildren: () => import('./tile/tile.module').then(m => m.TileModule)
   },
   {
+    path: 'tile-2-images',
+    loadChildren: () =>
+      import('./tile-2-images/tile-2-images.module').then(m => m.Tile2ImagesModule)
+  },
+  {
     path: 'banner-vertical',
     loadChildren: () =>
       import('./banner-vertical/banner-vertical.module').then(m => m.BannerVerticalModule)
