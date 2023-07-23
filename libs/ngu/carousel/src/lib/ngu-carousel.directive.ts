@@ -1,12 +1,14 @@
 import { Directive, TemplateRef, ViewContainerRef } from '@angular/core';
 
 @Directive({
-  selector: '[NguCarouselItem]'
+  selector: '[NguCarouselItem]',
+  standalone: true
 })
 export class NguCarouselItemDirective {}
 
 @Directive({
-  selector: '[NguCarouselNext]'
+  selector: '[NguCarouselNext]',
+  standalone: true
 })
 export class NguCarouselNextDirective {
   // @HostBinding('disabled') disabled: boolean;
@@ -17,7 +19,8 @@ export class NguCarouselNextDirective {
 }
 
 @Directive({
-  selector: '[NguCarouselPrev]'
+  selector: '[NguCarouselPrev]',
+  standalone: true
 })
 export class NguCarouselPrevDirective {
   // @HostBinding('disabled') disabled: boolean;
@@ -25,13 +28,15 @@ export class NguCarouselPrevDirective {
 }
 
 @Directive({
-  selector: '[NguCarouselPoint]'
+  selector: '[NguCarouselPoint]',
+  standalone: true
 })
 export class NguCarouselPointDirective {}
 
 @Directive({
   // eslint-disable-next-line @angular-eslint/directive-selector
-  selector: '[nguCarouselDef]'
+  selector: '[nguCarouselDef]',
+  standalone: true
 })
 export class NguCarouselDefDirective<T> {
   when?: (index: number, nodeData: T) => boolean;
@@ -41,7 +46,8 @@ export class NguCarouselDefDirective<T> {
 
 @Directive({
   // eslint-disable-next-line @angular-eslint/directive-selector
-  selector: '[nguCarouselOutlet]'
+  selector: '[nguCarouselOutlet]',
+  standalone: true
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class NguCarouselOutlet {

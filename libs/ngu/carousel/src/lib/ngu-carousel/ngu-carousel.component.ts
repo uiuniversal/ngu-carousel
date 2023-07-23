@@ -59,7 +59,9 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || ngDevMode;
   templateUrl: 'ngu-carousel.component.html',
   styleUrls: ['ngu-carousel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [NguCarouselHammerManager]
+  providers: [NguCarouselHammerManager],
+  imports: [NguCarouselOutlet],
+  standalone: true
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export class NguCarousel<T, U extends NgIterable<T> = NgIterable<T>>
