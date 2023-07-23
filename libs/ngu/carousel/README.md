@@ -12,7 +12,9 @@ Demo available [Here](https://ngu-carousel.netlify.app/)
 
 | Angular Version | ngu-carousel Version                |
 | --------------- | ----------------------------------- |
-| Angular >= 15   | `npm i --save @ngu/carousel@latest` |
+| Angular >= 16 standalone  | `npm i --save @ngu/carousel@latest` |
+| Angular >= 16   | `npm i --save @ngu/carousel@7.2.0` |
+| Angular >= 15   | `npm i --save @ngu/carousel@7.0.0` |
 | Angular >= 14   | `npm i --save @ngu/carousel@6.0.0`  |
 | Angular >= 13   | `npm i --save @ngu/carousel@5.0.0`  |
 | Angular >= 12   | `npm i --save @ngu/carousel@4.0.0`  |
@@ -27,12 +29,43 @@ Demo available [Here](https://ngu-carousel.netlify.app/)
 Include CarouselModule in your app module:
 
 ```javascript
-import { NguCarouselModule } from '@ngu/carousel';
+import {
+  NguCarousel,
+  NguCarouselDefDirective,
+  NguCarouselNextDirective,
+  NguCarouselPrevDirective,
+  NguItemComponent
+} from '@ngu/carousel';
 
 @NgModule({
-  imports: [NguCarouselModule]
+  imports: [
+  NguCarousel, 
+  NguTileComponent,   
+  NguCarousel,
+  NguCarouselDefDirective,
+  NguCarouselNextDirective,
+  NguCarouselPrevDirective,
+  NguItemComponent
+  ]
 })
 export class AppModule {}
+
+OR
+
+@Component({
+  imports: [
+  NguCarousel,
+  NguTileComponent,   
+  NguCarousel,
+  NguCarouselDefDirective,
+  NguCarouselNextDirective,
+  NguCarouselPrevDirective,
+  NguItemComponent
+  ],
+  standalone: true
+})
+export class AppComponent {}
+
 ```
 
 Now ngu-carousel supports touch with the help of hammerjs
