@@ -5,9 +5,7 @@
 [![npm version](https://badge.fury.io/js/%40ngu%2Fcarousel.svg)](https://badge.fury.io/js/%40ngu%2Fcarousel)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-
-[![All Contributors](https://img.shields.io/badge/all_contributors-15-orange.svg?style=flat-square)](#contributors-)
-
+[![All Contributors](https://img.shields.io/badge/all_contributors-16-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Angular Universal carousel
@@ -762,6 +760,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/luca-peruzzo"><img src="https://avatars.githubusercontent.com/u/69015314?v=4?s=100" width="100px;" alt="Luca Peruzzo"/><br /><sub><b>Luca Peruzzo</b></sub></a><br /><a href="https://github.com/uiuniversal/ngu-carousel/commits?author=luca-peruzzo" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://houseofangular.io/"><img src="https://avatars.githubusercontent.com/u/67691339?v=4?s=100" width="100px;" alt="Mateusz Stefańczyk"/><br /><sub><b>Mateusz Stefańczyk</b></sub></a><br /><a href="https://github.com/uiuniversal/ngu-carousel/commits?author=va-stefanek" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
