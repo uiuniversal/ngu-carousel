@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NguCarousel } from '@ngu/carousel';
 import { Tile2ImagesComponent } from './tile-2-images.component';
 
 describe('Tile2ImagesComponent', () => {
@@ -7,7 +8,8 @@ describe('Tile2ImagesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [Tile2ImagesComponent]
+      declarations: [Tile2ImagesComponent],
+      imports: [NguCarousel]
     }).compileComponents();
 
     fixture = TestBed.createComponent(Tile2ImagesComponent);

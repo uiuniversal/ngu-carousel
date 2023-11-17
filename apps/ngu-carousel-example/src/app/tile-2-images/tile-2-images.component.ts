@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NguCarouselConfig } from '@ngu/carousel';
 import { Observable, interval } from 'rxjs';
 import { map, startWith, take } from 'rxjs/operators';
@@ -8,7 +8,8 @@ import { slider } from '../slide-animation';
   selector: 'app-tile-2-images',
   templateUrl: './tile-2-images.component.html',
   styleUrls: ['./tile-2-images.component.css'],
-  animations: [slider]
+  animations: [slider],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Tile2ImagesComponent {
   images = ['assets/bg.jpg', 'assets/car.png'];

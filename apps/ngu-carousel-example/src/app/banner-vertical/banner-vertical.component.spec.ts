@@ -9,7 +9,8 @@ describe('BannerVerticalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [BannerVerticalComponent, NguCarousel]
+      declarations: [BannerVerticalComponent],
+      imports: [NguCarousel]
     }).compileComponents();
   }));
 
