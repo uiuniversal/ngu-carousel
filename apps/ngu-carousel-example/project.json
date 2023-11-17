@@ -104,13 +104,6 @@
         ]
       }
     },
-    "component-test": {
-      "executor": "@nx/cypress:cypress",
-      "options": {
-        "cypressConfig": "apps/ngu-carousel-example/cypress.config.ts",
-        "testingType": "component"
-      }
-    },
     "generate-bundle": {
       "executor": "@ngx-builders/analyze:analyze",
       "options": {
