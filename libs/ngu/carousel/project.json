@@ -9,7 +9,7 @@
       "executor": "@nx/angular:package",
       "options": {
         "project": "libs/ngu/carousel/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": false
+        "updateBuildableProjectDepsInPackageJson": true
       },
       "configurations": {
         "production": {
@@ -30,7 +30,7 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": ["libs/ngu/carousel/**/*.ts", "libs/ngu/carousel/**/*.html"]
       }

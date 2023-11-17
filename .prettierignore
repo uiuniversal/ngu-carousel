@@ -1,2 +1,4 @@
 package.json
 *.yml
+
+/.nx/cache

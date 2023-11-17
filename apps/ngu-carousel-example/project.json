@@ -32,9 +32,7 @@
           "apps/ngu-carousel-example/src/styles.scss"
         ],
         "scripts": [],
-        "allowedCommonJsDependencies": [
-          "hammerjs"
-        ]
+        "allowedCommonJsDependencies": ["hammerjs"]
       },
       "configurations": {
         "production": {
@@ -67,10 +65,10 @@
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
         "production": {
-          "browserTarget": "ngu-carousel-example:build:production"
+          "buildTarget": "ngu-carousel-example:build:production"
         },
         "development": {
-          "browserTarget": "ngu-carousel-example:build:development"
+          "buildTarget": "ngu-carousel-example:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -78,7 +76,7 @@
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "ngu-carousel-example:build"
+        "buildTarget": "ngu-carousel-example:build"
       }
     },
     "test": {
@@ -93,14 +91,12 @@
           "apps/ngu-carousel-example/src/favicon.ico",
           "apps/ngu-carousel-example/src/assets"
         ],
-        "styles": [
-          "apps/ngu-carousel-example/src/styles.scss"
-        ],
+        "styles": ["apps/ngu-carousel-example/src/styles.scss"],
         "scripts": []
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": [
           "apps/ngu-carousel-example/**/*.ts",
@@ -145,7 +141,7 @@
       "defaultConfiguration": "production"
     },
     "serve-ssr": {
-      "executor": "@nguniversal/builders:ssr-dev-server",
+      "executor": "@angular-devkit/build-angular:ssr-dev-server",
       "configurations": {
         "development": {
           "browserTarget": "ngu-carousel-example:build:development",
@@ -159,11 +155,9 @@
       "defaultConfiguration": "development"
     },
     "prerender": {
-      "executor": "@nguniversal/builders:prerender",
+      "executor": "@angular-devkit/build-angular:prerender",
       "options": {
-        "routes": [
-          "/"
-        ]
+        "routes": ["/"]
       },
       "configurations": {
         "production": {
