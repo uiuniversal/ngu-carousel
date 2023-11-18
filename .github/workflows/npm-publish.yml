@@ -14,26 +14,26 @@ jobs:
     build:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
               with:
-                  node-version: 18
-            - run: yarn
+                  node-version: 18.13.0
+            - run: npm ci
 
     publish-npm:
         needs: build
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
               with:
-                  node-version: 18
+                  node-version: 18.13.0
                   registry-url: https://registry.npmjs.org/
                   scope: '@ngu'
             - name: Build and Publish
               run: |
-                   yarn install
-                   yarn nx run-many --target=build --all
+                   npm ci
+                   npx nx run-many --target=build --all
                    cd dist/libs/ngu/carousel
                    npm publish --access=public
               shell: bash
