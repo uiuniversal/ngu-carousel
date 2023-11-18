@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
   NguCarousel,
@@ -9,13 +9,13 @@ import {
   NguTileComponent
 } from '@ngu/carousel';
 
-import { Tile2RoutingModule } from './tile-routing.module';
 import { Tile2ImagesComponent } from './tile-2-images.component';
+import { Tile2RoutingModule } from './tile-routing.module';
 
 @NgModule({
   declarations: [Tile2ImagesComponent],
   imports: [
-    CommonModule,
+    AsyncPipe,
     Tile2RoutingModule,
     NguCarousel,
     NguCarouselDefDirective,

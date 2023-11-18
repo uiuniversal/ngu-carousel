@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { NguCarouselConfig } from '@ngu/carousel';
-import { interval, Observable } from 'rxjs';
+import { Observable, interval } from 'rxjs';
 import { map, startWith, take } from 'rxjs/operators';
 import { slider } from '../slide-animation';
 

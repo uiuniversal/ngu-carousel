@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
   NguCarousel,
@@ -14,7 +14,7 @@ import { BannerVerticalComponent } from './banner-vertical.component';
 @NgModule({
   declarations: [BannerVerticalComponent],
   imports: [
-    CommonModule,
+    AsyncPipe,
     BannerVerticalRoutingModule,
     NguCarousel,
     NguItemComponent,

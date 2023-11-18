@@ -16,10 +16,8 @@
   </button>
 
   <ul class="myPoint" NguCarouselPoint>
-    <li
-      *ngFor="let i of myCarousel.pointNumbers"
-      [class.active]="i === myCarousel.activePoint"
-      (click)="myCarousel.moveTo(i)"
-    ></li>
+    @for (i of myCarousel.pointNumbers; track i) {
+      <li [class.active]="i === myCarousel.activePoint" (click)="myCarousel.moveTo(i)"></li>
+    }
   </ul>
 </ngu-carousel>

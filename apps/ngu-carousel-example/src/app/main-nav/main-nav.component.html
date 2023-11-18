@@ -1,6 +1,12 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+  >
     <mat-toolbar>Banner Types</mat-toolbar>
     <mat-nav-list>
       <a mat-list-item routerLink="/tile">Tile</a>
@@ -12,15 +18,24 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-      </button>
+      @if (isHandset$ | async) {
+        <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>
+      }
       <span>ngu-carousel Documentation</span>
       <span class="example-spacer"></span>
-      <a href="https://github.com/uiuniversal/ngu-carousel" target="_blank" mat-button class="github-button">
-        <img class="github-icon"
-          src="https://material.angular.io/assets/img/homepage/github-circle-white-transparent.svg" alt="Github" />
+      <a
+        href="https://github.com/uiuniversal/ngu-carousel"
+        target="_blank"
+        mat-button
+        class="github-button"
+      >
+        <img
+          class="github-icon"
+          src="https://material.angular.io/assets/img/homepage/github-circle-white-transparent.svg"
+          alt="Github"
+        />
         GitHub
       </a>
     </mat-toolbar>

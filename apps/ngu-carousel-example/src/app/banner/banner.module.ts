@@ -1,7 +1,5 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { BannerRoutingModule } from './banner-routing.module';
-import { BannerComponent } from './banner.component';
 import {
   NguCarousel,
   NguCarouselDefDirective,
@@ -9,11 +7,13 @@ import {
   NguCarouselPrevDirective,
   NguItemComponent
 } from '@ngu/carousel';
+import { BannerRoutingModule } from './banner-routing.module';
+import { BannerComponent } from './banner.component';
 
 @NgModule({
   declarations: [BannerComponent],
   imports: [
-    CommonModule,
+    AsyncPipe,
     BannerRoutingModule,
     NguCarousel,
     NguItemComponent,
