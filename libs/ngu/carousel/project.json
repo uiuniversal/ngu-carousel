@@ -25,7 +25,8 @@
       "options": {
         "main": "libs/ngu/carousel/src/test.ts",
         "tsConfig": "libs/ngu/carousel/tsconfig.spec.json",
-        "karmaConfig": "libs/ngu/carousel/karma.conf.js"
+        "karmaConfig": "libs/ngu/carousel/karma.conf.js",
+        "polyfills": ["zone.js", "zone.js/testing"]
       }
     },
     "lint": {
