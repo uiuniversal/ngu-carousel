@@ -5,7 +5,9 @@
 [![npm version](https://badge.fury.io/js/%40ngu%2Fcarousel.svg)](https://badge.fury.io/js/%40ngu%2Fcarousel)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-16-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Angular Universal carousel
@@ -22,17 +24,18 @@ Demo available [Here](https://ngu-carousel.netlify.app)
 
 `ngu-carousel` supports touch actions and requires `hammerjs` to be installed before the `ngu-carousel` is installed.
 
-| Angular Version | ngu-carousel Version                |
-| --------------- | ----------------------------------- |
-| Angular >= 16 standalone  | `npm i --save @ngu/carousel@latest` |
-| Angular >= 16   | `npm i --save @ngu/carousel@7.2.0` |
-| Angular >= 15   | `npm i --save @ngu/carousel@7.0.0` |
-| Angular >= 14   | `npm i --save @ngu/carousel@6.0.0`  |
-| Angular >= 13   | `npm i --save @ngu/carousel@5.0.0`  |
-| Angular >= 12   | `npm i --save @ngu/carousel@4.0.0`  |
-| Angular >= 10   | `npm i --save @ngu/carousel@3.0.2`  |
-| Angular = 9     | `npm i --save @ngu/carousel@2.1.0`  |
-| Angular < 9     | `npm i --save @ngu/carousel@1.5.5`  |
+| Angular Version          | ngu-carousel Version                         |
+| ------------------------ | -------------------------------------------- |
+| Angular >= 17            | `npm i --save @ngu/carousel@carousel@latest` |
+| Angular >= 16 standalone | `npm i --save @ngu/carousel@8.0.0`           |
+| Angular >= 16            | `npm i --save @ngu/carousel@7.2.0`           |
+| Angular >= 15            | `npm i --save @ngu/carousel@7.0.0`           |
+| Angular >= 14            | `npm i --save @ngu/carousel@6.0.0`           |
+| Angular >= 13            | `npm i --save @ngu/carousel@5.0.0`           |
+| Angular >= 12            | `npm i --save @ngu/carousel@4.0.0`           |
+| Angular >= 10            | `npm i --save @ngu/carousel@3.0.2`           |
+| Angular = 9              | `npm i --save @ngu/carousel@2.1.0`           |
+| Angular < 9              | `npm i --save @ngu/carousel@1.5.5`           |
 
 ## Usage
 
@@ -49,13 +52,13 @@ import {
 
 @NgModule({
   imports: [
-  NguCarousel, 
-  NguTileComponent,   
-  NguCarousel,
-  NguCarouselDefDirective,
-  NguCarouselNextDirective,
-  NguCarouselPrevDirective,
-  NguItemComponent
+    NguCarousel,
+    NguTileComponent,
+    NguCarousel,
+    NguCarouselDefDirective,
+    NguCarouselNextDirective,
+    NguCarouselPrevDirective,
+    NguItemComponent
   ]
 })
 export class AppModule {}
@@ -64,19 +67,17 @@ OR
 
 @Component({
   imports: [
-  NguCarousel,
-  NguTileComponent,   
-  NguCarousel,
-  NguCarouselDefDirective,
-  NguCarouselNextDirective,
-  NguCarouselPrevDirective,
-  NguItemComponent
+    NguCarousel,
+    NguTileComponent,
+    NguCarousel,
+    NguCarouselDefDirective,
+    NguCarouselNextDirective,
+    NguCarouselPrevDirective,
+    NguItemComponent
   ],
   standalone: true
 })
 export class AppComponent {}
-
-
 ```
 
 2. Then use in your component:
