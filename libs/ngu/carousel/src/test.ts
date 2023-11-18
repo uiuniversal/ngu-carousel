@@ -5,7 +5,6 @@ import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
-import 'core-js/stable/reflect';
 import 'zone.js';
 import 'zone.js/testing';
 
