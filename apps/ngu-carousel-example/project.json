@@ -83,7 +83,7 @@
       "executor": "@angular-devkit/build-angular:karma",
       "options": {
         "main": "apps/ngu-carousel-example/src/test.ts",
-        "polyfills": ["zone.js"],
+        "polyfills": ["zone.js", "zone.js/testing"],
         "tsConfig": "apps/ngu-carousel-example/tsconfig.spec.json",
         "karmaConfig": "apps/ngu-carousel-example/karma.conf.js",
         "inlineStyleLanguage": "scss",
