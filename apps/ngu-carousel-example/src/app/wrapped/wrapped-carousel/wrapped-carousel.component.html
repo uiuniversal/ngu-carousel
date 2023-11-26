@@ -12,7 +12,7 @@
             *ngTemplateOutlet="card; context: { $implicit: item, index: i }"
           ></ng-container>
         }
-        @if (i % 2 !== 0) {
+        @else {
           <div class="tile" [style.background]="'url(' + item + ')'">
             <h1>Odd: {{ i + 1 }}</h1>
           </div>
