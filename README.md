@@ -5,7 +5,7 @@
 [![npm version](https://badge.fury.io/js/%40ngu%2Fcarousel.svg)](https://badge.fury.io/js/%40ngu%2Fcarousel)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-17-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-18-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Angular Universal carousel
@@ -761,6 +761,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/luca-peruzzo"><img src="https://avatars.githubusercontent.com/u/69015314?v=4?s=100" width="100px;" alt="Luca Peruzzo"/><br /><sub><b>Luca Peruzzo</b></sub></a><br /><a href="https://github.com/uiuniversal/ngu-carousel/commits?author=luca-peruzzo" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://houseofangular.io/"><img src="https://avatars.githubusercontent.com/u/67691339?v=4?s=100" width="100px;" alt="Mateusz Stefańczyk"/><br /><sub><b>Mateusz Stefańczyk</b></sub></a><br /><a href="https://github.com/uiuniversal/ngu-carousel/commits?author=va-stefanek" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://riegler.fr"><img src="https://avatars.githubusercontent.com/u/1300985?v=4?s=100" width="100px;" alt="Matthieu Riegler"/><br /><sub><b>Matthieu Riegler</b></sub></a><br /><a href="https://github.com/uiuniversal/ngu-carousel/pulls?q=is%3Apr+reviewed-by%3AJeanMeche" title="Reviewed Pull Requests">👀</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/sasidharansd"><img src="https://avatars.githubusercontent.com/u/47988127?v=4?s=100" width="100px;" alt="Sasidharan SD"/><br /><sub><b>Sasidharan SD</b></sub></a><br /><a href="https://github.com/uiuniversal/ngu-carousel/commits?author=sasidharansd" title="Documentation">📖</a></td>
     </tr>
   </tbody>
 </table>
