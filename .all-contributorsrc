@@ -148,6 +148,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "JeanMeche",
+      "name": "Matthieu Riegler",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1300985?v=4",
+      "profile": "http://riegler.fr",
+      "contributions": [
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7,
