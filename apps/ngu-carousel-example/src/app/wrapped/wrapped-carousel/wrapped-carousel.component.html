@@ -1,36 +1,36 @@
-<div class="wrapped-carosuel" *ngIf="carouselTileItems.length">
-  <h2>Wrapped Carousel</h2>
-  <ngu-carousel #myCarousel [inputs]="config" [dataSource]="carouselTileItems">
-    <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst ? 0.5 : 1">
-      &lt;
-    </button>
+@if (carouselTileItems.length) {
+  <div class="wrapped-carosuel">
+    <h2>Wrapped Carousel</h2>
+    <ngu-carousel #myCarousel [inputs]="config" [dataSource]="carouselTileItems">
+      <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst ? 0.5 : 1">
+        &lt;
+      </button>
 
-    <ngu-tile *nguCarouselDef="let item; index as i; let ani = animate" [@slider]="ani">
-      <ng-container *ngIf="i % 2 === 0">
-        <ng-container
-          *ngTemplateOutlet="card; context: { $implicit: item, index: i }"
-        ></ng-container>
-      </ng-container>
-      <ng-container *ngIf="i % 2 !== 0">
-        <div class="tile" [style.background]="'url(' + item + ')'">
-          <h1>Odd: {{ i + 1 }}</h1>
-        </div>
-      </ng-container>
-    </ngu-tile>
+      <ngu-tile *nguCarouselDef="let item; index as i; let ani = animate" [@slider]="ani">
+        @if (i % 2 === 0) {
+          <ng-container
+            *ngTemplateOutlet="card; context: { $implicit: item, index: i }"
+          ></ng-container>
+        }
+        @else {
+          <div class="tile" [style.background]="'url(' + item + ')'">
+            <h1>Odd: {{ i + 1 }}</h1>
+          </div>
+        }
+      </ngu-tile>
 
-    <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast ? 0.5 : 1">
-      &gt;
-    </button>
+      <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast ? 0.5 : 1">
+        &gt;
+      </button>
 
-    <ul class="myPoint" NguCarouselPoint>
-      <li
-        *ngFor="let i of myCarousel.pointNumbers"
-        [class.active]="i === myCarousel.activePoint"
-        (click)="myCarousel.moveTo(i)"
-      ></li>
-    </ul>
-  </ngu-carousel>
-</div>
+      <ul class="myPoint" NguCarouselPoint>
+        @for (i of myCarousel.pointNumbers; track i) {
+          <li [class.active]="i === myCarousel.activePoint" (click)="myCarousel.moveTo(i)"></li>
+        }
+      </ul>
+    </ngu-carousel>
+  </div>
+}
 
 <ng-template #card let-item let-i="index">
   <div class="tile" [style.background]="'url(' + item + ')'">

@@ -1,21 +1,21 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
   NguCarousel,
   NguCarouselDefDirective,
   NguCarouselNextDirective,
+  NguCarouselPointDirective,
   NguCarouselPrevDirective,
-  NguTileComponent,
-  NguCarouselPointDirective
+  NguTileComponent
 } from '@ngu/carousel';
 
+import { AsyncPipe } from '@angular/common';
 import { TileRoutingModule } from './tile-routing.module';
 import { TileComponent } from './tile.component';
 
 @NgModule({
   declarations: [TileComponent],
   imports: [
-    CommonModule,
+    AsyncPipe,
     TileRoutingModule,
     NguCarousel,
     NguTileComponent,

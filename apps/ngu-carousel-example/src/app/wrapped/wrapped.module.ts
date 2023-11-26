@@ -1,5 +1,6 @@
-import { NgModule } from '@angular/core';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 import {
   NguCarousel,
   NguCarouselDefDirective,
@@ -8,15 +9,15 @@ import {
   NguItemComponent,
   NguTileComponent
 } from '@ngu/carousel';
-import { WrappedComponent } from './wrapped.component';
 import { WrappedCarouselComponent } from './wrapped-carousel/wrapped-carousel.component';
 import { WrappedRoutingModule } from './wrapped-routing.module';
-import { CommonModule } from '@angular/common';
+import { WrappedComponent } from './wrapped.component';
 
 @NgModule({
   imports: [
     WrappedRoutingModule,
-    CommonModule,
+    AsyncPipe,
+    NgTemplateOutlet,
     NguCarousel,
     NguCarouselDefDirective,
     NguCarouselNextDirective,

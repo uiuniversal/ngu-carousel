@@ -15,18 +15,18 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['16', '18']
+        node-version: ['18.13.0', '20']
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
-        run: yarn
+        run: npm ci
       - name: Build
         run: |
-          yarn nx run-many --target=build --all
+          npx nx run-many --target=build --all
         env:
           CI: true

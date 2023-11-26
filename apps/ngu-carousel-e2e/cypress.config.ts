@@ -3,7 +3,12 @@ import { nxE2EPreset } from '@nx/cypress/plugins/cypress-preset';
 
 export default defineConfig({
   e2e: {
-    ...nxE2EPreset(__dirname),
+    ...nxE2EPreset(__dirname, {
+      devServerTargets: {
+        default: 'ngu-carousel-example:serve:development',
+        production: 'ngu-carousel-example:serve:production'
+      }
+    }),
     /**
      * TODO(@nx/cypress): In Cypress v12,the testIsolation option is turned on by default.
      * This can cause tests to start breaking where not indended.

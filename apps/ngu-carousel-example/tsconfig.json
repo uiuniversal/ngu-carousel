@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022"
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./tsconfig.server.json"
+    }
+  ],
+  "extends": "../../tsconfig.base.json"
+}

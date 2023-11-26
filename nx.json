@@ -1,14 +1,10 @@
 {
-  "npmScope": "ngu",
   "affected": {
     "defaultBase": "master"
   },
   "tasksRunnerOptions": {
     "default": {
-      "runner": "nx-cloud",
       "options": {
-        "cacheableOperations": ["build", "test", "lint", "component-test", "build-storybook"],
-        "accessToken": "ZDc5YjI3NDItNzg5OS00YWM4LWE4ODItZjAzNjFkOWUwNzE3fHJlYWQtd3JpdGU=",
         "runtimeCacheInputs": ["node -v", "node ./scripts/get-os.js"]
       }
     }
@@ -26,33 +22,44 @@
       "!{projectRoot}/**/*.cy.[jt]s?(x)",
       "!{projectRoot}/cypress.config.[jt]s",
       "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
-      "!{projectRoot}/.storybook/**/*"
+      "!{projectRoot}/.storybook/**/*",
+      "!{projectRoot}/tsconfig.storybook.json"
     ]
   },
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+      "inputs": ["production", "^production"],
+      "cache": true
     },
     "test": {
-      "inputs": ["default", "^production", "{workspaceRoot}/karma.conf.js"]
+      "inputs": ["default", "^production", "{workspaceRoot}/karma.conf.js"],
+      "cache": true
     },
     "lint": {
-      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
+      "cache": true
     },
     "e2e": {
       "inputs": ["default", "^production"]
     },
     "component-test": {
-      "inputs": ["default", "^production"]
+      "inputs": ["default", "^production"],
+      "cache": true
     },
     "build-storybook": {
-      "inputs": ["default", "^production", "!{projectRoot}/.storybook/**/*"]
+      "inputs": [
+        "default",
+        "^production",
+        "{projectRoot}/.storybook/**/*",
+        "{projectRoot}/tsconfig.storybook.json"
+      ],
+      "cache": true
     }
   },
   "cli": {
     "analytics": false,
-    "packageManager": "yarn",
+    "packageManager": "npm",
     "schematicCollections": ["@angular-eslint/schematics"]
   },
   "generators": {
@@ -62,5 +69,15 @@
     "@angular-eslint/schematics:library": {
       "setParserOptionsProject": true
     }
-  }
+  },
+  "nxCloudAccessToken": "ZDc5YjI3NDItNzg5OS00YWM4LWE4ODItZjAzNjFkOWUwNzE3fHJlYWQtd3JpdGU=",
+  "plugins": [
+    {
+      "plugin": "@nx/cypress/plugin",
+      "options": {
+        "targetName": "e2e",
+        "componentTestingTargetName": "component-test"
+      }
+    }
+  ]
 }

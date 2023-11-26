@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { BehaviorSubject, Observable, delay, of } from 'rxjs';
 import data from '../../assets/mock/images.json';
 
@@ -10,7 +10,7 @@ import data from '../../assets/mock/images.json';
   ></app-wrapped-carousel>`,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WrappedComponent implements OnInit {
+export class WrappedComponent {
 
   public grid: { xs: 1; sm: 1; md: 1; lg: 5; all: 0 };
   data: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
@@ -25,6 +25,4 @@ export class WrappedComponent implements OnInit {
         cd.detectChanges();
       });
   }
-
-  ngOnInit() {}
 }

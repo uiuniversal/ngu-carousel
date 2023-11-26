@@ -19,7 +19,7 @@
         "outputPath": "dist/apps/ngu-carousel-example/browser",
         "index": "apps/ngu-carousel-example/src/index.html",
         "main": "apps/ngu-carousel-example/src/main.ts",
-        "polyfills": "apps/ngu-carousel-example/src/polyfills.ts",
+        "polyfills": ["zone.js"],
         "tsConfig": "apps/ngu-carousel-example/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
@@ -32,9 +32,7 @@
           "apps/ngu-carousel-example/src/styles.scss"
         ],
         "scripts": [],
-        "allowedCommonJsDependencies": [
-          "hammerjs"
-        ]
+        "allowedCommonJsDependencies": ["hammerjs"]
       },
       "configurations": {
         "production": {
@@ -67,10 +65,10 @@
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
         "production": {
-          "browserTarget": "ngu-carousel-example:build:production"
+          "buildTarget": "ngu-carousel-example:build:production"
         },
         "development": {
-          "browserTarget": "ngu-carousel-example:build:development"
+          "buildTarget": "ngu-carousel-example:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -78,14 +76,14 @@
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "ngu-carousel-example:build"
+        "buildTarget": "ngu-carousel-example:build"
       }
     },
     "test": {
       "executor": "@angular-devkit/build-angular:karma",
       "options": {
         "main": "apps/ngu-carousel-example/src/test.ts",
-        "polyfills": "apps/ngu-carousel-example/src/polyfills.ts",
+        "polyfills": ["zone.js", "zone.js/testing"],
         "tsConfig": "apps/ngu-carousel-example/tsconfig.spec.json",
         "karmaConfig": "apps/ngu-carousel-example/karma.conf.js",
         "inlineStyleLanguage": "scss",
@@ -93,26 +91,17 @@
           "apps/ngu-carousel-example/src/favicon.ico",
           "apps/ngu-carousel-example/src/assets"
         ],
-        "styles": [
-          "apps/ngu-carousel-example/src/styles.scss"
-        ],
+        "styles": ["apps/ngu-carousel-example/src/styles.scss"],
         "scripts": []
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": [
           "apps/ngu-carousel-example/**/*.ts",
           "apps/ngu-carousel-example/**/*.html"
         ]
-      }
-    },
-    "component-test": {
-      "executor": "@nx/cypress:cypress",
-      "options": {
-        "cypressConfig": "apps/ngu-carousel-example/cypress.config.ts",
-        "testingType": "component"
       }
     },
     "generate-bundle": {
@@ -145,7 +134,7 @@
       "defaultConfiguration": "production"
     },
     "serve-ssr": {
-      "executor": "@nguniversal/builders:ssr-dev-server",
+      "executor": "@angular-devkit/build-angular:ssr-dev-server",
       "configurations": {
         "development": {
           "browserTarget": "ngu-carousel-example:build:development",
@@ -159,11 +148,9 @@
       "defaultConfiguration": "development"
     },
     "prerender": {
-      "executor": "@nguniversal/builders:prerender",
+      "executor": "@angular-devkit/build-angular:prerender",
       "options": {
-        "routes": [
-          "/"
-        ]
+        "routes": ["/"]
       },
       "configurations": {
         "production": {
