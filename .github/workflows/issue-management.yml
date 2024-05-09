@@ -1,0 +1,20 @@
+name: 'Close Stale Issues'
+
+on:
+  schedule:
+    - cron: '0 10 * * 5' # Scheduled to run every Friday at 12pm CET
+
+jobs:
+  stale-issue-handler:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Mark and close stale issues
+        uses: actions/stale@v9
+        with:
+          days-before-stale: 180
+          days-before-close: 0
+          stale-issue-message: 'This issue has been automatically marked as stale because it has not had recent activity for 6 months. It will be closed if no further activity occurs. Thank you for your contributions.'
+          close-issue-message: 'Closing this issue due to no activity for 6 months.'
+          stale-pr-message: 'This PR has been automatically marked as stale because it has not had recent activity for 6 months. It will be closed if no further activity occurs. Thank you for your contributions.'
+          close-pr-message: 'Closing this PR due to no activity for 6 months.'
