@@ -1,0 +1,30 @@
+name: Branch Age Notification
+
+on:
+  schedule:
+    - cron: '0 12 * * 5' # Run every Friday at 12pm CET
+
+jobs:
+  branch-age-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check for branches older than 180 days
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: branches } = await github.repos.listBranches({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            const oldBranches = branches.filter(branch => {
+              const lastCommitDate = new Date(branch.commit.commit.author.date);
+              const daysOld = (new Date() - lastCommitDate) / (1000 * 60 * 60 * 24);
+              return daysOld > 180;
+            });
+            if (oldBranches.length > 0) {
+              console.log(`Found ${oldBranches.length} branches older than 180 days.`);
+              // Add notification logic here
+            } else {
+              console.log('No branches older than 180 days were found.');
+            }
