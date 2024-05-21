@@ -24,7 +24,21 @@ jobs:
             });
             if (oldBranches.length > 0) {
               console.log(`Found ${oldBranches.length} branches older than 180 days.`);
-              // Add notification logic here
+              for (const branch of oldBranches) {
+                const { data: commits } = await github.repos.listCommits({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  sha: branch.name,
+                  per_page: 1,
+                });
+                const commitAuthorEmail = commits[0].commit.author.email;
+                await github.repos.createCommitComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  commit_sha: commits[0].sha,
+                  body: `This branch is more than 180 days old. Consider deleting or archiving it.`
+                });
+              }
             } else {
               console.log('No branches older than 180 days were found.');
             }
