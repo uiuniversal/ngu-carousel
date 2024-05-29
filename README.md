@@ -24,7 +24,7 @@ Demo available [Here](https://ngu-carousel.netlify.app)
 
 | Angular Version          | ngu-carousel Version                         |
 | ------------------------ | -------------------------------------------- |
-| Angular >= 17            | `npm i --save @ngu/carousel@carousel@latest` |
+| Angular >= 17            | `npm i --save @ngu/carousel@latest`          |
 | Angular >= 16 standalone | `npm i --save @ngu/carousel@8.0.0`           |
 | Angular >= 16            | `npm i --save @ngu/carousel@7.2.0`           |
 | Angular >= 15            | `npm i --save @ngu/carousel@7.0.0`           |
