@@ -1,0 +1,17 @@
+name: Delete Stale Branches
+
+on:
+  schedule:
+    - cron: '0 12 * * 5' # Run every Friday at 12 pm CET
+
+jobs:
+  delete_stale_branches:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Delete branches older than 100 days
+        uses: dev-drprasad/delete-older-branches@v0.3.1
+        with:
+          max-age: '100d'
+          delete-merged-branches: 'true'
+          exclude-branches: 'master,main,develop'
