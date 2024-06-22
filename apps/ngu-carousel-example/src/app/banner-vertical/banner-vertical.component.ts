@@ -3,13 +3,30 @@ import { NguCarouselConfig } from '@ngu/carousel';
 import { interval, Observable } from 'rxjs';
 import { map, startWith, take } from 'rxjs/operators';
 import { slider } from '../slide-animation';
+import { AsyncPipe } from '@angular/common';
+import {
+  NguItemComponent,
+  NguCarouselPrevDirective,
+  NguCarouselDefDirective,
+  NguCarouselNextDirective,
+  NguCarousel
+} from '@ngu/carousel';
 
 @Component({
+  standalone: true,
   selector: 'app-banner-vertical',
   templateUrl: './banner-vertical.component.html',
   styleUrls: ['./banner-vertical.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [slider],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  imports: [
+    NguCarousel,
+    NguCarouselPrevDirective,
+    NguCarouselDefDirective,
+    NguItemComponent,
+    NguCarouselNextDirective,
+    AsyncPipe
+  ]
 })
 export class BannerVerticalComponent {
   images = ['assets/bg.jpg', 'assets/car.png', 'assets/canberra.jpg', 'assets/holi.jpg'];

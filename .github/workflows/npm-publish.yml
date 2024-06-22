@@ -15,16 +15,24 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+            - name: Install pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                version: 9
             - uses: actions/setup-node@v4
               with:
                   node-version: 18.13.0
-            - run: npm ci
+            - run: pnpm install
 
     publish-npm:
         needs: build
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+            - name: Install pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                version: 9
             - uses: actions/setup-node@v4
               with:
                   node-version: 18.13.0
@@ -32,8 +40,8 @@ jobs:
                   scope: '@ngu'
             - name: Build and Publish
               run: |
-                   npm ci
-                   npx nx run-many --target=build --all
+                   pnpm install
+                   pnpx nx run-many --target=build --all
                    cd dist/libs/ngu/carousel
                    npm publish --access=public
               shell: bash

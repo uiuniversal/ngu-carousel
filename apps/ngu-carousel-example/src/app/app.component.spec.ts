@@ -16,8 +16,7 @@ describe('AppComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [AppComponent, MainNavComponent],
-      imports: [
+    imports: [
         NoopAnimationsModule,
         LayoutModule,
         MatButtonModule,
@@ -25,9 +24,11 @@ describe('AppComponent', () => {
         MatListModule,
         MatSidenavModule,
         MatToolbarModule,
-        RouterTestingModule
-      ]
-    }).compileComponents();
+        RouterTestingModule,
+        MainNavComponent,
+        AppComponent
+    ]
+}).compileComponents();
   }));
 
   beforeEach(() => {

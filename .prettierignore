@@ -1,5 +1,8 @@
 package.json
 *.yml
 
-/.nx/cache
 .angular
+
+/.nx/cache
+/.nx/workspace-data
+
