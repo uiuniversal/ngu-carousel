@@ -8,8 +8,7 @@ describe('Tile2ImagesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [Tile2ImagesComponent],
-      imports: [NguCarousel]
+      imports: [NguCarousel, Tile2ImagesComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(Tile2ImagesComponent);

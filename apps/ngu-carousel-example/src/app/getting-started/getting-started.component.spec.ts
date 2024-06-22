@@ -9,9 +9,8 @@ describe('GettingStartedComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [GettingStartedComponent],
-      imports: [NguCarousel]
-    }).compileComponents();
+    imports: [NguCarousel, GettingStartedComponent]
+}).compileComponents();
   }));
 
   beforeEach(() => {

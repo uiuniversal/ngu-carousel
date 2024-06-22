@@ -9,13 +9,30 @@ import {
 } from '@angular/core';
 import { NguCarouselConfig } from '@ngu/carousel';
 import { slider } from '../../slide-animation';
+import { NgTemplateOutlet } from '@angular/common';
+import {
+  NguTileComponent,
+  NguCarouselPrevDirective,
+  NguCarouselDefDirective,
+  NguCarouselNextDirective,
+  NguCarousel
+} from '@ngu/carousel';
 
 @Component({
+  standalone: true,
   selector: 'app-wrapped-carousel',
   templateUrl: 'wrapped-carousel.component.html',
   styleUrls: ['./wrapped-carousel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [slider],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  imports: [
+    NguCarousel,
+    NguCarouselPrevDirective,
+    NguCarouselDefDirective,
+    NguTileComponent,
+    NgTemplateOutlet,
+    NguCarouselNextDirective
+  ]
 })
 export class WrappedCarouselComponent implements OnChanges, AfterViewInit {
   @Input() carouselTileItems: any[];
