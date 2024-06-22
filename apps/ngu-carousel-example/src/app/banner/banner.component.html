@@ -1,7 +1,7 @@
 <h2>Banner</h2>
 <ngu-carousel
   [inputs]="carouselBanner"
-  [dataSource]="carouselTileItems$ | async"
+  [dataSource]="items()"
   (onMove)="onmoveFn($event)"
   [trackBy]="trackCarousel"
 >

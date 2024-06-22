@@ -1,9 +1,5 @@
 <h2>Banner Vertical</h2>
-<ngu-carousel
-  [inputs]="carouselBanner"
-  [dataSource]="carouselTileItems$ | async"
-  (onMove)="onmoveFn($event)"
->
+<ngu-carousel [inputs]="carouselBanner" [dataSource]="items()" (onMove)="onmoveFn($event)">
   <button NguCarouselPrev class="leftRs">&lt;</button>
 
   <ngu-item *nguCarouselDef="let item; index as i; let ani = animate" [@slider]="ani">

@@ -1,14 +1,13 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
-import { AsyncPipe } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton, MatAnchor } from '@angular/material/button';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatNavList, MatListItem } from '@angular/material/list';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
+import { map } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -27,14 +26,12 @@ import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/mat
     MatIconButton,
     MatIcon,
     MatAnchor,
-    RouterOutlet,
-    AsyncPipe
+    RouterOutlet
   ]
 })
 export class MainNavComponent {
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-    map(result => result.matches),
-    shareReplay()
+  isHandset = toSignal(
+    this.breakpointObserver.observe(Breakpoints.Handset).pipe(map(result => result.matches))
   );
 
   constructor(private breakpointObserver: BreakpointObserver) {}

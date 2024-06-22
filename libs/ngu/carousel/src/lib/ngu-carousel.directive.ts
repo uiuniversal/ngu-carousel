@@ -1,34 +1,25 @@
-import { Directive, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, TemplateRef, ViewContainerRef, inject } from '@angular/core';
 
 @Directive({
-  selector: '[NguCarouselItem]',
+  selector: '[NguCarouselItem], [nguCarouselItem]',
   standalone: true
 })
 export class NguCarouselItemDirective {}
 
 @Directive({
-  selector: '[NguCarouselNext]',
-  standalone: true
+  standalone: true,
+  selector: '[NguCarouselNext]'
 })
-export class NguCarouselNextDirective {
-  // @HostBinding('disabled') disabled: boolean;
-  // @HostBinding('style.display') display = 'block';
-  // @HostListener('click')
-  // onClick() {
-  // }
-}
+export class NguCarouselNextDirective {}
 
 @Directive({
-  selector: '[NguCarouselPrev]',
-  standalone: true
+  standalone: true,
+  selector: '[NguCarouselPrev]'
 })
-export class NguCarouselPrevDirective {
-  // @HostBinding('disabled') disabled: boolean;
-  // @HostBinding('style.display') display = 'block';
-}
+export class NguCarouselPrevDirective {}
 
 @Directive({
-  selector: '[NguCarouselPoint]',
+  selector: '[NguCarouselPoint], [nguCarouselPoint]',
   standalone: true
 })
 export class NguCarouselPointDirective {}
@@ -39,9 +30,8 @@ export class NguCarouselPointDirective {}
   standalone: true
 })
 export class NguCarouselDefDirective<T> {
+  template = inject(TemplateRef);
   when?: (index: number, nodeData: T) => boolean;
-
-  constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
@@ -49,7 +39,6 @@ export class NguCarouselDefDirective<T> {
   selector: '[nguCarouselOutlet]',
   standalone: true
 })
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class NguCarouselOutlet {
-  constructor(public viewContainer: ViewContainerRef) {}
+  viewContainer = inject(ViewContainerRef);
 }

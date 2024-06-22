@@ -1,9 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, afterNextRender, signal } from '@angular/core';
 import { NguCarouselConfig } from '@ngu/carousel';
-import { interval, Observable } from 'rxjs';
-import { map, startWith, take } from 'rxjs/operators';
 import { slider } from '../slide-animation';
-import { AsyncPipe } from '@angular/common';
 import {
   NguItemComponent,
   NguCarouselPrevDirective,
@@ -24,8 +21,7 @@ import {
     NguCarouselPrevDirective,
     NguCarouselDefDirective,
     NguItemComponent,
-    NguCarouselNextDirective,
-    AsyncPipe
+    NguCarouselNextDirective
   ]
 })
 export class BannerVerticalComponent {
@@ -52,23 +48,23 @@ export class BannerVerticalComponent {
   };
   tempData: any[];
 
-  public carouselTileItems$: Observable<number[]>;
+  public items = signal<string[]>([]);
 
   constructor() {
-    this.tempData = [];
+    this.addItem();
+    afterNextRender(() => {
+      const id = setInterval(() => {
+        this.addItem();
+        if (this.items().length >= 30) {
+          clearInterval(id);
+        }
+      }, 500);
+    });
+  }
 
-    this.carouselTileItems$ = interval(500).pipe(
-      startWith(-1),
-      take(30),
-      map(() => {
-        const data = (this.tempData = [
-          ...this.tempData,
-          this.images[Math.floor(Math.random() * this.images.length)]
-        ]);
-
-        return data;
-      })
-    );
+  addItem() {
+    const i = Math.floor(Math.random() * this.images.length);
+    this.items.update(items => [...items, this.images[i]]);
   }
 
   /* It will be triggered on every slide*/
