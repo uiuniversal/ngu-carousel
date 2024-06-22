@@ -1,12 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnChanges,
-  SimpleChanges
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { NguCarouselConfig } from '@ngu/carousel';
 import { slider } from '../../slide-animation';
 import { NgTemplateOutlet } from '@angular/common';
@@ -34,8 +26,8 @@ import {
     NguCarouselNextDirective
   ]
 })
-export class WrappedCarouselComponent implements OnChanges, AfterViewInit {
-  @Input() carouselTileItems: any[];
+export class WrappedCarouselComponent {
+  items = input<string[]>([]);
   public config: NguCarouselConfig = {
     grid: { xs: 1, sm: 2, md: 3, lg: 4, xl: 4, all: 0 },
     gridBreakpoints: { sm: 480, md: 768, lg: 1024, xl: 1280 },
@@ -47,24 +39,19 @@ export class WrappedCarouselComponent implements OnChanges, AfterViewInit {
     touch: true,
     easing: 'cubic-bezier(0, 0, 0.2, 1)'
   };
-  @Input() grid: { xs?: number; sm?: number; md?: number; lg?: number; xl?: number; all?: number } =
-    { xs: 1, sm: 2, md: 3, lg: 4, xl: 4, all: 0 };
-  constructor(private cd: ChangeDetectorRef) {}
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (!!changes?.grid) {
-      this.config.grid = changes?.grid?.currentValue || {
-        xs: 1,
-        sm: 2,
-        md: 3,
-        lg: 4,
-        xl: 4,
-        all: 0
-      };
+  default = {
+    xs: 1,
+    sm: 2,
+    md: 3,
+    lg: 4,
+    xl: 4,
+    all: 0
+  };
+
+  grid = input(this.default, {
+    transform: (value: Partial<typeof this.default>) => {
+      return value || this.default;
     }
-    this.cd.detectChanges();
-  }
-  ngAfterViewInit(): void {
-    this.cd.detectChanges();
-  }
+  });
 }

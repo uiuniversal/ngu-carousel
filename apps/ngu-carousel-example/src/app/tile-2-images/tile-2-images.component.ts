@@ -1,9 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, afterNextRender, signal } from '@angular/core';
 import { NguCarouselConfig } from '@ngu/carousel';
-import { Observable, interval } from 'rxjs';
-import { map, startWith, take } from 'rxjs/operators';
 import { slider } from '../slide-animation';
-import { AsyncPipe } from '@angular/common';
 import {
   NguTileComponent,
   NguCarouselPrevDirective,
@@ -24,14 +21,13 @@ import {
     NguCarouselPrevDirective,
     NguCarouselDefDirective,
     NguTileComponent,
-    NguCarouselNextDirective,
-    AsyncPipe
+    NguCarouselNextDirective
   ]
 })
 export class Tile2ImagesComponent {
   images = ['assets/bg.jpg', 'assets/car.png'];
 
-  public carouselTileItems$: Observable<number[]>;
+  public carouselItems = signal<string[]>([]);
   public carouselTileConfig: NguCarouselConfig = {
     grid: { xs: 1, sm: 1, md: 1, lg: 5, all: 0 },
     speed: 250,
@@ -43,21 +39,21 @@ export class Tile2ImagesComponent {
     interval: { timing: 1500 },
     animation: 'lazy'
   };
-  tempData: any[];
 
   constructor() {
-    this.tempData = [];
-    this.carouselTileItems$ = interval(500).pipe(
-      startWith(-1),
-      take(2),
-      map(() => {
-        const data = (this.tempData = [
-          ...this.tempData,
-          this.images[Math.floor(Math.random() * this.images.length)]
-        ]);
+    this.addItem();
+    afterNextRender(() => {
+      const id = setInterval(() => {
+        this.addItem();
+        if (this.carouselItems().length >= 2) {
+          clearInterval(id);
+        }
+      }, 500);
+    });
+  }
 
-        return data;
-      })
-    );
+  addItem() {
+    const i = Math.floor(Math.random() * this.images.length);
+    this.carouselItems.update(items => [...items, this.images[i]]);
   }
 }

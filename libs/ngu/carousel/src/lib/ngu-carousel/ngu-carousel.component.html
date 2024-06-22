@@ -1,8 +1,10 @@
 <div #ngucarousel class="ngucarousel">
   <ng-content select="[NguCarouselPrev]"></ng-content>
-  <div #touchContainer class="ngu-touch-container">
-    <div #nguItemsContainer class="ngucarousel-items">
-      <ng-container nguCarouselOutlet></ng-container>
+  <div class="ngu-container">
+    <div #touchContainer class="ngu-touch-container">
+      <div #nguItemsContainer class="ngucarousel-items">
+        <ng-container nguCarouselOutlet></ng-container>
+      </div>
     </div>
   </div>
   <div class="nguclearFix"></div>

@@ -1,8 +1,8 @@
-@if (carouselTileItems.length) {
+@if (items().length) {
   <div class="wrapped-carosuel">
     <h2>Wrapped Carousel</h2>
-    <ngu-carousel #myCarousel [inputs]="config" [dataSource]="carouselTileItems">
-      <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst ? 0.5 : 1">
+    <ngu-carousel #myCarousel [inputs]="config" [dataSource]="items()">
+      <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst() ? 0.5 : 1">
         &lt;
       </button>
 
@@ -11,21 +11,20 @@
           <ng-container
             *ngTemplateOutlet="card; context: { $implicit: item, index: i }"
           ></ng-container>
-        }
-        @else {
+        } @else {
           <div class="tile" [style.background]="'url(' + item + ')'">
             <h1>Odd: {{ i + 1 }}</h1>
           </div>
         }
       </ngu-tile>
 
-      <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast ? 0.5 : 1">
+      <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast() ? 0.5 : 1">
         &gt;
       </button>
 
       <ul class="myPoint" NguCarouselPoint>
-        @for (i of myCarousel.pointNumbers; track i) {
-          <li [class.active]="i === myCarousel.activePoint" (click)="myCarousel.moveTo(i)"></li>
+        @for (i of myCarousel.pointNumbers(); track i) {
+          <li [class.active]="i === myCarousel.activePoint()" (click)="myCarousel.moveTo(i)"></li>
         }
       </ul>
     </ngu-carousel>

@@ -1,9 +1,9 @@
-import { ApplicationConfig } from '@angular/core';
-import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideRouter } from '@angular/router';
+import { mergeApplicationConfig, ApplicationConfig } from '@angular/core';
 import { provideServerRendering } from '@angular/platform-server';
-import { APP_ROUTES } from './app.routes';
+import { appConfig } from './app.config';
 
-export const appServerConfig: ApplicationConfig = {
-  providers: [provideRouter(APP_ROUTES), provideAnimations(), provideServerRendering()]
+const serverConfig: ApplicationConfig = {
+  providers: [provideServerRendering()]
 };
+
+export const config = mergeApplicationConfig(appConfig, serverConfig);
