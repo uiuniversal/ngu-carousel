@@ -1,11 +1,12 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
+  standalone: true,
   selector: 'ngu-tile',
   templateUrl: 'ngu-tile.component.html',
   styleUrls: ['ngu-tile.component.scss'],
-  standalone: true
+  host: {
+    class: 'item'
+  }
 })
-export class NguTileComponent {
-  @HostBinding('class.item') classes = true;
-}
+export class NguTileComponent {}

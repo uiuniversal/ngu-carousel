@@ -3,13 +3,32 @@ import { NguCarouselConfig } from '@ngu/carousel';
 import { interval, Observable } from 'rxjs';
 import { map, startWith, take } from 'rxjs/operators';
 import { slider } from '../slide-animation';
+import { AsyncPipe } from '@angular/common';
+import {
+  NguTileComponent,
+  NguCarouselPrevDirective,
+  NguCarouselDefDirective,
+  NguCarouselNextDirective,
+  NguCarouselPointDirective,
+  NguCarousel
+} from '@ngu/carousel';
 
 @Component({
+  standalone: true,
   selector: 'app-tile',
   templateUrl: './tile.component.html',
   styleUrls: ['./tile.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [slider],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  imports: [
+    NguCarousel,
+    NguCarouselPrevDirective,
+    NguCarouselDefDirective,
+    NguTileComponent,
+    NguCarouselNextDirective,
+    NguCarouselPointDirective,
+    AsyncPipe
+  ]
 })
 export class TileComponent {
   images = ['assets/bg.jpg', 'assets/car.png', 'assets/canberra.jpg', 'assets/holi.jpg'];

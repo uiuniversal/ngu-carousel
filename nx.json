@@ -1,7 +1,4 @@
 {
-  "affected": {
-    "defaultBase": "master"
-  },
   "tasksRunnerOptions": {
     "default": {
       "options": {
@@ -36,10 +33,6 @@
       "inputs": ["default", "^production", "{workspaceRoot}/karma.conf.js"],
       "cache": true
     },
-    "lint": {
-      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
-      "cache": true
-    },
     "e2e": {
       "inputs": ["default", "^production"]
     },
@@ -55,11 +48,15 @@
         "{projectRoot}/tsconfig.storybook.json"
       ],
       "cache": true
+    },
+    "@nx/eslint:lint": {
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
+      "cache": true
     }
   },
   "cli": {
     "analytics": false,
-    "packageManager": "npm",
+    "packageManager": "pnpm",
     "schematicCollections": ["@angular-eslint/schematics"]
   },
   "generators": {
@@ -79,5 +76,7 @@
         "componentTestingTargetName": "component-test"
       }
     }
-  ]
+  ],
+  "useInferencePlugins": false,
+  "defaultBase": "master"
 }
