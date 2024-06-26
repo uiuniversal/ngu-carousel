@@ -1,7 +1,7 @@
 <h2>Tile</h2>
 
-<ngu-carousel #myCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItems$ | async">
-  <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst ? 0.5 : 1">
+<ngu-carousel #myCarousel [inputs]="carouselTileConfig" [dataSource]="carouselItems()">
+  <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst() ? 0.5 : 1">
     &lt;
   </button>
 
@@ -11,13 +11,13 @@
     </div>
   </ngu-tile>
 
-  <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast ? 0.5 : 1">
+  <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast() ? 0.5 : 1">
     &gt;
   </button>
 
   <ul class="myPoint" NguCarouselPoint>
-    @for (i of myCarousel.pointNumbers; track i) {
-      <li [class.active]="i === myCarousel.activePoint" (click)="myCarousel.moveTo(i)"></li>
+    @for (i of myCarousel.pointNumbers(); track i) {
+      <li [class.active]="i === myCarousel.activePoint()" (click)="myCarousel.moveTo(i)"></li>
     }
   </ul>
 </ngu-carousel>

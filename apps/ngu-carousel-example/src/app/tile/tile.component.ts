@@ -1,20 +1,35 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, afterNextRender, signal } from '@angular/core';
 import { NguCarouselConfig } from '@ngu/carousel';
-import { interval, Observable } from 'rxjs';
-import { map, startWith, take } from 'rxjs/operators';
 import { slider } from '../slide-animation';
+import {
+  NguTileComponent,
+  NguCarouselPrevDirective,
+  NguCarouselDefDirective,
+  NguCarouselNextDirective,
+  NguCarouselPointDirective,
+  NguCarousel
+} from '@ngu/carousel';
 
 @Component({
+  standalone: true,
   selector: 'app-tile',
   templateUrl: './tile.component.html',
   styleUrls: ['./tile.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [slider],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  imports: [
+    NguCarousel,
+    NguCarouselPrevDirective,
+    NguCarouselDefDirective,
+    NguTileComponent,
+    NguCarouselNextDirective,
+    NguCarouselPointDirective
+  ]
 })
 export class TileComponent {
   images = ['assets/bg.jpg', 'assets/car.png', 'assets/canberra.jpg', 'assets/holi.jpg'];
 
-  public carouselTileItems$: Observable<number[]>;
+  public carouselItems = signal<string[]>([]);
   public carouselTileConfig: NguCarouselConfig = {
     grid: { xs: 1, sm: 1, md: 1, lg: 5, all: 0 },
     speed: 250,
@@ -26,22 +41,21 @@ export class TileComponent {
     interval: { timing: 1500 },
     animation: 'lazy'
   };
-  tempData: any[];
 
   constructor() {
-    this.tempData = [];
+    this.addItem();
+    afterNextRender(() => {
+      const id = setInterval(() => {
+        this.addItem();
+        if (this.carouselItems().length >= 30) {
+          clearInterval(id);
+        }
+      }, 500);
+    });
+  }
 
-    this.carouselTileItems$ = interval(500).pipe(
-      startWith(-1),
-      take(30),
-      map(() => {
-        const data = (this.tempData = [
-          ...this.tempData,
-          this.images[Math.floor(Math.random() * this.images.length)]
-        ]);
-
-        return data;
-      })
-    );
+  private addItem() {
+    const i = Math.floor(Math.random() * this.images.length);
+    this.carouselItems.update(items => [...items, this.images[i]]);
   }
 }

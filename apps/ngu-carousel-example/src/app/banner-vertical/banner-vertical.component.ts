@@ -1,15 +1,28 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, afterNextRender, signal } from '@angular/core';
 import { NguCarouselConfig } from '@ngu/carousel';
-import { interval, Observable } from 'rxjs';
-import { map, startWith, take } from 'rxjs/operators';
 import { slider } from '../slide-animation';
+import {
+  NguItemComponent,
+  NguCarouselPrevDirective,
+  NguCarouselDefDirective,
+  NguCarouselNextDirective,
+  NguCarousel
+} from '@ngu/carousel';
 
 @Component({
+  standalone: true,
   selector: 'app-banner-vertical',
   templateUrl: './banner-vertical.component.html',
   styleUrls: ['./banner-vertical.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [slider],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  imports: [
+    NguCarousel,
+    NguCarouselPrevDirective,
+    NguCarouselDefDirective,
+    NguItemComponent,
+    NguCarouselNextDirective
+  ]
 })
 export class BannerVerticalComponent {
   images = ['assets/bg.jpg', 'assets/car.png', 'assets/canberra.jpg', 'assets/holi.jpg'];
@@ -35,23 +48,23 @@ export class BannerVerticalComponent {
   };
   tempData: any[];
 
-  public carouselTileItems$: Observable<number[]>;
+  public items = signal<string[]>([]);
 
   constructor() {
-    this.tempData = [];
+    this.addItem();
+    afterNextRender(() => {
+      const id = setInterval(() => {
+        this.addItem();
+        if (this.items().length >= 30) {
+          clearInterval(id);
+        }
+      }, 500);
+    });
+  }
 
-    this.carouselTileItems$ = interval(500).pipe(
-      startWith(-1),
-      take(30),
-      map(() => {
-        const data = (this.tempData = [
-          ...this.tempData,
-          this.images[Math.floor(Math.random() * this.images.length)]
-        ]);
-
-        return data;
-      })
-    );
+  addItem() {
+    const i = Math.floor(Math.random() * this.images.length);
+    this.items.update(items => [...items, this.images[i]]);
   }
 
   /* It will be triggered on every slide*/

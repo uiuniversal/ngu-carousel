@@ -1,10 +1,11 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
+  standalone: true,
   selector: 'ngu-item',
   templateUrl: 'ngu-item.component.html',
-  standalone: true
+  host: {
+    class: 'item'
+  }
 })
-export class NguItemComponent {
-  @HostBinding('class.item') classes = true;
-}
+export class NguItemComponent {}

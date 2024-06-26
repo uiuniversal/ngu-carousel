@@ -16,8 +16,7 @@ describe('MainNavComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [MainNavComponent],
-      imports: [
+    imports: [
         NoopAnimationsModule,
         LayoutModule,
         MatButtonModule,
@@ -25,9 +24,10 @@ describe('MainNavComponent', () => {
         MatListModule,
         MatSidenavModule,
         MatToolbarModule,
-        RouterTestingModule
-      ]
-    }).compileComponents();
+        RouterTestingModule,
+        MainNavComponent
+    ]
+}).compileComponents();
   }));
 
   beforeEach(() => {

@@ -3,15 +3,14 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/ngu-carousel-e2e/src",
   "projectType": "application",
+  "tags": [],
+  "implicitDependencies": ["ngu-carousel-example"],
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/ngu-carousel-e2e/**/*.{js,ts}"]
+        "lintFilePatterns": ["{projectRoot}/**/*.{js,ts}"]
       }
     }
-  },
-  "tags": [],
-  "implicitDependencies": ["ngu-carousel-example"]
+  }
 }

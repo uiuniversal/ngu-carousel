@@ -2,6 +2,8 @@
   "name": "ngu-carousel-example",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
+  "sourceRoot": "apps/ngu-carousel-example/src",
+  "prefix": "app",
   "generators": {
     "@schematics/angular:component": {
       "style": "scss"
@@ -10,16 +12,14 @@
       "strict": true
     }
   },
-  "sourceRoot": "apps/ngu-carousel-example/src",
-  "prefix": "app",
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser-esbuild",
+      "executor": "@angular-devkit/build-angular:application",
       "options": {
         "outputPath": "dist/apps/ngu-carousel-example/browser",
         "index": "apps/ngu-carousel-example/src/index.html",
-        "main": "apps/ngu-carousel-example/src/main.ts",
-        "polyfills": ["zone.js"],
+        "browser": "apps/ngu-carousel-example/src/main.ts",
+        "polyfills": [],
         "tsConfig": "apps/ngu-carousel-example/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
@@ -51,9 +51,7 @@
           "outputHashing": "all"
         },
         "development": {
-          "buildOptimizer": false,
           "optimization": false,
-          "vendorChunk": true,
           "extractLicenses": false,
           "sourceMap": true,
           "namedChunks": true
@@ -82,8 +80,8 @@
     "test": {
       "executor": "@angular-devkit/build-angular:karma",
       "options": {
-        "main": "apps/ngu-carousel-example/src/test.ts",
-        "polyfills": ["zone.js", "zone.js/testing"],
+        "browser": "apps/ngu-carousel-example/src/test.ts",
+        "polyfills": [],
         "tsConfig": "apps/ngu-carousel-example/tsconfig.spec.json",
         "karmaConfig": "apps/ngu-carousel-example/karma.conf.js",
         "inlineStyleLanguage": "scss",
@@ -98,10 +96,7 @@
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
-        "lintFilePatterns": [
-          "apps/ngu-carousel-example/**/*.ts",
-          "apps/ngu-carousel-example/**/*.html"
-        ]
+        "lintFilePatterns": ["{projectRoot}/**/*.ts", "{projectRoot}/**/*.html"]
       }
     },
     "generate-bundle": {

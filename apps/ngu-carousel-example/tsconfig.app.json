@@ -7,7 +7,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true
   },
-  "files": ["src/main.ts"],
+  "files": ["src/main.ts", "src/main.server.ts", "server.ts"],
   "include": ["src/**/*.d.ts"],
   "exclude": ["karma.conf.js", "src/**/*.test.ts", "src/**/*.spec.ts"]
 }
