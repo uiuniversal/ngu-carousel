@@ -163,6 +163,12 @@
         }
       },
       "defaultConfiguration": "production"
+    },
+    "deploy": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "npx ng build ngu-carousel-example"
+      }
     }
   }
 }
