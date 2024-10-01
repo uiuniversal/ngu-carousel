@@ -24,7 +24,8 @@ Demo available [Here](https://ngu-carousel.netlify.app)
 
 | Angular Version          | ngu-carousel Version                         |
 | ------------------------ | -------------------------------------------- |
-| Angular >= 17            | `npm i --save @ngu/carousel@latest`          |
+| Angular >= 18            | `npm i --save @ngu/carousel@18`          |
+| Angular >= 17            | `npm i --save @ngu/carousel@9.0.0`          |
 | Angular >= 16 standalone | `npm i --save @ngu/carousel@8.0.0`           |
 | Angular >= 16            | `npm i --save @ngu/carousel@7.2.0`           |
 | Angular >= 15            | `npm i --save @ngu/carousel@7.0.0`           |
@@ -96,19 +97,19 @@ import { NguCarouselConfig } from '@ngu/carousel';
           <h1>{{j}}</h1>
         </div>
       </ngu-tile>
-      <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst ? 0.5:1">&lt;</button>
-      <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast ? 0.5:1">&gt;</button>
+      <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst() ? 0.5:1">&lt;</button>
+      <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast() ? 0.5:1">&gt;</button>
       <ul class="myPoint" NguCarouselPoint>
-        <li *ngFor="let j of myCarousel.pointNumbers; let j = index" [class.active]="j==myCarousel.activePoint" (click)="myCarousel.moveTo(j)"
+        <li *ngFor="let j of myCarousel.pointNumbers(); let j = index" [class.active]="j==myCarousel.activePoint()" (click)="myCarousel.moveTo(j)"
           [style.background]="'url(' + carouselTileItems[j] + ')'"></li>
       </ul>
     </ngu-carousel>
 
   </ngu-tile>
-  <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst ? 0.5:1">&lt;</button>
-  <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast ? 0.5:1">&gt;</button>
+  <button NguCarouselPrev class="leftRs" [style.opacity]="myCarousel.isFirst() ? 0.5:1">&lt;</button>
+  <button NguCarouselNext class="rightRs" [style.opacity]="myCarousel.isLast() ? 0.5:1">&gt;</button>
   <ul class="myPoint" NguCarouselPoint>
-    <li *ngFor="let i of myCarousel.pointNumbers; let i = index" [class.active]="i==myCarousel.activePoint" (click)="myCarousel.moveTo(i)"
+    <li *ngFor="let i of myCarousel.pointNumbers(); let i = index" [class.active]="i==myCarousel.activePoint()" (click)="myCarousel.moveTo(i)"
       [style.background]="'url(' + carouselTileItems[i] + ')'"></li>
   </ul>
 </ngu-carousel>
