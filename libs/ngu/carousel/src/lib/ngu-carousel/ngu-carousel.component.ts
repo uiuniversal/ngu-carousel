@@ -25,7 +25,7 @@ import {
   afterNextRender,
   AfterRenderPhase
 } from '@angular/core';
-import { EMPTY, Subject, Subscription, fromEvent, interval, merge, timer } from 'rxjs';
+import { EMPTY, Subject, fromEvent, interval, merge, timer } from 'rxjs';
 import { debounceTime, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 
 import { IS_BROWSER } from '../symbols';
@@ -80,24 +80,24 @@ export class NguCarousel<T, U extends NgIterable<T> = NgIterable<T>>
   readonly activePoint = signal(0);
   readonly pointNumbers = signal<number[]>([]);
 
-  inputs = input.required<NguCarouselConfig>();
-  carouselLoad = output<number>();
-  onMove = output<this>();
+  readonly inputs = input.required<NguCarouselConfig>();
+  readonly carouselLoad = output<number>();
+  readonly onMove = output<this>();
 
   private _defDirectives = contentChildren(NguCarouselDefDirective);
 
   private _nodeOutlet = viewChild.required(NguCarouselOutlet);
 
-  nextButton = contentChild(NguCarouselNextDirective, { read: ElementRef });
-  prevButton = contentChild(NguCarouselPrevDirective, { read: ElementRef });
+  readonly nextButton = contentChild(NguCarouselNextDirective, { read: ElementRef });
+  readonly prevButton = contentChild(NguCarouselPrevDirective, { read: ElementRef });
 
-  carouselMain1 = viewChild.required('ngucarousel', { read: ElementRef });
-  _nguItemsContainer = viewChild.required('nguItemsContainer', { read: ElementRef });
-  _touchContainer = viewChild.required('touchContainer', { read: ElementRef });
+  readonly carouselMain1 = viewChild.required('ngucarousel', { read: ElementRef });
+  readonly _nguItemsContainer = viewChild.required('nguItemsContainer', { read: ElementRef });
+  readonly _touchContainer = viewChild.required('touchContainer', { read: ElementRef });
 
   private _arrayChanges: IterableChanges<T> | null = null;
 
-  dataSource = input.required({
+  readonly dataSource = input.required({
     transform: (v: NguCarouselDataSource<T, U>) => v || ([] as never)
   });
 
@@ -125,8 +125,8 @@ export class NguCarousel<T, U extends NgIterable<T> = NgIterable<T>>
    * relative to the function to know if a Items should be added/removed/moved.
    * Accepts a function that takes two parameters, `index` and `item`.
    */
-  trackBy = input<TrackByFunction<T>>();
-  _trackByFn = computed(() => {
+  readonly trackBy = input<TrackByFunction<T>>();
+  readonly _trackByFn = computed(() => {
     const fn = this.trackBy();
     if (NG_DEV_MODE && fn != null && typeof fn !== 'function' && console?.warn) {
       console.warn(`trackBy must be a function, but received ${JSON.stringify(fn)}.`);
@@ -165,27 +165,26 @@ export class NguCarousel<T, U extends NgIterable<T> = NgIterable<T>>
       { allowSignalWrites: true }
     );
 
-    let preSub: Subscription;
-    effect(() => {
-      preSub?.unsubscribe();
+    effect(cleanup => {
       const prevButton = this.prevButton();
       untracked(() => {
         if (prevButton) {
-          preSub = fromEvent(prevButton.nativeElement, 'click')
+          const preSub = fromEvent(prevButton.nativeElement, 'click')
             .pipe(takeUntil(this._destroy$))
             .subscribe(() => this._carouselScrollOne(0));
+          cleanup(() => preSub.unsubscribe());
         }
       });
     });
-    let nextSub: Subscription;
-    effect(() => {
-      nextSub?.unsubscribe();
+
+    effect(cleanup => {
       const nextButton = this.nextButton();
       untracked(() => {
         if (nextButton) {
-          nextSub = fromEvent(nextButton.nativeElement, 'click')
+          const nextSub = fromEvent(nextButton.nativeElement, 'click')
             .pipe(takeUntil(this._destroy$))
             .subscribe(() => this._carouselScrollOne(1));
+          cleanup(() => nextSub.unsubscribe());
         }
       });
     });
