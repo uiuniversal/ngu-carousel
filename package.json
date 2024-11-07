@@ -28,7 +28,7 @@
     "@angular/router": "18.0.4",
     "@angular/ssr": "18.0.5",
     "@ngx-builders/analyze": "4.0.0",
-    "@nx/angular": "19.3.1",
+    "@nx/angular": "20.0.8",
     "express": "~4.18.2",
     "hammerjs": "2.0.8",
     "rxjs": "7.8.1",
