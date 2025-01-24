@@ -10,7 +10,6 @@ import {
 } from '@ngu/carousel';
 
 @Component({
-  standalone: true,
   selector: 'app-tile-2-images',
   templateUrl: './tile-2-images.component.html',
   styleUrls: ['./tile-2-images.component.css'],

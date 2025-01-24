@@ -11,7 +11,6 @@ import {
 } from '@ngu/carousel';
 
 @Component({
-  standalone: true,
   selector: 'app-wrapped-carousel',
   templateUrl: 'wrapped-carousel.component.html',
   styleUrls: ['./wrapped-carousel.component.scss'],

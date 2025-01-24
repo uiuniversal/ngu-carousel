@@ -10,7 +10,6 @@ import {
 } from '@ngu/carousel';
 
 @Component({
-  standalone: true,
   selector: 'app-banner-vertical',
   templateUrl: './banner-vertical.component.html',
   styleUrls: ['./banner-vertical.component.scss'],

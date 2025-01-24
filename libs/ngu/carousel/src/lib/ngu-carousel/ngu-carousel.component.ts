@@ -61,8 +61,7 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || ngDevMode;
   styleUrls: ['ngu-carousel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [NguCarouselHammerManager],
-  imports: [NguCarouselOutlet],
-  standalone: true
+  imports: [NguCarouselOutlet]
 })
 export class NguCarousel<T, U extends NgIterable<T> = NgIterable<T>>
   extends NguCarouselStore
@@ -156,14 +155,11 @@ export class NguCarousel<T, U extends NgIterable<T> = NgIterable<T>>
       { phase: AfterRenderPhase.EarlyRead }
     );
 
-    effect(
-      () => {
-        const _ = this._defDirectives();
-        const data = this.dataSource();
-        untracked(() => this._checkChanges(data));
-      },
-      { allowSignalWrites: true }
-    );
+    effect(() => {
+      const _ = this._defDirectives();
+      const data = this.dataSource();
+      untracked(() => this._checkChanges(data));
+    });
 
     effect(cleanup => {
       const prevButton = this.prevButton();

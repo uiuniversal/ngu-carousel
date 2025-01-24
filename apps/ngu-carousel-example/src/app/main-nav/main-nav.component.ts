@@ -10,7 +10,6 @@ import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/mat
 import { map } from 'rxjs';
 
 @Component({
-  standalone: true,
   selector: 'app-main-nav',
   templateUrl: './main-nav.component.html',
   styleUrls: ['./main-nav.component.scss'],
