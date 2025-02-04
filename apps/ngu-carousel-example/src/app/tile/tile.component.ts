@@ -11,7 +11,6 @@ import {
 } from '@ngu/carousel';
 
 @Component({
-  standalone: true,
   selector: 'app-tile',
   templateUrl: './tile.component.html',
   styleUrls: ['./tile.component.scss'],

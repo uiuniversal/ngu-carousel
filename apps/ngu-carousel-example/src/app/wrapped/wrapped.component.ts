@@ -3,7 +3,6 @@ import data from '../../assets/mock/images.json';
 import { WrappedCarouselComponent } from './wrapped-carousel/wrapped-carousel.component';
 
 @Component({
-  standalone: true,
   selector: 'app-wrapped',
   template: `<app-wrapped-carousel [items]="items()" [grid]="grid"></app-wrapped-carousel>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
