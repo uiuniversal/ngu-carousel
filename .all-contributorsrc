@@ -166,6 +166,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "jonplata",
+      "name": "Jonatan Plata",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14810139?v=4",
+      "profile": "https://github.com/jonplata",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
