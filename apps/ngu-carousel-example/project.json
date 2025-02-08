@@ -16,7 +16,7 @@
     "build": {
       "executor": "@angular-devkit/build-angular:application",
       "options": {
-        "outputPath": "dist/apps/ngu-carousel-example/browser",
+        "outputPath": "dist/apps/ngu-carousel-example",
         "index": "apps/ngu-carousel-example/src/index.html",
         "browser": "apps/ngu-carousel-example/src/main.ts",
         "polyfills": [],
@@ -32,7 +32,9 @@
           "apps/ngu-carousel-example/src/styles.scss"
         ],
         "scripts": [],
-        "allowedCommonJsDependencies": ["hammerjs"]
+        "allowedCommonJsDependencies": [
+          "hammerjs"
+        ]
       },
       "configurations": {
         "production": {
@@ -89,14 +91,19 @@
           "apps/ngu-carousel-example/src/favicon.ico",
           "apps/ngu-carousel-example/src/assets"
         ],
-        "styles": ["apps/ngu-carousel-example/src/styles.scss"],
+        "styles": [
+          "apps/ngu-carousel-example/src/styles.scss"
+        ],
         "scripts": []
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
-        "lintFilePatterns": ["{projectRoot}/**/*.ts", "{projectRoot}/**/*.html"]
+        "lintFilePatterns": [
+          "{projectRoot}/**/*.ts",
+          "{projectRoot}/**/*.html"
+        ]
       }
     },
     "generate-bundle": {
@@ -145,7 +152,9 @@
     "prerender": {
       "executor": "@angular-devkit/build-angular:prerender",
       "options": {
-        "routes": ["/"]
+        "routes": [
+          "/"
+        ]
       },
       "configurations": {
         "production": {
