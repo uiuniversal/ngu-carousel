@@ -28,7 +28,7 @@
     "@angular/router": "19.0.7",
     "@angular/ssr": "19.0.7",
     "@ngx-builders/analyze": "4.0.0",
-    "@nx/angular": "20.3.3",
+    "@nx/angular": "21.2.2",
     "@storybook/addon-interactions": "^8.2.8",
     "express": "~4.18.2",
     "hammerjs": "2.0.8",
