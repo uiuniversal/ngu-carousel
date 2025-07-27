@@ -15,9 +15,6 @@
       "!{projectRoot}/**/*.spec.[jt]s",
       "!{projectRoot}/karma.conf.js",
       "!{projectRoot}/.eslintrc.json",
-      "!{projectRoot}/cypress/**/*",
-      "!{projectRoot}/**/*.cy.[jt]s?(x)",
-      "!{projectRoot}/cypress.config.[jt]s",
       "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
       "!{projectRoot}/.storybook/**/*",
       "!{projectRoot}/tsconfig.storybook.json"
@@ -32,9 +29,6 @@
     "test": {
       "inputs": ["default", "^production", "{workspaceRoot}/karma.conf.js"],
       "cache": true
-    },
-    "e2e": {
-      "inputs": ["default", "^production"]
     },
     "component-test": {
       "inputs": ["default", "^production"],
@@ -68,15 +62,6 @@
     }
   },
   "nxCloudAccessToken": "ZDc5YjI3NDItNzg5OS00YWM4LWE4ODItZjAzNjFkOWUwNzE3fHJlYWQtd3JpdGU=",
-  "plugins": [
-    {
-      "plugin": "@nx/cypress/plugin",
-      "options": {
-        "targetName": "e2e",
-        "componentTestingTargetName": "component-test"
-      }
-    }
-  ],
   "useInferencePlugins": false,
   "defaultBase": "master"
 }
