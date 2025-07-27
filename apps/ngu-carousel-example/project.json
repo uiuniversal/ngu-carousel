@@ -32,9 +32,7 @@
           "apps/ngu-carousel-example/src/styles.scss"
         ],
         "scripts": [],
-        "allowedCommonJsDependencies": [
-          "hammerjs"
-        ]
+        "allowedCommonJsDependencies": ["hammerjs"]
       },
       "configurations": {
         "production": {
@@ -71,7 +69,8 @@
           "buildTarget": "ngu-carousel-example:build:development"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "continuous": true
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
@@ -91,19 +90,14 @@
           "apps/ngu-carousel-example/src/favicon.ico",
           "apps/ngu-carousel-example/src/assets"
         ],
-        "styles": [
-          "apps/ngu-carousel-example/src/styles.scss"
-        ],
+        "styles": ["apps/ngu-carousel-example/src/styles.scss"],
         "scripts": []
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
-        "lintFilePatterns": [
-          "{projectRoot}/**/*.ts",
-          "{projectRoot}/**/*.html"
-        ]
+        "lintFilePatterns": ["{projectRoot}/**/*.ts", "{projectRoot}/**/*.html"]
       }
     },
     "generate-bundle": {
@@ -147,14 +141,13 @@
           "serverTarget": "ngu-carousel-example:server:production"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "continuous": true
     },
     "prerender": {
       "executor": "@angular-devkit/build-angular:prerender",
       "options": {
-        "routes": [
-          "/"
-        ]
+        "routes": ["/"]
       },
       "configurations": {
         "production": {
