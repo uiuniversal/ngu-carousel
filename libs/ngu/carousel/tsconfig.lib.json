@@ -6,7 +6,8 @@
     "declarationMap": true,
     "inlineSources": true,
     "strictNullChecks": true,
-    "types": []
+    "types": [],
+    "moduleResolution": "bundler"
   },
   "exclude": [
     "src/test.ts",
