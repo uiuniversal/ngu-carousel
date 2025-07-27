@@ -9,8 +9,8 @@ describe('TileComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [NguCarousel, TileComponent]
-}).compileComponents();
+      imports: [NguCarousel, TileComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

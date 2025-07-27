@@ -9,8 +9,8 @@ describe('BannerComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [NguCarousel, BannerComponent]
-}).compileComponents();
+      imports: [NguCarousel, BannerComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
