@@ -154,24 +154,6 @@ export class NguCarousel<T, U extends NgIterable<T> = NgIterable<T>>
       }
     });
 
-    // afterNextRender(
-    //   () => {
-    //     this._inputValidation();
-
-    //     this._carouselCssNode = this._createStyleElem();
-
-    //     if (this._isBrowser) {
-    //       this._carouselInterval();
-    //       if (!this.vertical.enabled && this.inputs()?.touch) {
-    //         this._setupHammer();
-    //       }
-    //       this._setupWindowResizeListener();
-    //       this._onWindowScrolling();
-    //     }
-    //   },
-    //   { earlyRead: true }
-    // );
-
     effect(() => {
       const _ = this._defDirectives();
       const data = this.dataSource();
