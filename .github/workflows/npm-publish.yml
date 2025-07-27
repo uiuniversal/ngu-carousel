@@ -21,7 +21,7 @@ jobs:
                 version: 9
             - uses: actions/setup-node@v4
               with:
-                  node-version: 18.13.0
+                  node-version: 20
             - run: pnpm install
 
     publish-npm:
@@ -35,7 +35,7 @@ jobs:
                 version: 9
             - uses: actions/setup-node@v4
               with:
-                  node-version: 18.13.0
+                  node-version: 20
                   registry-url: https://registry.npmjs.org/
                   scope: '@ngu'
             - name: Build and Publish
