@@ -10,19 +10,19 @@ Demo available [Here](https://ngu-carousel.netlify.app/)
 
 ## Installation
 
-| Angular Version          | ngu-carousel Version                         |
-| ------------------------ | -------------------------------------------- |
-| Angular >= 18            | `npm i --save @ngu/carousel@latest`          |
-| Angular >= 17            | `npm i --save @ngu/carousel@9.0.0`           |
-| Angular >= 16 standalone | `npm i --save @ngu/carousel@8.0.0`           |
-| Angular >= 16            | `npm i --save @ngu/carousel@7.2.0`           |
-| Angular >= 15            | `npm i --save @ngu/carousel@7.0.0`           |
-| Angular >= 14            | `npm i --save @ngu/carousel@6.0.0`           |
-| Angular >= 13            | `npm i --save @ngu/carousel@5.0.0`           |
-| Angular >= 12            | `npm i --save @ngu/carousel@4.0.0`           |
-| Angular >= 10            | `npm i --save @ngu/carousel@3.0.2`           |
-| Angular = 9              | `npm i --save @ngu/carousel@2.1.0`           |
-| Angular < 9              | `npm i --save @ngu/carousel@1.5.5`           |
+| Angular Version          | ngu-carousel Version                |
+| ------------------------ | ----------------------------------- |
+| Angular >= 18            | `npm i --save @ngu/carousel@latest` |
+| Angular >= 17            | `npm i --save @ngu/carousel@9.0.0`  |
+| Angular >= 16 standalone | `npm i --save @ngu/carousel@8.0.0`  |
+| Angular >= 16            | `npm i --save @ngu/carousel@7.2.0`  |
+| Angular >= 15            | `npm i --save @ngu/carousel@7.0.0`  |
+| Angular >= 14            | `npm i --save @ngu/carousel@6.0.0`  |
+| Angular >= 13            | `npm i --save @ngu/carousel@5.0.0`  |
+| Angular >= 12            | `npm i --save @ngu/carousel@4.0.0`  |
+| Angular >= 10            | `npm i --save @ngu/carousel@3.0.2`  |
+| Angular = 9              | `npm i --save @ngu/carousel@2.1.0`  |
+| Angular < 9              | `npm i --save @ngu/carousel@1.5.5`  |
 
 ## Installation
 
@@ -41,33 +41,32 @@ import {
 
 @NgModule({
   imports: [
-  NguCarousel, 
-  NguTileComponent,   
-  NguCarousel,
-  NguCarouselDefDirective,
-  NguCarouselNextDirective,
-  NguCarouselPrevDirective,
-  NguItemComponent
+    NguCarousel,
+    NguTileComponent,
+    NguCarousel,
+    NguCarouselDefDirective,
+    NguCarouselNextDirective,
+    NguCarouselPrevDirective,
+    NguItemComponent
   ]
 })
 export class AppModule {}
 
-OR
+OR;
 
 @Component({
   imports: [
-  NguCarousel,
-  NguTileComponent,   
-  NguCarousel,
-  NguCarouselDefDirective,
-  NguCarouselNextDirective,
-  NguCarouselPrevDirective,
-  NguItemComponent
+    NguCarousel,
+    NguTileComponent,
+    NguCarousel,
+    NguCarouselDefDirective,
+    NguCarouselNextDirective,
+    NguCarouselPrevDirective,
+    NguItemComponent
   ],
   standalone: true
 })
 export class AppComponent {}
-
 ```
 
 Now ngu-carousel supports touch with the help of hammerjs
@@ -251,24 +250,24 @@ export type Custom = 'banner';
 export type Animate = 'lazy';
 ```
 
-| Command                   | Type          | Required | Description                                                                                                                                                                                                                   |
-| ------------------------- | ------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| `grid`                    | Object        | Yes      | **xs** - mobile, **sm** - tablet, **md** - desktop, **lg** - large desktops, **xl** - extra large desktops, **all** - fixed width (When you use **all** make others 0 and vice versa)                                         |
-| `gridBreakpoints`         | Object        | optional | Determines the browser width in pixels that the grid displays the intended number of tiles.<br/><br/> default: `{sm: 768, md: 992, lg: 1200, xl: 1200}`                                                                       |
-| `slide`                   | number        | optional | It is used to slide the number items on click                                                                                                                                                                                 |
-| `speed`                   | milliseconds | optional | It is used for time taken to slide the number items                                                                                                                                                                           |
-| `interval`                | milliseconds | optional | It is used to make the carousel auto slide with given value. interval defines the interval between slides                                                                                                                         |
-| `load`                    | number        | optional | It is used to load the items similar to pagination. The carousel will trigger the carouselLoad function to load another set of items. It will help you to improve the performance of the app.**`(carouselLoad)="myfunc($event)"`** |
-| `point.visible`           | boolean       | optional | It is used to indicate no. of slides and also shows the current active slide.                                                                                                                                                 |
-| `point.hideOnSingleSlide` | boolean       | optional | It is used to hide the point indicator when slide is less than one.                                                                                                                                                           |
-| `touch`                   | boolean       | optional | It is used to active touch support to the carousel.                                                                                                                                                                           |
-| `easing`                  | string        | optional | It is used to define the easing style of the carousel. Only define the ease name without any timing like `ease`,`ease-in`                                                                                                     |
-| `loop`                    | boolean       | optional | It is used to loop the `ngu-item                                                                                                                                                                                              | ngu-tile`. It must be true for `interval` |
-| `animation`               | string        | optional | It is used to animate the sliding items. currently it only supports `lazy`. more coming soon and also with custom CSS animation option                                                                                        |
-| `custom`                  | string        | optional | It is you to define the purpose of the carousel. Currently, it only supports `banner`.                                                                        |
-| `RTL`                     | boolean       | optional | This option enables the `rtl` direction and acts as rtl. By default it is set to `ltr`                                                                                                                                                 |
-| `vertical.enabled`        | boolean       | optional | This option enables the `vertical` direction                                                                                                                                                                                   |
-| `vertical.height`         | number       | optional | This option is used to set the height of the carousel                                                                                                                                                                         |
+| Command                   | Type         | Required | Description                                                                                                                                                                                                                        |
+| ------------------------- | ------------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| `grid`                    | Object       | Yes      | **xs** - mobile, **sm** - tablet, **md** - desktop, **lg** - large desktops, **xl** - extra large desktops, **all** - fixed width (When you use **all** make others 0 and vice versa)                                              |
+| `gridBreakpoints`         | Object       | optional | Determines the browser width in pixels that the grid displays the intended number of tiles.<br/><br/> default: `{sm: 768, md: 992, lg: 1200, xl: 1200}`                                                                            |
+| `slide`                   | number       | optional | It is used to slide the number items on click                                                                                                                                                                                      |
+| `speed`                   | milliseconds | optional | It is used for time taken to slide the number items                                                                                                                                                                                |
+| `interval`                | milliseconds | optional | It is used to make the carousel auto slide with given value. interval defines the interval between slides                                                                                                                          |
+| `load`                    | number       | optional | It is used to load the items similar to pagination. The carousel will trigger the carouselLoad function to load another set of items. It will help you to improve the performance of the app.**`(carouselLoad)="myfunc($event)"`** |
+| `point.visible`           | boolean      | optional | It is used to indicate no. of slides and also shows the current active slide.                                                                                                                                                      |
+| `point.hideOnSingleSlide` | boolean      | optional | It is used to hide the point indicator when slide is less than one.                                                                                                                                                                |
+| `touch`                   | boolean      | optional | It is used to active touch support to the carousel.                                                                                                                                                                                |
+| `easing`                  | string       | optional | It is used to define the easing style of the carousel. Only define the ease name without any timing like `ease`,`ease-in`                                                                                                          |
+| `loop`                    | boolean      | optional | It is used to loop the `ngu-item                                                                                                                                                                                                   | ngu-tile`. It must be true for `interval` |
+| `animation`               | string       | optional | It is used to animate the sliding items. currently it only supports `lazy`. more coming soon and also with custom CSS animation option                                                                                             |
+| `custom`                  | string       | optional | It is you to define the purpose of the carousel. Currently, it only supports `banner`.                                                                                                                                             |
+| `RTL`                     | boolean      | optional | This option enables the `rtl` direction and acts as rtl. By default it is set to `ltr`                                                                                                                                             |
+| `vertical.enabled`        | boolean      | optional | This option enables the `vertical` direction                                                                                                                                                                                       |
+| `vertical.height`         | number       | optional | This option is used to set the height of the carousel                                                                                                                                                                              |
 
 ### Custom CSS for Point
 

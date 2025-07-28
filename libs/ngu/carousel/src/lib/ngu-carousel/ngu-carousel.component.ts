@@ -22,8 +22,7 @@ import {
   signal,
   untracked,
   ChangeDetectorRef,
-  afterNextRender,
-  AfterRenderPhase
+  afterNextRender
 } from '@angular/core';
 import { EMPTY, Subject, fromEvent, interval, merge, timer } from 'rxjs';
 import { debounceTime, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
@@ -137,8 +136,9 @@ export class NguCarousel<T, U extends NgIterable<T> = NgIterable<T>>
     super();
     this._dataDiffer = this._differs.find([]).create(this._trackByFn())!;
 
-    afterNextRender(
-      () => {
+    afterNextRender({
+      earlyRead: () => true,
+      write: () => {
         this._inputValidation();
 
         this._carouselCssNode = this._createStyleElem();
@@ -151,9 +151,8 @@ export class NguCarousel<T, U extends NgIterable<T> = NgIterable<T>>
           this._setupWindowResizeListener();
           this._onWindowScrolling();
         }
-      },
-      { phase: AfterRenderPhase.EarlyRead }
-    );
+      }
+    });
 
     effect(() => {
       const _ = this._defDirectives();

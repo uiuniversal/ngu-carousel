@@ -16,7 +16,10 @@ export class NguHammerLoader {
 export class NguCarouselHammerManager implements OnDestroy {
   private _destroy$ = new Subject<void>();
 
-  constructor(private _ngZone: NgZone, private _nguHammerLoader: NguHammerLoader) {}
+  constructor(
+    private _ngZone: NgZone,
+    private _nguHammerLoader: NguHammerLoader
+  ) {}
 
   ngOnDestroy(): void {
     this._destroy$.next();
