@@ -2,9 +2,9 @@
   "name": "@ngu/carousel",
   "version": "20.0.0",
   "peerDependencies": {
-    "@angular/common": "^19.0.0",
-    "@angular/core": "^19.0.0",
-    "@angular/animations": "^19.0.0",
+    "@angular/common": "^20.0.0",
+    "@angular/core": "^20.0.0",
+    "@angular/animations": "^20.0.0",
     "hammerjs": "^2.0.0",
     "rxjs": "^7.0.0"
   },
