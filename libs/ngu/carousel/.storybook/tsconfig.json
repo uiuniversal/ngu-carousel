@@ -1,7 +1,10 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "jsx": "react",
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
 
   "exclude": ["../**/*.spec.ts"],

@@ -1,12 +1,20 @@
-import { Meta } from '@storybook/angular';
+import { Meta, StoryObj, moduleMetadata } from '@storybook/angular';
 import { NguTileComponent } from './ngu-tile.component';
 
-export default {
-  title: 'NguTileComponent',
-  component: NguTileComponent
-} as Meta<NguTileComponent>;
+const meta: Meta<NguTileComponent> = {
+  title: 'Carousel/NguTile',
+  component: NguTileComponent,
+  decorators: [
+    moduleMetadata({
+      imports: [NguTileComponent]
+    })
+  ]
+};
 
-export const Primary = {
+export default meta;
+type Story = StoryObj<NguTileComponent>;
+
+export const Primary: Story = {
   render: (args: NguTileComponent) => ({
     props: args
   }),
