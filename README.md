@@ -5,7 +5,7 @@
 [![npm version](https://badge.fury.io/js/%40ngu%2Fcarousel.svg)](https://badge.fury.io/js/%40ngu%2Fcarousel)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-20-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-21-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Angular Universal carousel
@@ -758,6 +758,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/sasidharansd"><img src="https://avatars.githubusercontent.com/u/47988127?v=4?s=100" width="100px;" alt="Sasidharan SD"/><br /><sub><b>Sasidharan SD</b></sub></a><br /><a href="https://github.com/uiuniversal/ngu-carousel/commits?author=sasidharansd" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/jonplata"><img src="https://avatars.githubusercontent.com/u/14810139?v=4?s=100" width="100px;" alt="Jonatan Plata"/><br /><sub><b>Jonatan Plata</b></sub></a><br /><a href="https://github.com/uiuniversal/ngu-carousel/commits?author=jonplata" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/felipeyukio182"><img src="https://avatars.githubusercontent.com/u/86835095?v=4?s=100" width="100px;" alt="Felipe Yukio Fupunaga"/><br /><sub><b>Felipe Yukio Fupunaga</b></sub></a><br /><a href="https://github.com/uiuniversal/ngu-carousel/commits?author=felipeyukio182" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Avcharov"><img src="https://avatars.githubusercontent.com/u/72924156?v=4?s=100" width="100px;" alt="Hryhorii (Greg) Avcharov"/><br /><sub><b>Hryhorii (Greg) Avcharov</b></sub></a><br /><a href="https://github.com/uiuniversal/ngu-carousel/commits?author=Avcharov" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
