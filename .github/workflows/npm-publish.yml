@@ -10,6 +10,10 @@ on:
     release:
         types: [created]
 
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -18,10 +22,10 @@ jobs:
             - name: Install pnpm
               uses: pnpm/action-setup@v4
               with:
-                version: 9
+                version: 10
             - uses: actions/setup-node@v4
               with:
-                  node-version: 20
+                  node-version: 24
             - run: pnpm install
 
     publish-npm:
@@ -35,7 +39,7 @@ jobs:
                 version: 9
             - uses: actions/setup-node@v4
               with:
-                  node-version: 20
+                  node-version: 24
                   registry-url: https://registry.npmjs.org/
                   scope: '@ngu'
             - name: Build and Publish
@@ -45,6 +49,3 @@ jobs:
                    cd dist/libs/ngu/carousel
                    npm publish --access=public
               shell: bash
-              env:
-                  NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-
