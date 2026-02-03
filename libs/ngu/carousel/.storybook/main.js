@@ -1,6 +1,6 @@
-module.exports = {
-  stories: ['../**/*.stories.mdx', '../**/*.stories.@(js|jsx|ts|tsx)'],
-  addons: ['@storybook/addon-essentials'],
+export default {
+  stories: ['../src/**/*.stories.@(js|jsx|ts|tsx)', '../src/**/*.stories.mdx'],
+  addons: ['@storybook/addon-docs'],
   framework: {
     name: '@storybook/angular',
     options: {}

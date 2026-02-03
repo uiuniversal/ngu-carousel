@@ -8,15 +8,14 @@
     "build": {
       "executor": "@nx/angular:package",
       "options": {
-        "project": "libs/ngu/carousel/ng-package.json"
+        "project": "libs/ngu/carousel/ng-package.json",
+        "tsConfig": "libs/ngu/carousel/tsconfig.lib.json"
       },
       "configurations": {
         "production": {
           "tsConfig": "libs/ngu/carousel/tsconfig.lib.prod.json"
         },
-        "development": {
-          "tsConfig": "libs/ngu/carousel/tsconfig.lib.json"
-        }
+        "development": {}
       },
       "defaultConfiguration": "production"
     },
@@ -25,7 +24,7 @@
       "options": {
         "main": "libs/ngu/carousel/src/test.ts",
         "tsConfig": "libs/ngu/carousel/tsconfig.spec.json",
-        "karmaConfig": "libs/ngu/carousel/karma.conf.js",
+        "karmaConfig": "libs/ngu/carousel/karma.conf.cjs",
         "polyfills": ["zone.js", "zone.js/testing"]
       }
     },
