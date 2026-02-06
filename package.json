@@ -90,7 +90,7 @@
     "react-dom": "~18.2.0",
     "storybook": "10.2.4",
     "typescript": "5.9.3",
-    "webpack": "~5.89.0",
+    "webpack": "~5.104.1",
     "@storybook/addon-docs": "10.2.4"
   },
   "keywords": [
