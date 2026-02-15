@@ -29,7 +29,7 @@
     "@angular/ssr": "21.1.2",
     "@ngx-builders/analyze": "4.0.0",
     "@nx/angular": "22.4.4",
-    "express": "~4.18.2",
+    "express": "~4.22.0",
     "hammerjs": "2.0.8",
     "rxjs": "7.8.1",
     "tslib": "2.6.2",
